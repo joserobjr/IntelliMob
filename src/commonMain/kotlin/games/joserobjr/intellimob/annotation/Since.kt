@@ -17,14 +17,13 @@
  *
  */
 
-package games.joserobjr.intellimob.control
-
-import games.joserobjr.intellimob.annotation.ExperimentalIntelliMobApi
-import games.joserobjr.intellimob.entity.RegularEntity
+package games.joserobjr.intellimob.annotation
 
 /**
  * @author joserobjr
  * @since 2021-01-11
  */
-@ExperimentalIntelliMobApi
-internal class SquidControls(entity: RegularEntity): AbstractEntityControls(entity)
+@MustBeDocumented
+@Retention(AnnotationRetention.BINARY)
+@Since("0.1.0")
+internal annotation class Since(val version: String)

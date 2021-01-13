@@ -17,14 +17,31 @@
  *
  */
 
-package games.joserobjr.intellimob.control
+package games.joserobjr.intellimob.entity
 
+import cn.nukkit.entity.mob.EntityMob
+import cn.nukkit.level.format.FullChunk
+import cn.nukkit.nbt.tag.CompoundTag
 import games.joserobjr.intellimob.annotation.ExperimentalIntelliMobApi
-import games.joserobjr.intellimob.entity.RegularEntity
 
 /**
  * @author joserobjr
- * @since 2021-01-11
+ * @since 2021-01-12
  */
 @ExperimentalIntelliMobApi
-internal class SquidControls(entity: RegularEntity): AbstractEntityControls(entity)
+public class EntityIronGolem(chunk: FullChunk?, nbt: CompoundTag?) : EntityMob(chunk, nbt) {
+    public companion object {
+        public const val NETWORK_ID: Int = 20
+    }
+
+    override fun getNetworkId(): Int = NETWORK_ID
+
+    override fun initEntity() {
+        super.initEntity()
+        maxHealth = 100
+    }
+
+    override fun getName(): String = "Iron Golem"
+    override fun getWidth(): Float = 1.4f
+    override fun getHeight(): Float = 2.9f
+}

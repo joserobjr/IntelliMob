@@ -19,6 +19,7 @@
 
 package games.joserobjr.intellimob.control
 
+import games.joserobjr.intellimob.annotation.ExperimentalIntelliMobApi
 import games.joserobjr.intellimob.entity.status.EntityStatus
 import games.joserobjr.intellimob.math.DoubleVectorXZ
 import games.joserobjr.intellimob.math.EntityPos
@@ -30,6 +31,7 @@ import games.joserobjr.intellimob.math.PitchYaw
  * @author joserobjr
  * @since 2021-01-11
  */
+@ExperimentalIntelliMobApi
 public interface EntityControls {
     /**
      * The current status affecting the entity. The returned values must consider if the entity is on floor, in water,

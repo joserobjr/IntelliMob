@@ -19,6 +19,7 @@
 
 package games.joserobjr.intellimob.brain
 
+import games.joserobjr.intellimob.annotation.ExperimentalIntelliMobApi
 import games.joserobjr.intellimob.brain.wish.Wishes
 import games.joserobjr.intellimob.entity.RegularEntity
 
@@ -26,6 +27,7 @@ import games.joserobjr.intellimob.entity.RegularEntity
  * @author joserobjr
  * @since 2021-01-11
  */
+@ExperimentalIntelliMobApi
 public class Brain(public val owner: RegularEntity) {
     public var wishes: Wishes = Wishes()
 }

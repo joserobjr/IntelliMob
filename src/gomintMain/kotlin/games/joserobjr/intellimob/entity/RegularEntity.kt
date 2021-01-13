@@ -19,6 +19,7 @@
 
 package games.joserobjr.intellimob.entity
 
+import games.joserobjr.intellimob.annotation.ExperimentalIntelliMobApi
 import games.joserobjr.intellimob.brain.Brain
 import games.joserobjr.intellimob.brain.createBrain
 import games.joserobjr.intellimob.brain.wish.Wishes
@@ -42,29 +43,37 @@ import kotlin.reflect.full.declaredMemberProperties
  */
 public actual typealias RegularEntity = Entity
 
+@ExperimentalIntelliMobApi
+public actual val RegularEntity.entityType: EntityType by lazyData(EntityType::fromEntity)
+
 /**
  * Allows to apply physical movements to the entity.
  */
+@ExperimentalIntelliMobApi
 public actual val RegularEntity.controls: EntityControls by lazyData(RegularEntity::createControls)
 
 /**
  * Hold and process all intelligence stuff which doesn't require physical interactions.
  */
+@ExperimentalIntelliMobApi
 public actual val RegularEntity.brain: Brain by lazyData(RegularEntity::createBrain)
 
 /**
  * The default status based on the entity type.
  */
+@ExperimentalIntelliMobApi
 public actual val RegularEntity.defaultStatus: EntityStatus by lazyData(RegularEntity::createDefaultStatus)
 
 /**
  * The current base status, not modified by environmental conditions.
  */
+@ExperimentalIntelliMobApi
 public actual val RegularEntity.baseStatus: EntityStatus by lazyData(RegularEntity::createBaseStatus)
 
 /**
  * The intelligence which visualizes the world to realize movement [Wishes] from the [Brain] using the [EntityControls].
  */
+@ExperimentalIntelliMobApi
 public actual val RegularEntity.pathFinder: PathFinder by lazyData(RegularEntity::createPathFinder)
 
 private inline fun <D: Any> lazyData(crossinline loader: RegularEntity.()-> D) = object : ReadOnlyProperty<RegularEntity, D> {
@@ -96,7 +105,9 @@ private val RegularEntity.intelliMobData: EntityDataStorage get() {
     }
 }
 
+@OptIn(ExperimentalIntelliMobApi::class)
 private data class EntityDataStorage (
+    var type: EntityType? = null,
     var controls: EntityControls? = null,
     var brain: Brain? = null,
     var defaultStatus: EntityStatus? = null,

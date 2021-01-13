@@ -19,10 +19,13 @@
 
 package games.joserobjr.intellimob.brain.wish
 
+import games.joserobjr.intellimob.annotation.ExperimentalIntelliMobApi
+
 /**
  * @author joserobjr
  * @since 2021-01-11
  */
+@ExperimentalIntelliMobApi
 public data class Wishes (
     public var moveHead: Wish? = null,
     public var move: Wish? = null,

@@ -19,6 +19,7 @@
 
 package games.joserobjr.intellimob.control
 
+import games.joserobjr.intellimob.annotation.ExperimentalIntelliMobApi
 import games.joserobjr.intellimob.entity.RegularEntity
 import games.joserobjr.intellimob.entity.defaultStatus
 import games.joserobjr.intellimob.entity.status.EntityStatus
@@ -30,6 +31,7 @@ import games.joserobjr.intellimob.math.PitchYaw
  * @author joserobjr
  * @since 2021-01-11
  */
+@ExperimentalIntelliMobApi
 public open class NoEntityControls(private val entity: RegularEntity) : EntityControls {
     override val currentStatus: EntityStatus = entity.defaultStatus.toImmutable()
     override fun lookAt(pos: EntityPos, speed: PitchYaw): Boolean = false

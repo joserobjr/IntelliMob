@@ -25,6 +25,7 @@ import cn.nukkit.entity.Entity
 import cn.nukkit.metadata.MetadataValue
 import cn.nukkit.metadata.Metadatable
 import cn.nukkit.plugin.Plugin
+import games.joserobjr.intellimob.annotation.ExperimentalIntelliMobApi
 import games.joserobjr.intellimob.brain.Brain
 import games.joserobjr.intellimob.brain.createBrain
 import games.joserobjr.intellimob.brain.wish.Wishes
@@ -42,7 +43,8 @@ import games.joserobjr.intellimob.pathfinding.PathFinder
  * 
  * @author joserobjr
  * @since 2021-01-11
- */ 
+ */
+@ExperimentalIntelliMobApi
 public actual interface RegularEntity: Metadatable {
     /**
      * The PowerNukkit entity which this interface represents.
@@ -50,34 +52,43 @@ public actual interface RegularEntity: Metadatable {
     public val powerNukkitEntity: Entity
 }
 
+@ExperimentalIntelliMobApi
+public actual val RegularEntity.entityType: EntityType get() = EntityType.fromEntity(this)
+
 /**
  * Allows to apply physical movements to the entity.
  */
+@ExperimentalIntelliMobApi
 public actual val RegularEntity.controls: EntityControls by lazyMetadata(RegularEntity::createControls)
 
 /**
  * Hold and process all intelligence stuff which doesn't require physical interactions.
  */
+@ExperimentalIntelliMobApi
 public actual val RegularEntity.brain: Brain by lazyMetadata(RegularEntity::createBrain)
 
 /**
  * The default status based on the entity type.
  */
+@ExperimentalIntelliMobApi
 public actual val RegularEntity.defaultStatus: EntityStatus by lazyMetadata(RegularEntity::createDefaultStatus)
 
 /**
  * The current base status, not modified by environmental conditions.
  */
+@ExperimentalIntelliMobApi
 public actual val RegularEntity.baseStatus: EntityStatus by lazyMetadata(RegularEntity::createBaseStatus)
 
 /**
  * The intelligence which visualizes the world to realize movement [Wishes] from the [Brain] using the [EntityControls].
  */
+@ExperimentalIntelliMobApi
 public actual val RegularEntity.pathFinder: PathFinder by lazyMetadata(RegularEntity::createPathFinder)
 
 /**
  * Wraps a PowerNukkit entity object and tag it as a regular entity.
  */
+@ExperimentalIntelliMobApi
 public inline class PowerEntityWrapper(override val powerNukkitEntity: Entity): RegularEntity {
     override fun setMetadata(metadataKey: String?, newMetadataValue: MetadataValue?): Unit = powerNukkitEntity.setMetadata(metadataKey, newMetadataValue)
     override fun getMetadata(metadataKey: String?): List<MetadataValue> = powerNukkitEntity.getMetadata(metadataKey)
@@ -88,4 +99,5 @@ public inline class PowerEntityWrapper(override val powerNukkitEntity: Entity): 
 /**
  * Gets an IntelliMob representation of this entity
  */
+@ExperimentalIntelliMobApi
 public inline fun Entity.asRegularEntity(): RegularEntity = PowerEntityWrapper(this)

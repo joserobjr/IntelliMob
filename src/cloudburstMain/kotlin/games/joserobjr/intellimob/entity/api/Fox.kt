@@ -17,14 +17,19 @@
  *
  */
 
-package games.joserobjr.intellimob.control
+package games.joserobjr.intellimob.entity.api
 
 import games.joserobjr.intellimob.annotation.ExperimentalIntelliMobApi
-import games.joserobjr.intellimob.entity.RegularEntity
+import games.joserobjr.intellimob.entity.PlatformEntityType
+import org.cloudburstmc.server.entity.Entity
 
 /**
  * @author joserobjr
- * @since 2021-01-11
+ * @since 2021-01-12
  */
 @ExperimentalIntelliMobApi
-internal class SquidControls(entity: RegularEntity): AbstractEntityControls(entity)
+public interface Fox: Entity {
+    public companion object {
+        public val TYPE: PlatformEntityType<Fox> = PlatformEntityType.from("fox", Fox::class.java)
+    }
+}

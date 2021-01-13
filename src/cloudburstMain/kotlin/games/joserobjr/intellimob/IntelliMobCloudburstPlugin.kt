@@ -20,11 +20,15 @@
 package games.joserobjr.intellimob
 
 import com.google.inject.Inject
+import games.joserobjr.intellimob.annotation.ExperimentalIntelliMobApi
+import games.joserobjr.intellimob.entity.api.Fox
+import games.joserobjr.intellimob.entity.impl.EntityFox
 import org.cloudburstmc.server.event.Listener
 import org.cloudburstmc.server.event.server.ServerInitializationEvent
 import org.cloudburstmc.server.plugin.Plugin
 import org.cloudburstmc.server.plugin.PluginContainer
 import org.cloudburstmc.server.plugin.PluginDescription
+import org.cloudburstmc.server.registry.EntityRegistry
 import org.slf4j.Logger
 import java.nio.file.Path
 
@@ -38,6 +42,7 @@ import java.nio.file.Path
     version = "0.1.0-SNAPSHOT",
     authors = ["joserobjr@powernukkit.org"]
 )
+@OptIn(ExperimentalIntelliMobApi::class)
 internal class IntelliMobCloudburstPlugin @Inject constructor(
     private val description: PluginDescription,
     private val logger: Logger,
@@ -45,8 +50,10 @@ internal class IntelliMobCloudburstPlugin @Inject constructor(
     internal val container: PluginContainer
 ) {
     @Listener
-    internal fun onLoad(event: ServerInitializationEvent) {
-        
+    internal fun onLoad(@Suppress("UNUSED_PARAMETER") event: ServerInitializationEvent) {
+        with(EntityRegistry.get()) {
+            register(container, Fox.TYPE, ::EntityFox, 2000, false)
+        }
     }
     
     companion object {

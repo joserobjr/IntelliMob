@@ -19,8 +19,11 @@
 
 package games.joserobjr.intellimob.entity.status
 
+import games.joserobjr.intellimob.annotation.ExperimentalIntelliMobApi
+
 /**
  * @author joserobjr
  * @since 2021-01-11
  */
+@ExperimentalIntelliMobApi
 internal class ImmutableEntityStatusView(private val root: EntityStatus): EntityStatus by root

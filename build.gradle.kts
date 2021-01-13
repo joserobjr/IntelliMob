@@ -111,7 +111,10 @@ kotlin {
             }
         }
         all {
-            languageSettings.enableLanguageFeature("InlineClasses")
+            with(languageSettings) {
+                enableLanguageFeature("InlineClasses")
+                useExperimentalAnnotation("kotlin.RequiresOptIn")
+            }
             explicitApi()
         }
     }

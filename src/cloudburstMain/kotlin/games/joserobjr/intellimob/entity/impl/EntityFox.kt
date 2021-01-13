@@ -17,14 +17,26 @@
  *
  */
 
-package games.joserobjr.intellimob.control
+package games.joserobjr.intellimob.entity.impl
 
 import games.joserobjr.intellimob.annotation.ExperimentalIntelliMobApi
-import games.joserobjr.intellimob.entity.RegularEntity
+import games.joserobjr.intellimob.entity.api.Fox
+import org.cloudburstmc.server.entity.EntityType
+import org.cloudburstmc.server.entity.impl.passive.Animal
+import org.cloudburstmc.server.level.Location
 
 /**
  * @author joserobjr
- * @since 2021-01-11
+ * @since 2021-01-12
  */
 @ExperimentalIntelliMobApi
-internal class SquidControls(entity: RegularEntity): AbstractEntityControls(entity)
+internal class EntityFox(type: EntityType<*>?, location: Location?) : Animal(type, location), Fox {
+    override fun initEntity() {
+        super.initEntity()
+        maxHealth = 20
+    }
+
+    override fun getName(): String = "Fox"
+    override fun getWidth(): Float = 0.7f
+    override fun getHeight(): Float = 0.6f
+}

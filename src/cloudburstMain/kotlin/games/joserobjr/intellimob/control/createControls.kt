@@ -19,6 +19,7 @@
 
 package games.joserobjr.intellimob.control
 
+import games.joserobjr.intellimob.annotation.ExperimentalIntelliMobApi
 import games.joserobjr.intellimob.entity.RegularEntity
 import org.cloudburstmc.server.entity.passive.Squid
 
@@ -26,6 +27,7 @@ import org.cloudburstmc.server.entity.passive.Squid
  * @author joserobjr
  * @since 2021-01-11
  */
+@ExperimentalIntelliMobApi
 internal fun RegularEntity.createControls(): EntityControls {
     return when(this) {
         is Squid -> SquidControls(this)

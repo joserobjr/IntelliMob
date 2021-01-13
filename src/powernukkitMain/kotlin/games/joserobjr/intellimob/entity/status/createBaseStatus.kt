@@ -19,12 +19,14 @@
 
 package games.joserobjr.intellimob.entity.status
 
+import games.joserobjr.intellimob.annotation.ExperimentalIntelliMobApi
 import games.joserobjr.intellimob.entity.RegularEntity
 
 /**
  * @author joserobjr
  * @since 2021-01-11
  */
+@ExperimentalIntelliMobApi
 internal fun RegularEntity.createBaseStatus(): EntityStatus {
     TODO()
 }

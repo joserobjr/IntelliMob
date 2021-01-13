@@ -19,15 +19,20 @@
 
 package games.joserobjr.intellimob
 
+import cn.nukkit.entity.Entity
 import cn.nukkit.plugin.PluginBase
+import games.joserobjr.intellimob.annotation.ExperimentalIntelliMobApi
+import games.joserobjr.intellimob.entity.EntityIronGolem
 
 /**
  * @author joserobjr
  * @since 2021-01-11
  */
+@OptIn(ExperimentalIntelliMobApi::class)
 internal class IntelliMobPowerNukkitPlugin: PluginBase() {
     override fun onEnable() {
         instance = this
+        Entity.registerEntity("IronGolem", EntityIronGolem::class.java)
     }
     
     companion object {

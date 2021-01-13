@@ -19,6 +19,7 @@
 
 package games.joserobjr.intellimob.control
 
+import games.joserobjr.intellimob.annotation.ExperimentalIntelliMobApi
 import games.joserobjr.intellimob.entity.RegularEntity
 import games.joserobjr.intellimob.entity.defaultStatus
 import games.joserobjr.intellimob.entity.status.EntityStatus
@@ -28,6 +29,7 @@ import games.joserobjr.intellimob.entity.status.MutableEntityStatus
  * @author joserobjr
  * @since 2021-01-11
  */
+@ExperimentalIntelliMobApi
 public abstract class AbstractEntityControls(entity: RegularEntity) : NoEntityControls(entity) {
     protected val mutableStatus: MutableEntityStatus = entity.defaultStatus.toMutable()
     final override val currentStatus: EntityStatus = mutableStatus.asImmutableView()

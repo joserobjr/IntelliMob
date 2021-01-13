@@ -19,12 +19,12 @@
 
 package games.joserobjr.intellimob.entity
 
-import games.joserobjr.intellimob.control.EntityControls
-import games.joserobjr.intellimob.pathfinding.PathFinder
+import games.joserobjr.intellimob.annotation.ExperimentalIntelliMobApi
 import games.joserobjr.intellimob.brain.Brain
 import games.joserobjr.intellimob.brain.wish.Wishes
+import games.joserobjr.intellimob.control.EntityControls
 import games.joserobjr.intellimob.entity.status.EntityStatus
-import games.joserobjr.intellimob.entity.status.MutableEntityStatus
+import games.joserobjr.intellimob.pathfinding.PathFinder
 
 /**
  * The root interface which compose the entities, with or without IntelliMob AI. 
@@ -32,29 +32,38 @@ import games.joserobjr.intellimob.entity.status.MutableEntityStatus
  * @author joserobjr
  * @since 2021-01-11
  */
+@ExperimentalIntelliMobApi
 public expect interface RegularEntity
+
+@ExperimentalIntelliMobApi
+public expect val RegularEntity.entityType: EntityType
 
 /**
  * Allows to apply physical movements to the entity.
  */
+@ExperimentalIntelliMobApi
 public expect val RegularEntity.controls: EntityControls
 
 /**
  * Hold and process all intelligence stuff which doesn't require physical interactions.
  */
+@ExperimentalIntelliMobApi
 public expect val RegularEntity.brain: Brain
 
 /**
  * The default status based on the entity type.
  */
+@ExperimentalIntelliMobApi
 public expect val RegularEntity.defaultStatus: EntityStatus
 
 /**
  * The current base status, not modified by environmental conditions.
  */
+@ExperimentalIntelliMobApi
 public expect val RegularEntity.baseStatus: EntityStatus
 
 /**
  * The intelligence which visualizes the world to realize movement [Wishes] from the [Brain] using the [EntityControls].
  */
+@ExperimentalIntelliMobApi
 public expect val RegularEntity.pathFinder: PathFinder

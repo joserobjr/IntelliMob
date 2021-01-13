@@ -17,14 +17,20 @@
  *
  */
 
-package games.joserobjr.intellimob.control
+package games.joserobjr.intellimob.entity.api
 
 import games.joserobjr.intellimob.annotation.ExperimentalIntelliMobApi
-import games.joserobjr.intellimob.entity.RegularEntity
+import games.joserobjr.intellimob.entity.PlatformEntityType
+import org.cloudburstmc.server.entity.Entity
+import org.cloudburstmc.server.entity.EntityType
 
 /**
  * @author joserobjr
- * @since 2021-01-11
+ * @since 2021-01-12
  */
 @ExperimentalIntelliMobApi
-internal class SquidControls(entity: RegularEntity): AbstractEntityControls(entity)
+public interface Zoglin: Entity {
+    public companion object {
+        public val TYPE: EntityType<Zoglin> = PlatformEntityType.from("zoglin", Zoglin::class.java)
+    }
+}

@@ -17,14 +17,12 @@
  *
  */
 
-package games.joserobjr.intellimob.control
+package games.joserobjr.intellimob.entity
 
-import games.joserobjr.intellimob.annotation.ExperimentalIntelliMobApi
-import games.joserobjr.intellimob.entity.RegularEntity
+import org.cloudburstmc.server.entity.EntityType
 
 /**
  * @author joserobjr
- * @since 2021-01-11
+ * @since 2021-01-12
  */
-@ExperimentalIntelliMobApi
-internal class SquidControls(entity: RegularEntity): AbstractEntityControls(entity)
+internal typealias PlatformEntityType<T> = EntityType<T>
