@@ -17,6 +17,9 @@
  *
  */
 
+import java.util.zip.ZipEntry
+import java.util.zip.ZipOutputStream
+
 plugins {
     kotlin("multiplatform") version "1.4.21"
 }
@@ -87,7 +90,9 @@ kotlin {
         }
         val gomintMain by getting {
             dependencies {
-                implementation("io.gomint:gomint-api:${findProperty("gomint.version")}")
+                val gomintVersion = findProperty("gomint.version")
+                implementation("io.gomint:gomint-api:$gomintVersion")
+                runtimeOnly("io.gomint:gomint-server:$gomintVersion")
                 implementation(kotlin("reflect"))
             }
         }
@@ -117,5 +122,136 @@ kotlin {
             }
             explicitApi()
         }
+    }
+}
+
+tasks {
+    fun findFileInResources(sourceSetName: String, fileName: String) =
+        kotlin.sourceSets.getByName(sourceSetName).resources.srcDirs.asSequence()
+            .map { it.resolve(fileName) }
+            .first { it.isFile }
+    
+    fun createSingleFileJar(jarFile: File, entryFile: File) {
+        jarFile.outputStream().use { out ->
+            ZipOutputStream(out).use { zip ->
+                zip.putNextEntry(ZipEntry(entryFile.name))
+                entryFile.inputStream().use { input ->
+                    input.copyTo(zip)
+                }
+                zip.closeEntry()
+            }
+        }
+    }
+    
+    fun mkdirs(file: File) {
+        check(file.isDirectory || file.mkdirs()) { "Failed to create $file" }
+    }
+    
+    val preparePowerNukkitRun by creating {
+        group = "build setup"
+        val pnPlugins = projectDir.resolve("run/powernukkit/plugins")
+        val pluginYml = findFileInResources("powernukkitMain", "plugin.yml")
+        val outputJar = pnPlugins.resolve("IntelliMob-PowerNukkit-debug.jar")
+        
+        inputs.file(pluginYml)
+        outputs.file(outputJar)
+        
+        doFirst {
+            mkdirs(pnPlugins)
+            createSingleFileJar(outputJar, pluginYml)
+        }
+    }
+    
+    create(name = "runPowerNukkit", type = JavaExec::class) {
+        dependsOn(preparePowerNukkitRun)
+        group = "debug"
+        main = "cn.nukkit.Nukkit"
+        workingDir = projectDir.resolve("run/powernukkit")
+        standardInput = System.`in`
+        
+        
+        classpath(objects.fileCollection().from(
+            named("compileKotlinPowernukkit"),
+            configurations.named("powernukkitRuntimeClasspath")
+        ))
+    }
+    
+    val gomintJar = getByName("gomintJar", Jar::class)
+    val prepareGoMintRun by creating {
+        dependsOn(gomintJar)
+        group = "build setup"
+        val pluginsDir = projectDir.resolve("run/gomint/plugins")
+        val outputJar = pluginsDir.resolve("IntelliMob-GoMint-debug.jar")
+
+        inputs.file(gomintJar.archiveFile)
+        outputs.file(outputJar)
+
+        doFirst {
+            mkdirs(pluginsDir)
+        }
+        
+        doLast {
+            copy {
+                from(gomintJar.archiveFile)
+                into(pluginsDir)
+            }
+        }
+    }
+
+    create(name = "runGoMint", type = JavaExec::class) {
+        dependsOn(prepareGoMintRun)
+        group = "debug"
+        main = "io.gomint.server.Bootstrap"
+        workingDir = projectDir.resolve("run/gomint")
+        standardInput = System.`in`
+        jvmArgs(
+            "-Dio.netty.buffer.checkBounds=false",
+            "--add-opens", "java.base/java.nio=io.netty.common",
+            "--add-exports", "java.base/jdk.internal.misc=io.netty.common"
+        )
+        
+        classpath(objects.fileCollection().from(
+            named("compileKotlinGomint"),
+            configurations.named("gomintRuntimeClasspath")
+        ))
+    }
+
+    val cloudburstJar = getByName("cloudburstJar", Jar::class)
+    val prepareCloudburstRun by creating {
+        dependsOn(cloudburstJar)
+        group = "build setup"
+        val pluginsDir = projectDir.resolve("run/cloudburst/plugins")
+        //val pluginYml = findFileInResources("cloudburstMain", "plugin.yml")
+        val outputJar = pluginsDir.resolve("IntelliMob-Cloudburst-debug.jar")
+
+        //inputs.file(pluginYml)
+        inputs.file(cloudburstJar.archiveFile)
+        outputs.file(outputJar)
+
+        doFirst {
+            mkdirs(pluginsDir)
+            //createSingleFileJar(outputJar, pluginYml)
+        }
+
+        doLast {
+            copy {
+                from(gomintJar.archiveFile)
+                into(pluginsDir)
+            }
+        }
+    }
+
+    create(name = "runCloudburst", type = JavaExec::class) {
+        dependsOn(prepareCloudburstRun)
+        group = "debug"
+        main = "org.cloudburstmc.server.Bootstrap"
+        workingDir = projectDir.resolve("run/cloudburst")
+        standardInput = System.`in`
+
+
+        classpath(objects.fileCollection().from(
+            named("compileKotlinCloudburst"),
+            configurations.named("cloudburstRuntimeClasspath")
+        ))
     }
 }

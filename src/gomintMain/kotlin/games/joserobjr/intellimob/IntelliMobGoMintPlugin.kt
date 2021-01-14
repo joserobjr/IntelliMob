@@ -19,9 +19,7 @@
 
 package games.joserobjr.intellimob
 
-import io.gomint.plugin.Plugin
-import io.gomint.plugin.PluginName
-import io.gomint.plugin.Version
+import io.gomint.plugin.*
 
 /**
  * @author joserobjr
@@ -29,9 +27,11 @@ import io.gomint.plugin.Version
  */
 @PluginName("IntelliMob")
 @Version(major = 0, minor = 1)
+@Startup(StartupPriority.STARTUP)
 internal class IntelliMobGoMintPlugin: Plugin() {
     override fun onInstall() {
         instance = this
+        logger.info("Hello world")
     }
     
     companion object {

@@ -51,6 +51,7 @@ internal class IntelliMobCloudburstPlugin @Inject constructor(
 ) {
     @Listener
     internal fun onLoad(@Suppress("UNUSED_PARAMETER") event: ServerInitializationEvent) {
+        logger.info("Hello World")
         with(EntityRegistry.get()) {
             register(container, Fox.TYPE, ::EntityFox, 2000, false)
         }
