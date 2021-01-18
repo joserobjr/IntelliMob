@@ -23,6 +23,7 @@ import games.joserobjr.intellimob.brain.Brain
 import games.joserobjr.intellimob.brain.wish.Wishes
 import games.joserobjr.intellimob.control.EntityControls
 import games.joserobjr.intellimob.entity.status.EntityStatus
+import games.joserobjr.intellimob.math.EntityPos
 import games.joserobjr.intellimob.pathfinding.PathFinder
 import games.joserobjr.intellimob.trait.WithBoundingBox
 import games.joserobjr.intellimob.trait.WithEntityLocation
@@ -64,6 +65,8 @@ internal actual interface RegularEntity: WithEntityLocation, WithTimeSource, Wit
      * The intelligence which visualizes the world to realize movement [Wishes] from the [Brain] using the [EntityControls].
      */
     actual val pathFinder: PathFinder
+
+    actual override val position: EntityPos
 
     actual suspend fun createSnapshot(): EntitySnapshot
 }

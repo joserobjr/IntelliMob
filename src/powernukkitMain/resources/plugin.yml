@@ -6,5 +6,5 @@ load: STARTUP
 author: joserobjr
 website: https://github.com/joserobjr/IntelliMob
 description: Giving intelligence to mobs on Minecraft Bedrock Edition servers written in Java
-softdepend:
+depend:
   - PowerNukkit

@@ -28,6 +28,7 @@ import games.joserobjr.intellimob.control.EntityControls
 import games.joserobjr.intellimob.entity.status.EntityStatus
 import games.joserobjr.intellimob.math.EntityPos
 import games.joserobjr.intellimob.pathfinding.PathFinder
+import games.joserobjr.intellimob.trait.WithBoundingBox
 import games.joserobjr.intellimob.trait.WithEntityLocation
 import games.joserobjr.intellimob.trait.WithTimeSource
 
@@ -37,7 +38,7 @@ import games.joserobjr.intellimob.trait.WithTimeSource
  * @author joserobjr
  * @since 2021-01-11
  */
-internal actual interface RegularEntity: WithEntityLocation, WithTimeSource {
+internal actual interface RegularEntity: WithEntityLocation, WithTimeSource, WithBoundingBox {
     /**
      * The PowerNukkit entity which this interface represents.
      */

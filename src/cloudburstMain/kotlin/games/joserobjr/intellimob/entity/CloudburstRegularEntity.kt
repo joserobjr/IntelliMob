@@ -48,7 +48,7 @@ internal class CloudburstRegularEntity(override val cloudburstEntity: Entity) : 
     override val brain: Brain by lazy { createBrain() }
     override val baseStatus: EntityStatus by lazy { createBaseStatus() }
     override val pathFinder: PathFinder by lazy { createPathFinder() }
-    override val position: IEntityPos get() = cloudburstEntity.position.toEntityPos()
+    override val position: EntityPos get() = cloudburstEntity.position.toEntityPos()
     override val world: World get() = cloudburstEntity.level.asIntelliMobWorld()
     override val boundingBox: BoundingBox get() = cloudburstEntity.boundingBox.toIntelliMobBoundingBox()
     

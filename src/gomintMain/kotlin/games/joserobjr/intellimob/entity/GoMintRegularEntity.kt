@@ -43,8 +43,7 @@ internal class GoMintRegularEntity<E>(override val goMintEntity: Entity<E>) : Re
     override val brain: Brain by lazy { createBrain() }
     override val baseStatus: EntityStatus by lazy { createBaseStatus() }
     override val pathFinder: PathFinder by lazy { createPathFinder() }
-    override val position: IEntityPos
-        get() = with(goMintEntity) { EntityPos(positionX(), positionY(), positionZ()) }
+    override val position: EntityPos get() = with(goMintEntity) { EntityPos(positionX(), positionY(), positionZ()) }
     override val world: World get() = goMintEntity.world().asIntelliMobWorld()
     override val boundingBox: BoundingBox get() = goMintEntity.boundingBox().toIntelliMobBoundingBox()
     

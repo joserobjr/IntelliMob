@@ -20,8 +20,8 @@
 package games.joserobjr.intellimob.timesource
 
 import games.joserobjr.intellimob.trait.WithTimeSource
-import kotlinx.atomicfu.atomic
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicLong
 import kotlin.time.AbstractLongTimeSource
 import kotlin.time.ExperimentalTime
 import kotlin.time.TimeSource
@@ -32,15 +32,14 @@ import kotlin.time.TimeSource
  */
 @ExperimentalTime
 internal object ServerTickTimeSource: AbstractLongTimeSource(TimeUnit.MILLISECONDS), WithTimeSource {
-    private val currentTickAtomic = atomic(0L)
-    val currentTick by currentTickAtomic
+    private val currentTickAtomic = AtomicLong()
     
     fun increment(ticks: Long = 1L): Long {
         require(ticks > 0L) { "Ticks must be positive. Got $ticks" }
         return currentTickAtomic.addAndGet(ticks)
     }
     
-    override fun read() = currentTick * 50
+    override fun read() = currentTickAtomic.get() * 50
 
     @ExperimentalTime
     override val timeSource: TimeSource get() = this

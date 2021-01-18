@@ -17,22 +17,10 @@
  *
  */
 
-package games.joserobjr.intellimob.block
+repositories {
+    mavenCentral()
+}
 
-import games.joserobjr.intellimob.math.BlockLocation
-import games.joserobjr.intellimob.math.IBlockPos
-import games.joserobjr.intellimob.trait.WithBlockLocation
-import games.joserobjr.intellimob.world.World
-
-/**
- * @author joserobjr
- * @since 2021-01-17
- */
-internal data class BlockSnapshot (
-    override val location: BlockLocation,
-    val states: LayeredBlockState,
-    val blockEntity: BlockEntitySnapshot? = null,
-): WithBlockLocation {
-    override val position: IBlockPos get() = location
-    override val world: World get() = location.world
+dependencies {
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.4.21")
 }

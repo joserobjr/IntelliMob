@@ -27,10 +27,7 @@ import games.joserobjr.intellimob.control.createControls
 import games.joserobjr.intellimob.coroutines.Sync
 import games.joserobjr.intellimob.entity.status.EntityStatus
 import games.joserobjr.intellimob.entity.status.createBaseStatus
-import games.joserobjr.intellimob.math.EntityLocation
-import games.joserobjr.intellimob.math.EntityPos
-import games.joserobjr.intellimob.math.PitchYaw
-import games.joserobjr.intellimob.math.asEntityPos
+import games.joserobjr.intellimob.math.*
 import games.joserobjr.intellimob.pathfinder.createPathFinder
 import games.joserobjr.intellimob.pathfinding.PathFinder
 import games.joserobjr.intellimob.timesource.ServerTickTimeSource
@@ -52,6 +49,7 @@ internal class PowerEntityRegularEntity(override val powerNukkitEntity: Entity) 
     override val pathFinder: PathFinder by lazy { createPathFinder() }
     override val position: EntityPos get() = powerNukkitEntity.asEntityPos()
     override val world: World get() = powerNukkitEntity.level.asIntelliMobWorld()
+    override val boundingBox: BoundingBox get() = powerNukkitEntity.boundingBox?.toIntelliMobBoundingBox() ?: BoundingBox.EMPTY
     private var _currentStatus: EntityStatus? = null
     public override var currentStatus: EntityStatus
         get() {
