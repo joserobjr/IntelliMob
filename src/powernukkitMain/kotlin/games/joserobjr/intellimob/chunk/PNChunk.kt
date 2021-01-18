@@ -17,6 +17,8 @@
  *
  */
 
+@file:Suppress("NOTHING_TO_INLINE")
+
 package games.joserobjr.intellimob.chunk
 
 import cn.nukkit.level.format.Chunk
@@ -26,3 +28,7 @@ import cn.nukkit.level.format.Chunk
  * @since 2021-01-18
  */
 internal typealias PNChunk = Chunk
+
+internal inline fun PNChunk.asRegularChunk(): RegularChunk {
+    return PowerNukkitChunk(this)
+}

@@ -29,7 +29,7 @@ import games.joserobjr.intellimob.entity.status.createBaseStatus
 import games.joserobjr.intellimob.math.*
 import games.joserobjr.intellimob.pathfinder.createPathFinder
 import games.joserobjr.intellimob.pathfinding.PathFinder
-import games.joserobjr.intellimob.world.World
+import games.joserobjr.intellimob.world.RegularWorld
 import games.joserobjr.intellimob.world.asIntelliMobWorld
 import io.gomint.entity.Entity
 import kotlinx.coroutines.Dispatchers
@@ -37,14 +37,15 @@ import kotlinx.coroutines.withContext
 import kotlin.time.ExperimentalTime
 import kotlin.time.TimeSource
 
-internal class GoMintRegularEntity<E>(override val goMintEntity: Entity<E>) : RegularEntity {
+internal class GoMintEntity<E>(override val goMintEntity: Entity<E>) : RegularEntity {
     override val type: EntityType by lazy { EntityType.fromEntity(this) }
     override val controls: EntityControls by lazy { createControls() }
     override val brain: Brain by lazy { createBrain() }
     override val baseStatus: EntityStatus by lazy { createBaseStatus() }
     override val pathFinder: PathFinder by lazy { createPathFinder() }
     override val position: EntityPos get() = with(goMintEntity) { EntityPos(positionX(), positionY(), positionZ()) }
-    override val world: World get() = goMintEntity.world().asIntelliMobWorld()
+    override val eyePosition: EntityPos get() = with(goMintEntity) { EntityPos(positionX(), positionY() + eyeHeight(), positionZ()) }
+    override val world: RegularWorld get() = goMintEntity.world().asIntelliMobWorld()
     override val boundingBox: BoundingBox get() = goMintEntity.boundingBox().toIntelliMobBoundingBox()
     
     @ExperimentalTime
@@ -68,5 +69,9 @@ internal class GoMintRegularEntity<E>(override val goMintEntity: Entity<E>) : Re
                 status = currentStatus
             )
         }
+    }
+
+    override suspend fun isEyeUnderWater(): Boolean {
+        TODO("Not yet implemented")
     }
 }

@@ -17,12 +17,25 @@
  *
  */
 
+@file:Suppress("NOTHING_TO_INLINE")
+
 package games.joserobjr.intellimob.world
 
-import io.gomint.world.World
+import games.joserobjr.intellimob.coroutines.Sync
+import games.joserobjr.intellimob.timesource.ServerTickTimeSource
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlin.time.ExperimentalTime
+import kotlin.time.TimeSource
 
 /**
  * @author joserobjr
  * @since 2021-01-17
  */
-internal typealias GoMintWorld = World
+internal inline class GoMintWorld(override val goMintWorld: GMWorld): RegularWorld {
+    override val world: RegularWorld get() = this
+    
+    @ExperimentalTime
+    override val timeSource: TimeSource get() = ServerTickTimeSource
+    override val updateDispatcher: CoroutineDispatcher get() = Dispatchers.Sync
+}

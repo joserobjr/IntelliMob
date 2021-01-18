@@ -27,5 +27,5 @@ import games.joserobjr.intellimob.brain.wish.Wishes
  * @since 2021-01-17
  */
 internal abstract class Goal {
-    public abstract suspend fun Wishes.execute(brain: Brain)
+    abstract suspend fun Wishes.execute(brain: Brain)
 }

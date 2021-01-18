@@ -28,6 +28,6 @@ import games.joserobjr.intellimob.brain.wish.Wishes
  */
 internal class SwimUpGoal: Goal() {
     override suspend fun Wishes.execute(brain: Brain) {
-        brain.owner.world
+        //brain.owner.isInWater()
     }
 }

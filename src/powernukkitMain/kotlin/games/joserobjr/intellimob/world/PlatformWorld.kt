@@ -17,34 +17,16 @@
  *
  */
 
-@file:Suppress("NOTHING_TO_INLINE")
-
 package games.joserobjr.intellimob.world
 
-import games.joserobjr.intellimob.coroutines.Sync
-import games.joserobjr.intellimob.timesource.ServerTickTimeSource
-import games.joserobjr.intellimob.trait.WithTimeSource
-import games.joserobjr.intellimob.trait.WithWorld
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
-import kotlin.time.ExperimentalTime
-import kotlin.time.TimeSource
+import cn.nukkit.level.Level
 
 /**
  * @author joserobjr
- * @since 2021-01-17
+ * @since 2021-01-18
  */
-internal actual interface World: WithWorld, WithTimeSource {
-    val goMintWorld: GoMintWorld
-}
-
-internal inline class GoMintWorldWrapper(override val goMintWorld: GoMintWorld): World {
-    override val world: World get() = this
+internal actual interface PlatformWorld {
+    val powerNukkitLevel: Level
     
-    @ExperimentalTime
-    override val timeSource: TimeSource get() = ServerTickTimeSource
+    actual val regularWorld: RegularWorld
 }
-
-internal inline fun GoMintWorld.asIntelliMobWorld(): World = GoMintWorldWrapper(this)
-
-internal actual val World.updateDispatcher: CoroutineDispatcher get() = Dispatchers.Sync

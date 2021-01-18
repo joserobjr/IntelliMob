@@ -35,7 +35,7 @@ import games.joserobjr.intellimob.trait.WithTimeSource
  * @author joserobjr
  * @since 2021-01-11
  */
-internal expect interface RegularEntity: WithEntityLocation, WithTimeSource, WithBoundingBox {
+internal interface RegularEntity: PlatformEntity, WithEntityLocation, WithTimeSource, WithBoundingBox {
     val type: EntityType
 
     /**
@@ -65,5 +65,11 @@ internal expect interface RegularEntity: WithEntityLocation, WithTimeSource, Wit
 
     override val position: EntityPos
     
+    val eyePosition: EntityPos
+    
     suspend fun createSnapshot(): EntitySnapshot
+    
+    suspend fun isEyeUnderWater(): Boolean
+
+    override val regularEntity: RegularEntity get() = this
 }

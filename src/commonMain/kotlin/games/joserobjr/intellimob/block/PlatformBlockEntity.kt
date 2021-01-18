@@ -17,16 +17,12 @@
  *
  */
 
-package games.joserobjr.intellimob.world
-
-import games.joserobjr.intellimob.trait.WithTimeSource
-import games.joserobjr.intellimob.trait.WithWorld
-import kotlinx.coroutines.CoroutineDispatcher
+package games.joserobjr.intellimob.block
 
 /**
  * @author joserobjr
- * @since 2021-01-17
+ * @since 2021-01-18
  */
-internal expect interface World: WithWorld, WithTimeSource
-
-internal expect val World.updateDispatcher: CoroutineDispatcher
+internal expect interface PlatformBlockEntity {
+    val regularBlockEntity: RegularBlockEntity
+}

@@ -17,6 +17,8 @@
  *
  */
 
+@file:Suppress("NOTHING_TO_INLINE")
+
 package games.joserobjr.intellimob.chunk
 
 import org.cloudburstmc.server.level.chunk.Chunk
@@ -26,3 +28,7 @@ import org.cloudburstmc.server.level.chunk.Chunk
  * @since 2021-01-18
  */
 internal typealias CBChunk = Chunk
+
+internal inline fun CBChunk.asRegularChunk(): RegularChunk {
+    return CloudburstRegularChunk(this)
+}

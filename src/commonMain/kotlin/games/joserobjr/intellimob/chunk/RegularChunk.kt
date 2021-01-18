@@ -33,7 +33,7 @@ import kotlinx.coroutines.CoroutineDispatcher
  * @author joserobjr
  * @since 2021-01-17
  */
-internal expect interface RegularChunk: WithWorld {
+internal interface RegularChunk: PlatformChunk, WithWorld {
     val updateDispatcher: CoroutineDispatcher
     val position: ChunkPos
     suspend fun getEntitySnapshots(): List<EntitySnapshot>
@@ -42,4 +42,5 @@ internal expect interface RegularChunk: WithWorld {
     suspend fun getBlockEntity(pos: IBlockPos): RegularBlockEntity?
     suspend fun setBlockState(pos: IBlockPos, blockState: BlockState, layer: Int = 0)
     suspend fun createBlockSnapshot(pos: IBlockPos, includeBlockEntity: Boolean = false): BlockSnapshot
+    override val regularChunk: RegularChunk get() = this
 }

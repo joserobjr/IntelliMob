@@ -22,37 +22,34 @@ package games.joserobjr.intellimob.block
 import games.joserobjr.intellimob.math.BlockLocation
 import games.joserobjr.intellimob.math.BoundingBox
 import games.joserobjr.intellimob.math.toVector3i
-import games.joserobjr.intellimob.trait.WithBlockLocation
-import games.joserobjr.intellimob.trait.WithBlockPosWorldByLocation
-import games.joserobjr.intellimob.world.updateDispatcher
 import kotlinx.coroutines.withContext
 
 /**
  * @author joserobjr
  * @since 2021-01-17
  */
-internal actual class RegularBlock(override val location: BlockLocation): WithBlockLocation, WithBlockPosWorldByLocation {
-    actual suspend fun currentState(layer: Int): BlockState {
+internal class CloudburstBlock(override val location: BlockLocation): RegularBlock {
+    override suspend fun currentState(layer: Int): BlockState {
         return with(location) {
             world.cloudburstWorld.getBlock(x, y, z).getState(layer).asIntelliMobBlockState()
         }
     }
-    
-    actual suspend fun currentStates(): LayeredBlockState = withContext(world.updateDispatcher) {
+
+    override suspend fun currentStates(): LayeredBlockState = withContext(world.updateDispatcher) {
         with(location) {
             world.cloudburstWorld.getBlock(x, y, z).toLayeredBlockState()
         }
     }
-    
-    actual suspend fun currentBlockEntity(): RegularBlockEntity? {
+
+    override suspend fun currentBlockEntity(): RegularBlockEntity? {
         return world.cloudburstWorld.getBlockEntity(location.toVector3i())?.asRegularBlockEntity()
     }
 
-    actual suspend fun currentBoundingBox(): BoundingBox {
+    override suspend fun currentBoundingBox(): BoundingBox {
         return currentState(1).boundingBox + location
     }
-    
-    actual suspend fun createSnapshot(includeBlockEntity: Boolean): BlockSnapshot {
+
+    override suspend fun createSnapshot(includeBlockEntity: Boolean): BlockSnapshot {
         val level = world.cloudburstWorld
         return if (includeBlockEntity) {
             withContext(world.updateDispatcher) {

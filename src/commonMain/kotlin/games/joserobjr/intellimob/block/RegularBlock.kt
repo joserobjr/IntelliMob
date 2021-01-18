@@ -19,7 +19,6 @@
 
 package games.joserobjr.intellimob.block
 
-import games.joserobjr.intellimob.math.BlockLocation
 import games.joserobjr.intellimob.math.BoundingBox
 import games.joserobjr.intellimob.trait.WithBlockLocation
 
@@ -27,10 +26,11 @@ import games.joserobjr.intellimob.trait.WithBlockLocation
  * @author joserobjr
  * @since 2021-01-17
  */
-internal expect class RegularBlock: WithBlockLocation {
+internal interface RegularBlock: PlatformBlock, WithBlockLocation {
     suspend fun currentState(layer: Int = 0): BlockState
     suspend fun currentStates(): LayeredBlockState
     suspend fun currentBlockEntity(): RegularBlockEntity?
     suspend fun createSnapshot(includeBlockEntity: Boolean = false): BlockSnapshot
     suspend fun currentBoundingBox(): BoundingBox
+    override val regularBlock: RegularBlock get() = this
 }

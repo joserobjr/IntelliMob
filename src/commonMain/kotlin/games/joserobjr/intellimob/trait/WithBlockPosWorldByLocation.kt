@@ -21,7 +21,7 @@ package games.joserobjr.intellimob.trait
 
 import games.joserobjr.intellimob.math.BlockLocation
 import games.joserobjr.intellimob.math.IBlockPos
-import games.joserobjr.intellimob.world.World
+import games.joserobjr.intellimob.world.RegularWorld
 
 /**
  * @author joserobjr
@@ -30,5 +30,5 @@ import games.joserobjr.intellimob.world.World
 internal interface WithBlockPosWorldByLocation: WithBlockLocation {
     override val location: BlockLocation
     override val position: IBlockPos get() = location
-    override val world: World get() = location.world
+    override val world: RegularWorld get() = location.world
 }

@@ -19,31 +19,13 @@
 
 package games.joserobjr.intellimob.world
 
-import games.joserobjr.intellimob.coroutines.Sync
-import games.joserobjr.intellimob.timesource.ServerTickTimeSource
-import games.joserobjr.intellimob.trait.WithTimeSource
-import games.joserobjr.intellimob.trait.WithWorld
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import org.cloudburstmc.server.level.Level
-import kotlin.time.ExperimentalTime
-import kotlin.time.TimeSource
 
 /**
  * @author joserobjr
- * @since 2021-01-17
+ * @since 2021-01-18
  */
-internal actual interface World: WithWorld, WithTimeSource {
+internal actual interface PlatformWorld {
     val cloudburstWorld: Level
+    actual val regularWorld: RegularWorld
 }
-
-internal inline class ClourburstWorldWrapper(override val cloudburstWorld: Level): World {
-    override val world: World get() = this
-
-    @ExperimentalTime
-    override val timeSource: TimeSource get() = ServerTickTimeSource
-}
-
-internal fun Level.asIntelliMobWorld(): World = ClourburstWorldWrapper(this)
-
-internal actual val World.updateDispatcher: CoroutineDispatcher get() = Dispatchers.Sync

@@ -17,18 +17,12 @@
  *
  */
 
-package games.joserobjr.intellimob.block
-
-import games.joserobjr.intellimob.trait.WithBlockLocation
-import games.joserobjr.intellimob.trait.WithTimeSource
-import kotlinx.coroutines.CoroutineDispatcher
+package games.joserobjr.intellimob.chunk
 
 /**
  * @author joserobjr
- * @since 2021-01-17
+ * @since 2021-01-18
  */
-internal actual interface RegularBlockEntity: WithBlockLocation, WithTimeSource {
-    actual val updateDispatcher: CoroutineDispatcher
-    
-    actual suspend fun createSnapshot(): BlockEntitySnapshot
+internal expect interface PlatformChunk {
+    val regularChunk: RegularChunk
 }

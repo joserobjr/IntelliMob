@@ -17,6 +17,8 @@
  *
  */
 
+@file:Suppress("NOTHING_TO_INLINE")
+
 package games.joserobjr.intellimob.chunk
 
 import io.gomint.world.Chunk
@@ -26,3 +28,7 @@ import io.gomint.world.Chunk
  * @since 2021-01-18
  */
 internal typealias GMChunk = Chunk
+
+internal inline fun GMChunk.asRegularChunk(): RegularChunk {
+    return GoMintChunk(this)
+}

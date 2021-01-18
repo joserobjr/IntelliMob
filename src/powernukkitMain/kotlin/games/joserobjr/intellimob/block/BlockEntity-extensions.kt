@@ -27,4 +27,4 @@ import cn.nukkit.blockentity.BlockEntity
  * @author joserobjr
  * @since 2021-01-18
  */
-internal inline fun BlockEntity.asIntelliMobBlockEntity(): RegularBlockEntity = PowerNukkitRegularBlockEntity(this)
+internal inline fun BlockEntity.asIntelliMobBlockEntity(): RegularBlockEntity = PowerNukkitBlockEntity(this)

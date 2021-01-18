@@ -17,20 +17,12 @@
  *
  */
 
-package games.joserobjr.intellimob.math
+package games.joserobjr.intellimob.world
 
-import games.joserobjr.intellimob.trait.WithWorld
-import games.joserobjr.intellimob.world.RegularWorld
+import cn.nukkit.level.Level
 
 /**
  * @author joserobjr
- * @since 2021-01-17
+ * @since 2021-01-18
  */
-internal data class ChunkLocation (
-    override val world: RegularWorld,
-    override val x: Int,
-    override val z: Int
-): IChunkPos, WithWorld {
-    constructor(withWorld: WithWorld, pos: IChunkPos): this(withWorld.world, pos.x, pos.z)
-    constructor(withWorld: WithWorld, x: Int, z: Int): this(withWorld.world, x, z)
-}
+internal fun Level.asIntelliMobWorld(): RegularWorld = PowerNukkitRegularWorld(this)

@@ -21,14 +21,14 @@ package games.joserobjr.intellimob.math
 
 import games.joserobjr.intellimob.trait.WithEntityPos
 import games.joserobjr.intellimob.trait.WithWorld
-import games.joserobjr.intellimob.world.World
+import games.joserobjr.intellimob.world.RegularWorld
 
 /**
  * @author joserobjr
  * @since 2021-01-17
  */
 internal data class EntityLocation(
-    override val world: World,
+    override val world: RegularWorld,
     override val x: Double,
     override val y: Double,
     override val z: Double

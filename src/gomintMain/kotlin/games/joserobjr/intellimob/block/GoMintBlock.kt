@@ -21,9 +21,6 @@ package games.joserobjr.intellimob.block
 
 import games.joserobjr.intellimob.math.BlockLocation
 import games.joserobjr.intellimob.math.BoundingBox
-import games.joserobjr.intellimob.trait.WithBlockLocation
-import games.joserobjr.intellimob.trait.WithBlockPosWorldByLocation
-import games.joserobjr.intellimob.world.updateDispatcher
 import io.gomint.world.WorldLayer
 import io.gomint.world.block.Block
 import kotlinx.coroutines.withContext
@@ -32,8 +29,8 @@ import kotlinx.coroutines.withContext
  * @author joserobjr
  * @since 2021-01-17
  */
-internal actual class RegularBlock(override val location: BlockLocation): WithBlockLocation, WithBlockPosWorldByLocation {
-    actual suspend fun currentState(layer: Int): BlockState {
+internal class GoMintBlock(override val location: BlockLocation): RegularBlock {
+    override suspend fun currentState(layer: Int): BlockState {
         if (layer !in VALID_LAYERS) {
             return BlockState.AIR
         }
@@ -42,8 +39,8 @@ internal actual class RegularBlock(override val location: BlockLocation): WithBl
             world.goMintWorld.blockAt<Block>(x, y, z, layer.asWorldLayer()).asIntelliMobBlockState()
         }
     }
-    
-    actual suspend fun currentStates(): LayeredBlockState = withContext(world.updateDispatcher) {
+
+    override suspend fun currentStates(): LayeredBlockState = withContext(world.updateDispatcher) {
         with(location) {
             world.goMintWorld.run {
                 LayeredBlockState(
@@ -53,10 +50,10 @@ internal actual class RegularBlock(override val location: BlockLocation): WithBl
             }
         }
     }
-    
-    actual suspend fun currentBlockEntity(): RegularBlockEntity? = null
-    actual suspend fun currentBoundingBox(): BoundingBox = currentState(0).boundingBox
-    actual suspend fun createSnapshot(includeBlockEntity: Boolean): BlockSnapshot {
+
+    override suspend fun currentBlockEntity(): RegularBlockEntity? = null
+    override suspend fun currentBoundingBox(): BoundingBox = currentState(0).boundingBox
+    override suspend fun createSnapshot(includeBlockEntity: Boolean): BlockSnapshot {
         return BlockSnapshot(
             location = location,
             states = currentStates()

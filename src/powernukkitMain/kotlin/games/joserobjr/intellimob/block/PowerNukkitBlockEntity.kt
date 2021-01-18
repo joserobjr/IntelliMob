@@ -19,34 +19,35 @@
 
 package games.joserobjr.intellimob.block
 
+import cn.nukkit.blockentity.BlockEntity
+import games.joserobjr.intellimob.math.BlockPos
 import games.joserobjr.intellimob.math.IBlockPos
-import games.joserobjr.intellimob.math.toBlockPos
-import games.joserobjr.intellimob.world.World
+import games.joserobjr.intellimob.world.RegularWorld
 import games.joserobjr.intellimob.world.asIntelliMobWorld
-import games.joserobjr.intellimob.world.updateDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import org.cloudburstmc.server.blockentity.BlockEntity
 import kotlin.time.ExperimentalTime
 import kotlin.time.TimeSource
 
-internal inline class CloudburstBlockEntityWrapper(override val cloudburstBlockEntity: BlockEntity):
-    RegularBlockEntity {
+internal inline class PowerNukkitBlockEntity(override val powerNukkitEntity: BlockEntity): RegularBlockEntity {
     override val updateDispatcher: CoroutineDispatcher get() = world.updateDispatcher
-    override val position: IBlockPos get() = cloudburstBlockEntity.position.toBlockPos()
-    override val world: World get() = cloudburstBlockEntity.level.asIntelliMobWorld()
     
-    override suspend fun createSnapshot(): BlockEntitySnapshot = withContext(updateDispatcher) {
-        with(cloudburstBlockEntity) {
-            BlockEntitySnapshot(
-                location = location,
-                type = type,
-                content = serverTag
-            )
-        }
+    override val position: IBlockPos get() = with(powerNukkitEntity) {
+            BlockPos(x.toInt(), y.toInt(), z.toInt())
     }
 
+    override val world: RegularWorld get() = powerNukkitEntity.level.asIntelliMobWorld()
+
     @ExperimentalTime
-    override val timeSource: TimeSource
-        get() = world.timeSource
+    override val timeSource: TimeSource get() = world.timeSource
+
+    override suspend fun createSnapshot(): BlockEntitySnapshot = withContext(updateDispatcher) {
+        val entity = powerNukkitEntity
+        entity.saveNBT()
+        BlockEntitySnapshot(
+            location = location,
+            name = entity.name,
+            content = entity.namedTag.copy()
+        )
+    }
 }

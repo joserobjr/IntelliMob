@@ -17,20 +17,16 @@
  *
  */
 
-package games.joserobjr.intellimob.math
+@file:Suppress("NOTHING_TO_INLINE")
 
-import games.joserobjr.intellimob.trait.WithWorld
-import games.joserobjr.intellimob.world.RegularWorld
+package games.joserobjr.intellimob.world
+
+import io.gomint.world.World
 
 /**
  * @author joserobjr
  * @since 2021-01-17
  */
-internal data class ChunkLocation (
-    override val world: RegularWorld,
-    override val x: Int,
-    override val z: Int
-): IChunkPos, WithWorld {
-    constructor(withWorld: WithWorld, pos: IChunkPos): this(withWorld.world, pos.x, pos.z)
-    constructor(withWorld: WithWorld, x: Int, z: Int): this(withWorld.world, x, z)
-}
+internal typealias GMWorld = World
+
+internal inline fun GMWorld.asIntelliMobWorld(): RegularWorld = GoMintWorld(this)

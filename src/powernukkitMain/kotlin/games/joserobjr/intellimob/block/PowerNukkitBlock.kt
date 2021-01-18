@@ -23,27 +23,24 @@ import games.joserobjr.intellimob.math.BlockLocation
 import games.joserobjr.intellimob.math.BoundingBox
 import games.joserobjr.intellimob.math.asBlockVector3
 import games.joserobjr.intellimob.math.toIntelliMobBoundingBox
-import games.joserobjr.intellimob.trait.WithBlockLocation
-import games.joserobjr.intellimob.trait.WithBlockPosWorldByLocation
-import games.joserobjr.intellimob.world.updateDispatcher
 import kotlinx.coroutines.withContext
 
 /**
  * @author joserobjr
  * @since 2021-01-17
  */
-internal actual data class RegularBlock(
+internal data class PowerNukkitBlock(
     override val location: BlockLocation
-): WithBlockLocation, WithBlockPosWorldByLocation {
-    actual suspend fun currentState(layer: Int): BlockState {
+): RegularBlock {
+    override suspend fun currentState(layer: Int): BlockState {
         return world.powerNukkitLevel.getBlockStateAt(location.x, location.y, location.z, layer).asIntelliMobBlockState()
     }
-    
-    actual suspend fun currentBlockEntity(): RegularBlockEntity? { 
+
+    override suspend fun currentBlockEntity(): RegularBlockEntity? { 
         return world.powerNukkitLevel.getBlockEntity(position.asBlockVector3())?.asIntelliMobBlockEntity() 
     }
-    
-    actual suspend fun createSnapshot(includeBlockEntity: Boolean): BlockSnapshot = withContext(world.updateDispatcher) {
+
+    override suspend fun createSnapshot(includeBlockEntity: Boolean): BlockSnapshot = withContext(world.updateDispatcher) {
         BlockSnapshot(
             location = location,
             states = currentStates(),
@@ -51,11 +48,11 @@ internal actual data class RegularBlock(
         )
     }
 
-    actual suspend fun currentStates(): LayeredBlockState = withContext(world.updateDispatcher) {
+    override suspend fun currentStates(): LayeredBlockState = withContext(world.updateDispatcher) {
         LayeredBlockState(currentState(0), currentState(1))
     }
 
-    actual suspend fun currentBoundingBox(): BoundingBox = withContext(world.updateDispatcher) {
+    override suspend fun currentBoundingBox(): BoundingBox = withContext(world.updateDispatcher) {
         world.powerNukkitLevel.getBlock(location.x, location.y, location.z).boundingBox?.toIntelliMobBoundingBox()
             ?: BoundingBox.EMPTY + location
     }

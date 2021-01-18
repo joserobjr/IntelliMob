@@ -23,7 +23,7 @@ import games.joserobjr.intellimob.entity.status.EntityStatus
 import games.joserobjr.intellimob.math.EntityLocation
 import games.joserobjr.intellimob.math.PitchYaw
 import games.joserobjr.intellimob.trait.WithWorld
-import games.joserobjr.intellimob.world.World
+import games.joserobjr.intellimob.world.RegularWorld
 
 /**
  * @author joserobjr
@@ -35,5 +35,5 @@ internal data class EntitySnapshot (
     val pitchYaw: PitchYaw,
     val status: EntityStatus,
 ): WithWorld {
-    override val world: World get() = location.world
+    override val world: RegularWorld get() = location.world
 }

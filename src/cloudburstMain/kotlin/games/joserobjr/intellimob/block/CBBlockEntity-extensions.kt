@@ -28,5 +28,5 @@ import org.cloudburstmc.server.blockentity.BlockEntity
  * @since 2021-01-18
  */
 internal inline fun BlockEntity.asRegularBlockEntity(): RegularBlockEntity {
-    return CloudburstBlockEntityWrapper(this)
+    return CloudburstBlockEntity(this)
 }

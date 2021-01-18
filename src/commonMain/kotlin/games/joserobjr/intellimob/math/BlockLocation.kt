@@ -22,14 +22,14 @@ package games.joserobjr.intellimob.math
 import games.joserobjr.intellimob.trait.WithBlockLocation
 import games.joserobjr.intellimob.trait.WithBlockPos
 import games.joserobjr.intellimob.trait.WithWorld
-import games.joserobjr.intellimob.world.World
+import games.joserobjr.intellimob.world.RegularWorld
 
 /**
  * @author joserobjr
  * @since 2021-01-17
  */
 internal data class BlockLocation(
-    override val world: World,
+    override val world: RegularWorld,
     override val x: Int,
     override val y: Int,
     override val z: Int

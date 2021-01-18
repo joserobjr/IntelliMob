@@ -17,20 +17,17 @@
  *
  */
 
-package games.joserobjr.intellimob.math
+package games.joserobjr.intellimob.entity
 
-import games.joserobjr.intellimob.trait.WithWorld
-import games.joserobjr.intellimob.world.RegularWorld
+import org.cloudburstmc.server.entity.Entity
+
 
 /**
  * @author joserobjr
- * @since 2021-01-17
+ * @since 2021-01-18
  */
-internal data class ChunkLocation (
-    override val world: RegularWorld,
-    override val x: Int,
-    override val z: Int
-): IChunkPos, WithWorld {
-    constructor(withWorld: WithWorld, pos: IChunkPos): this(withWorld.world, pos.x, pos.z)
-    constructor(withWorld: WithWorld, x: Int, z: Int): this(withWorld.world, x, z)
+internal actual interface PlatformEntity {
+    val cloudburstEntity: Entity
+
+    actual val regularEntity: RegularEntity
 }

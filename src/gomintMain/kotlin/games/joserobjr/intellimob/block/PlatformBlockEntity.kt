@@ -19,18 +19,10 @@
 
 package games.joserobjr.intellimob.block
 
-import games.joserobjr.intellimob.trait.WithBlockLocation
-import games.joserobjr.intellimob.trait.WithTimeSource
-import kotlinx.coroutines.CoroutineDispatcher
-import org.cloudburstmc.server.blockentity.BlockEntity
-
 /**
  * @author joserobjr
- * @since 2021-01-17
+ * @since 2021-01-18
  */
-internal actual interface RegularBlockEntity: WithBlockLocation, WithTimeSource {
-    val cloudburstBlockEntity: BlockEntity
-    actual val updateDispatcher: CoroutineDispatcher
-    
-    actual suspend fun createSnapshot(): BlockEntitySnapshot
+internal actual interface PlatformBlockEntity {
+    actual val regularBlockEntity: RegularBlockEntity
 }

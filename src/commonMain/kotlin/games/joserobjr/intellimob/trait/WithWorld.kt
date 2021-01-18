@@ -19,12 +19,12 @@
 
 package games.joserobjr.intellimob.trait
 
-import games.joserobjr.intellimob.world.World
+import games.joserobjr.intellimob.world.RegularWorld
 
 /**
  * @author joserobjr
  * @since 2021-01-17
  */
 internal interface WithWorld {
-    val world: World
+    val world: RegularWorld
 }

@@ -31,7 +31,7 @@ import games.joserobjr.intellimob.math.*
 import games.joserobjr.intellimob.pathfinder.createPathFinder
 import games.joserobjr.intellimob.pathfinding.PathFinder
 import games.joserobjr.intellimob.timesource.ServerTickTimeSource
-import games.joserobjr.intellimob.world.World
+import games.joserobjr.intellimob.world.RegularWorld
 import games.joserobjr.intellimob.world.asIntelliMobWorld
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -48,7 +48,8 @@ internal class PowerEntityRegularEntity(override val powerNukkitEntity: Entity) 
     override val baseStatus: EntityStatus by lazy { createBaseStatus() }
     override val pathFinder: PathFinder by lazy { createPathFinder() }
     override val position: EntityPos get() = powerNukkitEntity.asEntityPos()
-    override val world: World get() = powerNukkitEntity.level.asIntelliMobWorld()
+    override val eyePosition: EntityPos get() = with(powerNukkitEntity) { EntityPos(x, y + eyeHeight, z) }
+    override val world: RegularWorld get() = powerNukkitEntity.level.asIntelliMobWorld()
     override val boundingBox: BoundingBox get() = powerNukkitEntity.boundingBox?.toIntelliMobBoundingBox() ?: BoundingBox.EMPTY
     private var _currentStatus: EntityStatus? = null
     public override var currentStatus: EntityStatus
@@ -72,4 +73,6 @@ internal class PowerEntityRegularEntity(override val powerNukkitEntity: Entity) 
             )
         }
     }
+
+    override suspend fun isEyeUnderWater(): Boolean = powerNukkitEntity.isTouchingWater
 }

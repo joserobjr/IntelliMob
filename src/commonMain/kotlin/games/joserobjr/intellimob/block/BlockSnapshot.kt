@@ -24,7 +24,7 @@ import games.joserobjr.intellimob.math.BoundingBox
 import games.joserobjr.intellimob.math.IBlockPos
 import games.joserobjr.intellimob.trait.WithBlockLocation
 import games.joserobjr.intellimob.trait.WithBoundingBox
-import games.joserobjr.intellimob.world.World
+import games.joserobjr.intellimob.world.RegularWorld
 
 /**
  * @author joserobjr
@@ -36,6 +36,6 @@ internal data class BlockSnapshot (
     val blockEntity: BlockEntitySnapshot? = null,
 ): WithBlockLocation, WithBoundingBox {
     override val position: IBlockPos get() = location
-    override val world: World get() = location.world
+    override val world: RegularWorld get() = location.world
     override val boundingBox: BoundingBox get() = states.main.boundingBox + position
 }

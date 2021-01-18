@@ -17,22 +17,17 @@
  *
  */
 
-@file:Suppress("NOTHING_TO_INLINE")
+package games.joserobjr.intellimob.entity
 
-package games.joserobjr.intellimob.block
+import io.gomint.entity.Entity
 
-import cn.nukkit.blockentity.BlockEntity
-import games.joserobjr.intellimob.trait.WithBlockLocation
-import games.joserobjr.intellimob.trait.WithTimeSource
-import kotlinx.coroutines.CoroutineDispatcher
 
 /**
  * @author joserobjr
- * @since 2021-01-17
+ * @since 2021-01-18
  */
-internal actual interface RegularBlockEntity: WithBlockLocation, WithTimeSource {
-    val powerNukkitEntity: BlockEntity
-    actual val updateDispatcher: CoroutineDispatcher
-    
-    actual suspend fun createSnapshot(): BlockEntitySnapshot
+internal actual interface PlatformEntity {
+    val goMintEntity: Entity<*>
+
+    actual val regularEntity: RegularEntity
 }

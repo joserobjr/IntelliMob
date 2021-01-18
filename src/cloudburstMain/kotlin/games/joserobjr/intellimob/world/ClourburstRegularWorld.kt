@@ -17,20 +17,24 @@
  *
  */
 
-package games.joserobjr.intellimob.math
+package games.joserobjr.intellimob.world
 
-import games.joserobjr.intellimob.trait.WithWorld
-import games.joserobjr.intellimob.world.RegularWorld
+import games.joserobjr.intellimob.coroutines.Sync
+import games.joserobjr.intellimob.timesource.ServerTickTimeSource
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import org.cloudburstmc.server.level.Level
+import kotlin.time.ExperimentalTime
+import kotlin.time.TimeSource
 
 /**
  * @author joserobjr
  * @since 2021-01-17
  */
-internal data class ChunkLocation (
-    override val world: RegularWorld,
-    override val x: Int,
-    override val z: Int
-): IChunkPos, WithWorld {
-    constructor(withWorld: WithWorld, pos: IChunkPos): this(withWorld.world, pos.x, pos.z)
-    constructor(withWorld: WithWorld, x: Int, z: Int): this(withWorld.world, x, z)
+internal inline class ClourburstRegularWorld(override val cloudburstWorld: Level): RegularWorld {
+    override val world: RegularWorld get() = this
+
+    @ExperimentalTime
+    override val timeSource: TimeSource get() = ServerTickTimeSource
+    override val updateDispatcher: CoroutineDispatcher get() = Dispatchers.Sync
 }
