@@ -17,16 +17,17 @@
  *
  */
 
-package games.joserobjr.intellimob.trait
+@file:Suppress("NOTHING_TO_INLINE")
 
-import games.joserobjr.intellimob.math.BoundingBox
+package games.joserobjr.intellimob.entity
+
+import org.cloudburstmc.server.entity.Entity
 
 /**
  * @author joserobjr
  * @since 2021-01-18
  */
-internal interface WithBoundingBox {
-    val boundingBox: BoundingBox
-
-    fun intersects(with: WithBoundingBox): Boolean = boundingBox.intersects(with.boundingBox)
+internal inline fun Entity.asRegularEntity(): RegularEntity {
+    return CloudburstRegularEntity(this)
 }
+

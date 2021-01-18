@@ -17,6 +17,8 @@
  *
  */
 
+@file:Suppress("NOTHING_TO_INLINE")
+
 package games.joserobjr.intellimob.math
 
 import com.nukkitx.math.vector.Vector3f
@@ -25,4 +27,4 @@ import com.nukkitx.math.vector.Vector3f
  * @author joserobjr
  * @since 2021-01-17
  */
-internal fun Vector3f.asEntityPos(): EntityPos = EntityPos(x, y, z)
+internal inline fun Vector3f.toEntityPos(): EntityPos = EntityPos(x, y, z)

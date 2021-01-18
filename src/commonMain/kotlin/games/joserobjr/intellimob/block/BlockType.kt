@@ -19,12 +19,13 @@
 
 package games.joserobjr.intellimob.block
 
-import games.joserobjr.intellimob.annotation.ExperimentalIntelliMobApi
-
 /**
  * @author joserobjr
  * @since 2021-01-17
  */
 internal expect class BlockType {
     val defaultState: BlockState
+    companion object {
+        val AIR: BlockType
+    }
 }

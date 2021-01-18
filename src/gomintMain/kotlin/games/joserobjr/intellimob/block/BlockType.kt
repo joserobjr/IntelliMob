@@ -19,31 +19,32 @@
 
 package games.joserobjr.intellimob.block
 
-import cn.nukkit.block.BlockID
+import io.gomint.GoMint
+import io.gomint.world.block.Block
+import io.gomint.world.block.BlockAir
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.reflect.KClass
+import kotlin.reflect.full.isSuperclassOf
 
 /**
  * @author joserobjr
  * @since 2021-01-17
  */
-internal actual class BlockType private constructor(state: PNBlockState) {
-    actual val defaultState: BlockState = state.asIntelliMobBlockState()
+internal actual class BlockType private constructor(val goMintBlockClass: KClass<out Block>) {
+    actual val defaultState: BlockState by lazy { 
+        GoMint.instance().createBlock(goMintBlockClass.java).asIntelliMobBlockState()
+    }
     
     actual companion object {
-        private val types = ConcurrentHashMap<PNBlockState, BlockType>()
-        actual val AIR: BlockType = fromBlockId(BlockID.AIR)
-        
-        fun fromBlockId(blockId: Int): BlockType {
-            val state = PNBlockState.of(blockId)
-            return types.computeIfAbsent(state, ::BlockType)
-        }
-        
-        fun fromBlockState(state: PNBlockState): BlockType {
-            return if (state.isDefaultState) {
-                types.computeIfAbsent(state, ::BlockType)
-            } else {
-                fromBlockId(state.blockId)
+        private val types = ConcurrentHashMap<KClass<out Block>, BlockType>()
+        actual val AIR: BlockType = fromClass(BlockAir::class)
+        fun fromBlock(block: Block): BlockType = fromClass(block::class) 
+        fun fromClass(entityClass: KClass<out Block>): BlockType {
+            types[entityClass]?.let { return it }
+            types.entries.firstOrNull { it.key.isSuperclassOf(entityClass) }?.let { (_, type) ->
+                return types.putIfAbsent(entityClass, type) ?: type
             }
+            return types.computeIfAbsent(entityClass, ::BlockType)
         }
     }
 }

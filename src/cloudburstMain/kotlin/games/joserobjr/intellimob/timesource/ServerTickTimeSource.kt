@@ -17,16 +17,23 @@
  *
  */
 
-package games.joserobjr.intellimob.trait
+package games.joserobjr.intellimob.timesource
 
-import games.joserobjr.intellimob.math.BoundingBox
+import games.joserobjr.intellimob.trait.WithTimeSource
+import org.cloudburstmc.server.Server
+import java.util.concurrent.TimeUnit
+import kotlin.time.AbstractLongTimeSource
+import kotlin.time.ExperimentalTime
+import kotlin.time.TimeSource
 
 /**
  * @author joserobjr
- * @since 2021-01-18
+ * @since 2021-01-17
  */
-internal interface WithBoundingBox {
-    val boundingBox: BoundingBox
+@ExperimentalTime
+internal object ServerTickTimeSource: AbstractLongTimeSource(TimeUnit.MILLISECONDS), WithTimeSource {
+    override fun read() = Server.getInstance().tick.toLong() * 50
 
-    fun intersects(with: WithBoundingBox): Boolean = boundingBox.intersects(with.boundingBox)
+    @ExperimentalTime
+    override val timeSource: TimeSource get() = this
 }

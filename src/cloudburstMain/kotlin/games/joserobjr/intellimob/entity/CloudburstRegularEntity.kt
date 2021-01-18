@@ -28,7 +28,6 @@ import games.joserobjr.intellimob.entity.EntityType.Companion.fromEntity
 import games.joserobjr.intellimob.entity.status.EntityStatus
 import games.joserobjr.intellimob.entity.status.createBaseStatus
 import games.joserobjr.intellimob.math.*
-import games.joserobjr.intellimob.math.asEntityPos
 import games.joserobjr.intellimob.pathfinder.createPathFinder
 import games.joserobjr.intellimob.pathfinding.PathFinder
 import games.joserobjr.intellimob.world.World
@@ -36,6 +35,8 @@ import games.joserobjr.intellimob.world.asIntelliMobWorld
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.cloudburstmc.server.entity.Entity
+import kotlin.time.ExperimentalTime
+import kotlin.time.TimeSource
 
 /**
  * @author joserobjr
@@ -47,8 +48,12 @@ internal class CloudburstRegularEntity(override val cloudburstEntity: Entity) : 
     override val brain: Brain by lazy { createBrain() }
     override val baseStatus: EntityStatus by lazy { createBaseStatus() }
     override val pathFinder: PathFinder by lazy { createPathFinder() }
-    override val position: IEntityPos get() = cloudburstEntity.position.asEntityPos()
+    override val position: IEntityPos get() = cloudburstEntity.position.toEntityPos()
     override val world: World get() = cloudburstEntity.level.asIntelliMobWorld()
+    override val boundingBox: BoundingBox get() = cloudburstEntity.boundingBox.toIntelliMobBoundingBox()
+    
+    @ExperimentalTime
+    override val timeSource: TimeSource get() = world.timeSource
 
     private var _currentStatus: EntityStatus? = null
     override var currentStatus: EntityStatus

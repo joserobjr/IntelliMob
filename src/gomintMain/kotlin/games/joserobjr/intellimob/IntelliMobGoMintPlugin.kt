@@ -19,7 +19,10 @@
 
 package games.joserobjr.intellimob
 
+import games.joserobjr.intellimob.timesource.ServerTickTimeSource
 import io.gomint.plugin.*
+import java.util.concurrent.TimeUnit
+import kotlin.time.ExperimentalTime
 
 /**
  * @author joserobjr
@@ -31,7 +34,12 @@ import io.gomint.plugin.*
 internal class IntelliMobGoMintPlugin: Plugin() {
     override fun onInstall() {
         instance = this
-        logger().info("Hello world")
+        setupServerTickTimeSource()
+    }
+    
+    @OptIn(ExperimentalTime::class)
+    private fun setupServerTickTimeSource() {
+        scheduler().schedule({ ServerTickTimeSource.increment() }, 0L, 50L, TimeUnit.MILLISECONDS)
     }
     
     companion object {

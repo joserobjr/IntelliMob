@@ -17,16 +17,12 @@
  *
  */
 
-package games.joserobjr.intellimob.trait
+@file:Suppress("NOTHING_TO_INLINE")
 
-import games.joserobjr.intellimob.math.BoundingBox
+package games.joserobjr.intellimob.block
 
 /**
  * @author joserobjr
  * @since 2021-01-18
  */
-internal interface WithBoundingBox {
-    val boundingBox: BoundingBox
-
-    fun intersects(with: WithBoundingBox): Boolean = boundingBox.intersects(with.boundingBox)
-}
+internal inline fun CBBlockState.asIntelliMobBlockState(): BlockState = BlockState.from(this)

@@ -17,16 +17,12 @@
  *
  */
 
-package games.joserobjr.intellimob.trait
+package games.joserobjr.intellimob.chunk
 
-import games.joserobjr.intellimob.math.BoundingBox
+import org.cloudburstmc.server.level.chunk.Chunk
 
 /**
  * @author joserobjr
  * @since 2021-01-18
  */
-internal interface WithBoundingBox {
-    val boundingBox: BoundingBox
-
-    fun intersects(with: WithBoundingBox): Boolean = boundingBox.intersects(with.boundingBox)
-}
+internal typealias CBChunk = Chunk

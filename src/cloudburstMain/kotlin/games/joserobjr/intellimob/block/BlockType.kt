@@ -17,47 +17,48 @@
  *
  */
 
+@file:Suppress("NOTHING_TO_INLINE")
+
 package games.joserobjr.intellimob.block
+
+import org.cloudburstmc.server.block.BlockTypes
+import org.cloudburstmc.server.utils.Identifier
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * @author joserobjr
- * @since 2021-01-18
+ * @since 2021-01-17
  */
-internal class LayeredBlockState private constructor(layers: MutableList<BlockState>) {
-    constructor(layers: Iterable<BlockState>): this(layers.toMutableList())
-    constructor(vararg layers: BlockState): this(layers.toMutableList())
+internal actual class BlockType private constructor(blockState: CBBlockState) {
+    actual val defaultState: BlockState = blockState.defaultState().asIntelliMobBlockState()
     
-    private val layers: List<BlockState> = layers.run {
-        asReversed().listIterator().let { iterator ->
-            while (iterator.hasNext() && iterator.next() == BlockState.AIR) {
-                iterator.remove()
+    actual companion object {
+        private val types = ConcurrentHashMap<Identifier, BlockType>()
+        actual val AIR: BlockType = from(CBBlockState.get(BlockTypes.AIR.id))
+        
+        fun from(state: CBBlockState): BlockType {
+            return types.computeIfAbsent(state.type) {
+                BlockType(state)
             }
         }
-        toList()
     }
     
-    val main: BlockState get() = this[0]
-    
-    operator fun get(layer: Int): BlockState {
-        return layers.getOrElse(layer) { BlockState.AIR }
-    }
-
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other == null || this::class != other::class) return false
+        if (javaClass != other?.javaClass) return false
 
-        other as LayeredBlockState
+        other as BlockType
 
-        if (layers != other.layers) return false
+        if (defaultState != other.defaultState) return false
 
         return true
     }
 
     override fun hashCode(): Int {
-        return layers.hashCode()
+        return defaultState.hashCode()
     }
 
-    companion object {
-        val EMPTY = LayeredBlockState()
+    override fun toString(): String {
+        return "BlockType(defaultState=$defaultState)"
     }
 }

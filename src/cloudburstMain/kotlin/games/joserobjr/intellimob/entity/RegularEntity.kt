@@ -23,8 +23,8 @@ import games.joserobjr.intellimob.brain.Brain
 import games.joserobjr.intellimob.brain.wish.Wishes
 import games.joserobjr.intellimob.control.EntityControls
 import games.joserobjr.intellimob.entity.status.EntityStatus
-import games.joserobjr.intellimob.math.EntityPos
 import games.joserobjr.intellimob.pathfinding.PathFinder
+import games.joserobjr.intellimob.trait.WithBoundingBox
 import games.joserobjr.intellimob.trait.WithEntityLocation
 import games.joserobjr.intellimob.trait.WithTimeSource
 import org.cloudburstmc.server.entity.Entity
@@ -35,7 +35,7 @@ import org.cloudburstmc.server.entity.Entity
  * @author joserobjr
  * @since 2021-01-11
  */
-internal actual interface RegularEntity: WithEntityLocation, WithTimeSource {
+internal actual interface RegularEntity: WithEntityLocation, WithTimeSource, WithBoundingBox {
     val cloudburstEntity: Entity
 
     actual val type: EntityType
@@ -64,8 +64,6 @@ internal actual interface RegularEntity: WithEntityLocation, WithTimeSource {
      * The intelligence which visualizes the world to realize movement [Wishes] from the [Brain] using the [EntityControls].
      */
     actual val pathFinder: PathFinder
-
-    actual override val position: EntityPos
 
     actual suspend fun createSnapshot(): EntitySnapshot
 }

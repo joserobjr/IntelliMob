@@ -26,10 +26,7 @@ import games.joserobjr.intellimob.control.createControls
 import games.joserobjr.intellimob.coroutines.Sync
 import games.joserobjr.intellimob.entity.status.EntityStatus
 import games.joserobjr.intellimob.entity.status.createBaseStatus
-import games.joserobjr.intellimob.math.EntityLocation
-import games.joserobjr.intellimob.math.EntityPos
-import games.joserobjr.intellimob.math.IEntityPos
-import games.joserobjr.intellimob.math.PitchYaw
+import games.joserobjr.intellimob.math.*
 import games.joserobjr.intellimob.pathfinder.createPathFinder
 import games.joserobjr.intellimob.pathfinding.PathFinder
 import games.joserobjr.intellimob.world.World
@@ -37,6 +34,8 @@ import games.joserobjr.intellimob.world.asIntelliMobWorld
 import io.gomint.entity.Entity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlin.time.ExperimentalTime
+import kotlin.time.TimeSource
 
 internal class GoMintRegularEntity<E>(override val goMintEntity: Entity<E>) : RegularEntity {
     override val type: EntityType by lazy { EntityType.fromEntity(this) }
@@ -47,6 +46,10 @@ internal class GoMintRegularEntity<E>(override val goMintEntity: Entity<E>) : Re
     override val position: IEntityPos
         get() = with(goMintEntity) { EntityPos(positionX(), positionY(), positionZ()) }
     override val world: World get() = goMintEntity.world().asIntelliMobWorld()
+    override val boundingBox: BoundingBox get() = goMintEntity.boundingBox().toIntelliMobBoundingBox()
+    
+    @ExperimentalTime
+    override val timeSource: TimeSource get() = world.timeSource
     
     private var _currentStatus: EntityStatus? = null
     public override var currentStatus: EntityStatus

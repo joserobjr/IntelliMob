@@ -17,16 +17,13 @@
  *
  */
 
-package games.joserobjr.intellimob.trait
+package games.joserobjr.intellimob.block
 
-import games.joserobjr.intellimob.math.BoundingBox
+import org.cloudburstmc.server.block.BlockState
 
 /**
  * @author joserobjr
  * @since 2021-01-18
  */
-internal interface WithBoundingBox {
-    val boundingBox: BoundingBox
+internal typealias CBBlockState = BlockState
 
-    fun intersects(with: WithBoundingBox): Boolean = boundingBox.intersects(with.boundingBox)
-}

@@ -29,28 +29,36 @@ import games.joserobjr.intellimob.math.IBlockPos
 import games.joserobjr.intellimob.world.World
 import games.joserobjr.intellimob.world.asIntelliMobWorld
 import games.joserobjr.intellimob.world.updateDispatcher
+import io.gomint.entity.Entity
+import io.gomint.world.block.Block
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
-internal inline class PowerNukkitRegularChunkWrapper(override val powerNukkitChunk: PNChunk): RegularChunk {
+internal inline class GoMintRegularChunkWrapper(override val goMintChunk: GMChunk): RegularChunk {
     override val updateDispatcher: CoroutineDispatcher get() = world.updateDispatcher
-    override val world: World get() = powerNukkitChunk.provider.level.asIntelliMobWorld()
-    override val position: ChunkPos get() = with(powerNukkitChunk) { ChunkPos(x, z) }
+    override val world: World get() = goMintChunk.world().asIntelliMobWorld()
+    override val position: ChunkPos get() = with(goMintChunk) { ChunkPos(x(), z()) }
 
     private fun validatePos(pos: IBlockPos) {
-        val minX = powerNukkitChunk.x shl 4
-        val minZ = powerNukkitChunk.z shl 4
+        val minX = goMintChunk.x() shl 4
+        val minZ = goMintChunk.z() shl 4
         require(pos.x in minX..(minX + 15) && pos.z in minZ..(minZ + 15)) { 
             "The position $pos is not inside the chunk $position" 
         }
     }
     
     override suspend fun getRegularEntities(): List<RegularEntity> = withContext(updateDispatcher) {
-        powerNukkitChunk.entities.values.map { it.asRegularEntity() }
+        mutableListOf<RegularEntity>().also { entities ->
+            goMintChunk.iterateEntities(Entity::class.java) { entity ->
+                entities += entity.asRegularEntity()
+            }
+        }
     }
 
     override suspend fun getEntitySnapshots(): List<EntitySnapshot> = withContext(updateDispatcher) {
-        powerNukkitChunk.entities.values.map { it.asRegularEntity().createSnapshot() }
+        getRegularEntities().map { 
+            it.createSnapshot()
+        }
     }
 
     override suspend fun getBlockState(pos: IBlockPos, layer: Int): BlockState {
@@ -62,15 +70,12 @@ internal inline class PowerNukkitRegularChunkWrapper(override val powerNukkitChu
     }
     
     private fun getBlockStateUnchecked(pos: IBlockPos, layer: Int): BlockState {
-        return powerNukkitChunk.getBlockState(pos.x and 0xF, pos.y, pos.z and 0xF, layer).asIntelliMobBlockState()
+        return goMintChunk.blockAt<Block>(pos.x and 0xF, pos.y, pos.z and 0xF, layer.asWorldLayer()).asIntelliMobBlockState()
     }
 
     override suspend fun getBlockEntity(pos: IBlockPos): RegularBlockEntity? {
         validatePos(pos)
-        if (pos.y !in 0..255) {
-            return null
-        }
-        return powerNukkitChunk.getTile(pos.x and 0xF, pos.y, pos.z and 0xF)?.asIntelliMobBlockEntity()
+        return null
     }
 
     override suspend fun setBlockState(pos: IBlockPos, blockState: BlockState, layer: Int): Unit = withContext(updateDispatcher) {
@@ -78,7 +83,7 @@ internal inline class PowerNukkitRegularChunkWrapper(override val powerNukkitChu
         require(pos.y in 0..255) {
             "The position $pos is not inside the chunk $position. The Y coordinate is outside the valid range."
         }
-        powerNukkitChunk.setBlockStateAtLayer(pos.x and 0xF, pos.y, pos.z and 0xF, layer, blockState.powerNukkitBlockState)
+        goMintChunk.block(pos.x and 0xF, pos.y, pos.z and 0xF, layer.asWorldLayer(), blockState.goMintBlockReference)
     }
 
     override suspend fun createBlockSnapshot(pos: IBlockPos, includeBlockEntity: Boolean): BlockSnapshot {

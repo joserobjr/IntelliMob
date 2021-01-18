@@ -17,16 +17,15 @@
  *
  */
 
-package games.joserobjr.intellimob.trait
+package games.joserobjr.intellimob.block
 
-import games.joserobjr.intellimob.math.BoundingBox
+import games.joserobjr.intellimob.math.BlockLocation
+import games.joserobjr.intellimob.trait.WithBlockLocation
+import games.joserobjr.intellimob.trait.WithBlockPosWorldByLocation
 
 /**
  * @author joserobjr
- * @since 2021-01-18
+ * @since 2021-01-17
  */
-internal interface WithBoundingBox {
-    val boundingBox: BoundingBox
-
-    fun intersects(with: WithBoundingBox): Boolean = boundingBox.intersects(with.boundingBox)
-}
+internal actual class BlockEntitySnapshot private constructor(override val location: BlockLocation)
+    : WithBlockLocation, WithBlockPosWorldByLocation

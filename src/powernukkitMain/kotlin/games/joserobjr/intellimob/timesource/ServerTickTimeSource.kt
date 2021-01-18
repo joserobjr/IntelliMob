@@ -32,7 +32,7 @@ import kotlin.time.TimeSource
  */
 @ExperimentalTime
 internal object ServerTickTimeSource: AbstractLongTimeSource(TimeUnit.MILLISECONDS), WithTimeSource {
-    override fun read() = Server.getInstance().tick.toLong()
+    override fun read() = Server.getInstance().tick.toLong() * 50
 
     @ExperimentalTime
     override val timeSource: TimeSource get() = this

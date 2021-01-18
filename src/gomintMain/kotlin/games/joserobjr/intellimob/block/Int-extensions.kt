@@ -17,16 +17,19 @@
  *
  */
 
-package games.joserobjr.intellimob.trait
+package games.joserobjr.intellimob.block
 
-import games.joserobjr.intellimob.math.BoundingBox
+import io.gomint.world.WorldLayer
 
 /**
  * @author joserobjr
  * @since 2021-01-18
  */
-internal interface WithBoundingBox {
-    val boundingBox: BoundingBox
+internal val VALID_LAYERS = 0..1
 
-    fun intersects(with: WithBoundingBox): Boolean = boundingBox.intersects(with.boundingBox)
+internal fun Int.asWorldLayer(): WorldLayer = when(this) {
+    0 -> WorldLayer.NORMAL
+    1 -> WorldLayer.UNDER_WATER
+    else -> throw UnsupportedOperationException("World layer $this")
 }
+

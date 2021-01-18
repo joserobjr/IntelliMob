@@ -17,16 +17,20 @@
  *
  */
 
-package games.joserobjr.intellimob.trait
+package games.joserobjr.intellimob.block
 
-import games.joserobjr.intellimob.math.BoundingBox
+import com.nukkitx.nbt.NbtMap
+import games.joserobjr.intellimob.math.BlockLocation
+import games.joserobjr.intellimob.trait.WithBlockLocation
+import games.joserobjr.intellimob.trait.WithBlockPosWorldByLocation
+import org.cloudburstmc.server.blockentity.BlockEntityType
 
 /**
  * @author joserobjr
- * @since 2021-01-18
+ * @since 2021-01-17
  */
-internal interface WithBoundingBox {
-    val boundingBox: BoundingBox
-
-    fun intersects(with: WithBoundingBox): Boolean = boundingBox.intersects(with.boundingBox)
-}
+internal actual data class BlockEntitySnapshot(
+    override val location: BlockLocation,
+    val type: BlockEntityType<*>,
+    val content: NbtMap
+) : WithBlockLocation, WithBlockPosWorldByLocation

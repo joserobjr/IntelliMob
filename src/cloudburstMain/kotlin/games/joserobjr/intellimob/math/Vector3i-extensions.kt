@@ -17,16 +17,14 @@
  *
  */
 
-package games.joserobjr.intellimob.trait
+@file:Suppress("NOTHING_TO_INLINE")
 
-import games.joserobjr.intellimob.math.BoundingBox
+package games.joserobjr.intellimob.math
+
+import com.nukkitx.math.vector.Vector3i
 
 /**
  * @author joserobjr
  * @since 2021-01-18
  */
-internal interface WithBoundingBox {
-    val boundingBox: BoundingBox
-
-    fun intersects(with: WithBoundingBox): Boolean = boundingBox.intersects(with.boundingBox)
-}
+internal inline fun Vector3i.toBlockPos(): BlockPos = BlockPos(x, y, z)
