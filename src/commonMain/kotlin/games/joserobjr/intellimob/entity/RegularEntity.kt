@@ -19,12 +19,14 @@
 
 package games.joserobjr.intellimob.entity
 
-import games.joserobjr.intellimob.annotation.ExperimentalIntelliMobApi
 import games.joserobjr.intellimob.brain.Brain
 import games.joserobjr.intellimob.brain.wish.Wishes
 import games.joserobjr.intellimob.control.EntityControls
 import games.joserobjr.intellimob.entity.status.EntityStatus
 import games.joserobjr.intellimob.pathfinding.PathFinder
+import games.joserobjr.intellimob.trait.WithBoundingBox
+import games.joserobjr.intellimob.trait.WithEntityLocation
+import games.joserobjr.intellimob.trait.WithTimeSource
 
 /**
  * The root interface which compose the entities, with or without IntelliMob AI. 
@@ -32,38 +34,33 @@ import games.joserobjr.intellimob.pathfinding.PathFinder
  * @author joserobjr
  * @since 2021-01-11
  */
-@ExperimentalIntelliMobApi
-public expect interface RegularEntity
+internal expect interface RegularEntity: WithEntityLocation, WithTimeSource, WithBoundingBox {
+    val type: EntityType
 
-@ExperimentalIntelliMobApi
-public expect val RegularEntity.entityType: EntityType
+    /**
+     * Allows to apply physical movements to the entity.
+     */
+    val controls: EntityControls
 
-/**
- * Allows to apply physical movements to the entity.
- */
-@ExperimentalIntelliMobApi
-public expect val RegularEntity.controls: EntityControls
+    /**
+     * Hold and process all intelligence stuff which doesn't require physical interactions.
+     */
+    val brain: Brain
 
-/**
- * Hold and process all intelligence stuff which doesn't require physical interactions.
- */
-@ExperimentalIntelliMobApi
-public expect val RegularEntity.brain: Brain
+    /**
+     * The current base status, not modified by environmental conditions.
+     */
+    val baseStatus: EntityStatus
 
-/**
- * The default status based on the entity type.
- */
-@ExperimentalIntelliMobApi
-public expect val RegularEntity.defaultStatus: EntityStatus
+    /**
+     * The current status, affected environmental conditions.
+     */
+    val currentStatus: EntityStatus
 
-/**
- * The current base status, not modified by environmental conditions.
- */
-@ExperimentalIntelliMobApi
-public expect val RegularEntity.baseStatus: EntityStatus
-
-/**
- * The intelligence which visualizes the world to realize movement [Wishes] from the [Brain] using the [EntityControls].
- */
-@ExperimentalIntelliMobApi
-public expect val RegularEntity.pathFinder: PathFinder
+    /**
+     * The intelligence which visualizes the world to realize movement [Wishes] from the [Brain] using the [EntityControls].
+     */
+    val pathFinder: PathFinder
+    
+    suspend fun createSnapshot(): EntitySnapshot
+}

@@ -20,14 +20,12 @@
 package games.joserobjr.intellimob.control
 
 import cn.nukkit.entity.passive.EntitySquid
-import games.joserobjr.intellimob.annotation.ExperimentalIntelliMobApi
 import games.joserobjr.intellimob.entity.RegularEntity
 
 /**
  * @author joserobjr
  * @since 2021-01-11
  */
-@ExperimentalIntelliMobApi
 internal fun RegularEntity.createControls(): EntityControls {
     return when(powerNukkitEntity) {
         is EntitySquid -> SquidControls(this)

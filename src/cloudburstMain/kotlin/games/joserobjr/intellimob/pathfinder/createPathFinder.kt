@@ -19,7 +19,6 @@
 
 package games.joserobjr.intellimob.pathfinder
 
-import games.joserobjr.intellimob.annotation.ExperimentalIntelliMobApi
 import games.joserobjr.intellimob.entity.RegularEntity
 import games.joserobjr.intellimob.pathfinding.PathFinder
 
@@ -27,7 +26,6 @@ import games.joserobjr.intellimob.pathfinding.PathFinder
  * @author joserobjr
  * @since 2021-01-11
  */
-@ExperimentalIntelliMobApi
 internal fun RegularEntity.createPathFinder(): PathFinder {
     TODO()
 }

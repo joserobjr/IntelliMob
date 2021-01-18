@@ -20,9 +20,18 @@
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 
+buildscript {
+    val atomicfuVersion = "0.15.1"
+    dependencies {
+        classpath("org.jetbrains.kotlinx:atomicfu-gradle-plugin:$atomicfuVersion")
+    }
+}
+
 plugins {
     kotlin("multiplatform") version "1.4.21"
 }
+
+apply(plugin = "kotlinx-atomicfu")
 
 group = "games.joserobjr"
 version = "0.1.0-SNAPSHOT"
@@ -68,12 +77,15 @@ kotlin {
         }
     }
     sourceSets {
-        val commonMain by getting
+        val commonMain by getting {
+            dependencies {
+                api("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesVersion")
+            }
+        }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
-                api("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesVersion")
             }
         }
         val powernukkitMain by getting {

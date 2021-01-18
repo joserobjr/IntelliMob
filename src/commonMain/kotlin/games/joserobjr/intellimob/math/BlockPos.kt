@@ -19,15 +19,17 @@
 
 package games.joserobjr.intellimob.math
 
+import games.joserobjr.intellimob.trait.WithBlockPos
+
 /**
  * @author joserobjr
  * @since 2021-01-11
  */
-public data class BlockPos (
-    public val x: Int,
-    public val y: Int,
-    public val z: Int
-) {
-    public fun asCenteredEntityPos(): EntityPos = EntityPos(x.toDouble() + 0.5, y.toDouble(), z.toDouble() + 0.5)
-    public fun asEntityPos(): EntityPos = EntityPos(x.toDouble(), y.toDouble(), z.toDouble())
+internal data class BlockPos (
+    override val x: Int,
+    override val y: Int,
+    override val z: Int
+): IBlockPos {
+    constructor(pos: IBlockPos): this(pos.x, pos.y, pos.z)
+    constructor(withPos: WithBlockPos): this(withPos.position)
 }

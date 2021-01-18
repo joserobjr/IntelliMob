@@ -19,15 +19,83 @@
 
 package games.joserobjr.intellimob.brain.wish
 
-import games.joserobjr.intellimob.annotation.ExperimentalIntelliMobApi
+import games.joserobjr.intellimob.brain.Brain
+import games.joserobjr.intellimob.control.EntityControls
+import games.joserobjr.intellimob.entity.RegularEntity
+import games.joserobjr.intellimob.math.EntityPos
+import kotlinx.atomicfu.atomic
+import kotlinx.atomicfu.update
 
 /**
  * @author joserobjr
  * @since 2021-01-11
  */
-@ExperimentalIntelliMobApi
-public data class Wishes (
-    public var moveHead: Wish? = null,
-    public var move: Wish? = null,
-    public var jump: Wish? = null,
-)
+internal class Wishes (
+    look: LookWish? = null,
+    move: MoveWish? = null,
+    jump: Wish? = null,
+) {
+    private val _look = atomic(look)
+    private val _move = atomic(move)
+    private val _jump = atomic(jump)
+
+    val look: LookWish? by _look 
+    val move: MoveWish? by _move 
+    val jump: Wish? by _jump 
+    
+    fun moveTo(pos: EntityPos, sprinting: Boolean = false) {
+        _move.update { move ->
+            move?.takeIf { it.isConstant && it.target == pos }?.let { return }
+            MoveToPosWish(pos, sprinting)
+        }
+    }
+    
+    fun moveTo(entity: RegularEntity, sprinting: Boolean = false) {
+        _move.update { move ->
+            move?.takeIf { it.targetEntity == entity }?.let { return }
+            MoveToEntityWish(entity, sprinting)
+        }
+    }
+    
+    fun lookAt(pos: EntityPos, quickly: Boolean = false) {
+        _look.update { look ->
+            look?.takeIf { it.isConstant && it.target == pos }?.let { return }
+            LookAtPosWish(pos, quickly)
+        }
+    }
+    
+    fun lookAt(entity: RegularEntity, quickly: Boolean = false) {
+        _look.update { look ->
+            look?.takeIf { it.targetEntity == entity }?.let { return }
+            LookAtEntityWish(entity, quickly)
+        }
+    }
+    
+    fun EntityControls.execute(brain: Brain): Boolean {
+        var needsUpdate = false
+        move?.apply {
+            if (execute(brain)) {
+                _move.compareAndSet(this, null)
+            } else {
+                needsUpdate = true
+            }
+        }
+        jump?.apply {
+            if (execute(brain)) {
+                _jump.compareAndSet(this, null)
+            } else {
+                needsUpdate = true
+            }
+        }
+        look?.apply {
+            if (execute(brain)) {
+                if (!_look.compareAndSet(this, null)) {
+                    needsUpdate = look != null
+                }
+            } else {
+                needsUpdate = true
+            }
+        }
+        return needsUpdate
+    }
+}

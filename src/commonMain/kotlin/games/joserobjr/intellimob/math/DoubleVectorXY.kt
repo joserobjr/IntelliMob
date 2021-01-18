@@ -23,7 +23,7 @@ package games.joserobjr.intellimob.math
  * @author joserobjr
  * @since 2021-01-11
  */
-public data class DoubleVectorXY (
-    public val x: Double,
-    public val y: Double
+internal data class DoubleVectorXY (
+    val x: Double,
+    val y: Double
 )

@@ -17,9 +17,14 @@
  *
  */
 
-package games.joserobjr.intellimob.metadata
+package games.joserobjr.intellimob.entity
+
+import cn.nukkit.entity.Entity
 
 /**
+ * Gets an IntelliMob representation of this entity
+ * 
  * @author joserobjr
- * @since 2021-01-11
+ * @since 2021-01-17
  */
+internal fun Entity.asRegularEntity(): RegularEntity = PowerEntityRegularEntity(this)

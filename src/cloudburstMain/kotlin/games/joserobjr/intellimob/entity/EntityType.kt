@@ -19,8 +19,9 @@
 
 package games.joserobjr.intellimob.entity
 
-import games.joserobjr.intellimob.annotation.ExperimentalIntelliMobApi
 import games.joserobjr.intellimob.entity.api.*
+import games.joserobjr.intellimob.entity.status.ImmutableEntityStatus
+import games.joserobjr.intellimob.entity.status.createDefaultStatus
 import org.cloudburstmc.server.entity.EntityTypes
 import java.util.concurrent.ConcurrentHashMap
 
@@ -28,89 +29,92 @@ import java.util.concurrent.ConcurrentHashMap
  * @author joserobjr
  * @since 2021-01-12
  */
-@ExperimentalIntelliMobApi
-public actual class EntityType(public val platformType: PlatformEntityType<*>) {
-    @ExperimentalIntelliMobApi
-    public actual companion object {
+internal actual class EntityType(val platformType: PlatformEntityType<*>) {
+    /**
+     * The default status based on the entity type.
+     */
+    actual val defaultStatus: ImmutableEntityStatus by lazy { createDefaultStatus() }
+    
+    actual companion object {
         private val registry: MutableMap<PlatformEntityType<*>, EntityType> = ConcurrentHashMap()
         internal fun fromEntity(entity: RegularEntity): EntityType {
-            return registry.computeIfAbsent(entity.type, ::EntityType)
+            return registry.computeIfAbsent(entity.type.platformType, ::EntityType)
         }
         
         //-------- Passive Mobs --------// 
-        public actual val BAT: EntityType = EntityType(EntityTypes.BAT)
-        public actual val CAT: EntityType = EntityType(EntityTypes.CAT)
-        public actual val CHICKEN: EntityType = EntityType(EntityTypes.CHICKEN)
-        public actual val COD: EntityType = EntityType(EntityTypes.COD)
-        public actual val COW: EntityType = EntityType(EntityTypes.COW)
-        public actual val DONKEY: EntityType = EntityType(EntityTypes.DONKEY)
-        public actual val FOX: EntityType = EntityType(Fox.TYPE)
-        public actual val HORSE: EntityType = EntityType(EntityTypes.HORSE)
-        public actual val MOOSHROOM: EntityType = EntityType(EntityTypes.MOOSHROOM)
-        public actual val MULE: EntityType = EntityType(EntityTypes.MULE)
-        public actual val OCELOT: EntityType = EntityType(EntityTypes.OCELOT)
-        public actual val PARROT: EntityType = EntityType(EntityTypes.PARROT)
-        public actual val PIG: EntityType = EntityType(EntityTypes.PIG)
-        public actual val RABBIT: EntityType = EntityType(EntityTypes.RABBIT)
-        public actual val SALMON: EntityType = EntityType(EntityTypes.SALMON)
-        public actual val SHEEP: EntityType = EntityType(EntityTypes.SHEEP)
-        public actual val SKELETON_HORSE: EntityType = EntityType(EntityTypes.SKELETON_HORSE)
-        public actual val SNOW_GOLEM: EntityType = EntityType(EntityTypes.SNOW_GOLEM)
-        public actual val SQUID: EntityType = EntityType(EntityTypes.SQUID)
-        public actual val STRIDER: EntityType = EntityType(Strider.TYPE)
-        public actual val TROPICAL_FISH: EntityType = EntityType(EntityTypes.TROPICALFISH)
-        public actual val TURTLE: EntityType = EntityType(EntityTypes.TURTLE)
-        public actual val VILLAGER: EntityType = EntityType(EntityTypes.VILLAGER)
-        public actual val VILLAGER_V1: EntityType = EntityType(EntityTypes.DEPRECATED_VILLAGER)
-        public actual val WANDERING_TRADER: EntityType = EntityType(EntityTypes.WANDERING_TRADER)
+        actual val BAT: EntityType = EntityType(EntityTypes.BAT)
+        actual val CAT: EntityType = EntityType(EntityTypes.CAT)
+        actual val CHICKEN: EntityType = EntityType(EntityTypes.CHICKEN)
+        actual val COD: EntityType = EntityType(EntityTypes.COD)
+        actual val COW: EntityType = EntityType(EntityTypes.COW)
+        actual val DONKEY: EntityType = EntityType(EntityTypes.DONKEY)
+        actual val FOX: EntityType = EntityType(Fox.TYPE)
+        actual val HORSE: EntityType = EntityType(EntityTypes.HORSE)
+        actual val MOOSHROOM: EntityType = EntityType(EntityTypes.MOOSHROOM)
+        actual val MULE: EntityType = EntityType(EntityTypes.MULE)
+        actual val OCELOT: EntityType = EntityType(EntityTypes.OCELOT)
+        actual val PARROT: EntityType = EntityType(EntityTypes.PARROT)
+        actual val PIG: EntityType = EntityType(EntityTypes.PIG)
+        actual val RABBIT: EntityType = EntityType(EntityTypes.RABBIT)
+        actual val SALMON: EntityType = EntityType(EntityTypes.SALMON)
+        actual val SHEEP: EntityType = EntityType(EntityTypes.SHEEP)
+        actual val SKELETON_HORSE: EntityType = EntityType(EntityTypes.SKELETON_HORSE)
+        actual val SNOW_GOLEM: EntityType = EntityType(EntityTypes.SNOW_GOLEM)
+        actual val SQUID: EntityType = EntityType(EntityTypes.SQUID)
+        actual val STRIDER: EntityType = EntityType(Strider.TYPE)
+        actual val TROPICAL_FISH: EntityType = EntityType(EntityTypes.TROPICALFISH)
+        actual val TURTLE: EntityType = EntityType(EntityTypes.TURTLE)
+        actual val VILLAGER: EntityType = EntityType(EntityTypes.VILLAGER)
+        actual val VILLAGER_V1: EntityType = EntityType(EntityTypes.DEPRECATED_VILLAGER)
+        actual val WANDERING_TRADER: EntityType = EntityType(EntityTypes.WANDERING_TRADER)
 
         //-------- Neutral Mobs --------//
-        public actual val BEE: EntityType = EntityType(Bee.TYPE)
-        public actual val CAVE_SPIDER: EntityType = EntityType(EntityTypes.CAVE_SPIDER)
-        public actual val DOLPHIN: EntityType = EntityType(EntityTypes.DOLPHIN)
-        public actual val ENDERMAN: EntityType = EntityType(EntityTypes.ENDERMAN)
-        public actual val IRON_GOLEM: EntityType = EntityType(EntityTypes.IRON_GOLEM)
-        public actual val LLAMA: EntityType = EntityType(EntityTypes.LLAMA)
-        public actual val PIGLIN: EntityType = EntityType(Piglin.TYPE)
-        public actual val PANDA: EntityType = EntityType(EntityTypes.PANDA)
-        public actual val POLAR_BEAR: EntityType = EntityType(EntityTypes.POLAR_BEAR)
-        public actual val PUFFERFISH: EntityType = EntityType(EntityTypes.PUFFERFISH)
-        public actual val SPIDER: EntityType = EntityType(EntityTypes.SPIDER)
-        public actual val WOLF: EntityType = EntityType(EntityTypes.WOLF)
-        public actual val ZOMBIFED_PIGLIN: EntityType = EntityType(EntityTypes.ZOMBIE_PIGMAN)
+        actual val BEE: EntityType = EntityType(Bee.TYPE)
+        actual val CAVE_SPIDER: EntityType = EntityType(EntityTypes.CAVE_SPIDER)
+        actual val DOLPHIN: EntityType = EntityType(EntityTypes.DOLPHIN)
+        actual val ENDERMAN: EntityType = EntityType(EntityTypes.ENDERMAN)
+        actual val IRON_GOLEM: EntityType = EntityType(EntityTypes.IRON_GOLEM)
+        actual val LLAMA: EntityType = EntityType(EntityTypes.LLAMA)
+        actual val PIGLIN: EntityType = EntityType(Piglin.TYPE)
+        actual val PANDA: EntityType = EntityType(EntityTypes.PANDA)
+        actual val POLAR_BEAR: EntityType = EntityType(EntityTypes.POLAR_BEAR)
+        actual val PUFFERFISH: EntityType = EntityType(EntityTypes.PUFFERFISH)
+        actual val SPIDER: EntityType = EntityType(EntityTypes.SPIDER)
+        actual val WOLF: EntityType = EntityType(EntityTypes.WOLF)
+        actual val ZOMBIFED_PIGLIN: EntityType = EntityType(EntityTypes.ZOMBIE_PIGMAN)
 
         //-------- Hostile Mobs --------//
-        public actual val BLAZE: EntityType = EntityType(EntityTypes.BLAZE)
-        public actual val CREEPER: EntityType = EntityType(EntityTypes.CREEPER)
-        public actual val DROWNED: EntityType = EntityType(EntityTypes.DROWNED)
-        public actual val ELDER_GUARDIAN: EntityType = EntityType(EntityTypes.ELDER_GUARDIAN)
-        public actual val ENDERMITE: EntityType = EntityType(EntityTypes.ENDERMITE)
-        public actual val EVOKER: EntityType = EntityType(Evoker.TYPE)
-        public actual val GHAST: EntityType = EntityType(EntityTypes.GHAST)
-        public actual val GUARDIAN: EntityType = EntityType(EntityTypes.GUARDIAN)
-        public actual val HOGLIN: EntityType = EntityType(Hoglin.TYPE)
-        public actual val HUSK: EntityType = EntityType(EntityTypes.HUSK)
-        public actual val MAGMA_CUBE: EntityType = EntityType(EntityTypes.MAGMA_CUBE)
-        public actual val PHANTOM: EntityType = EntityType(EntityTypes.PHANTOM)
-        public actual val PIGLIN_BRUTE: EntityType = EntityType(PiglinBrute.TYPE)
-        public actual val PILLAGER: EntityType = EntityType(EntityTypes.PILLAGER)
-        public actual val RAVEGER: EntityType = EntityType(Raveger.TYPE)
-        public actual val SHULKER: EntityType = EntityType(EntityTypes.SHULKER)
-        public actual val SILVERFISH: EntityType = EntityType(EntityTypes.SILVERFISH)
-        public actual val SKELETON: EntityType = EntityType(EntityTypes.SKELETON)
-        public actual val SLIME: EntityType = EntityType(EntityTypes.SLIME)
-        public actual val STRAY: EntityType = EntityType(EntityTypes.STRAY)
-        public actual val VEX: EntityType = EntityType(EntityTypes.VEX)
-        public actual val VINDICATOR: EntityType = EntityType(EntityTypes.VINDICATOR)
-        public actual val WITCH: EntityType = EntityType(EntityTypes.WITCH)
-        public actual val WITHER_SKELETON: EntityType = EntityType(EntityTypes.WITHER_SKELETON)
-        public actual val ZOGLIN: EntityType = EntityType(Zoglin.TYPE)
-        public actual val ZOMBIE: EntityType = EntityType(EntityTypes.ZOMBIE)
-        public actual val ZOMBIE_VILLAGER: EntityType = EntityType(EntityTypes.ZOMBIE_VILLAGER)
-        public actual val ZOMBIE_VILLAGER_V1: EntityType = EntityType(EntityTypes.DEPRECATED_ZOMBIE_VILLAGER)
+        actual val BLAZE: EntityType = EntityType(EntityTypes.BLAZE)
+        actual val CREEPER: EntityType = EntityType(EntityTypes.CREEPER)
+        actual val DROWNED: EntityType = EntityType(EntityTypes.DROWNED)
+        actual val ELDER_GUARDIAN: EntityType = EntityType(EntityTypes.ELDER_GUARDIAN)
+        actual val ENDERMITE: EntityType = EntityType(EntityTypes.ENDERMITE)
+        actual val EVOKER: EntityType = EntityType(Evoker.TYPE)
+        actual val GHAST: EntityType = EntityType(EntityTypes.GHAST)
+        actual val GUARDIAN: EntityType = EntityType(EntityTypes.GUARDIAN)
+        actual val HOGLIN: EntityType = EntityType(Hoglin.TYPE)
+        actual val HUSK: EntityType = EntityType(EntityTypes.HUSK)
+        actual val MAGMA_CUBE: EntityType = EntityType(EntityTypes.MAGMA_CUBE)
+        actual val PHANTOM: EntityType = EntityType(EntityTypes.PHANTOM)
+        actual val PIGLIN_BRUTE: EntityType = EntityType(PiglinBrute.TYPE)
+        actual val PILLAGER: EntityType = EntityType(EntityTypes.PILLAGER)
+        actual val RAVEGER: EntityType = EntityType(Raveger.TYPE)
+        actual val SHULKER: EntityType = EntityType(EntityTypes.SHULKER)
+        actual val SILVERFISH: EntityType = EntityType(EntityTypes.SILVERFISH)
+        actual val SKELETON: EntityType = EntityType(EntityTypes.SKELETON)
+        actual val SLIME: EntityType = EntityType(EntityTypes.SLIME)
+        actual val STRAY: EntityType = EntityType(EntityTypes.STRAY)
+        actual val VEX: EntityType = EntityType(EntityTypes.VEX)
+        actual val VINDICATOR: EntityType = EntityType(EntityTypes.VINDICATOR)
+        actual val WITCH: EntityType = EntityType(EntityTypes.WITCH)
+        actual val WITHER_SKELETON: EntityType = EntityType(EntityTypes.WITHER_SKELETON)
+        actual val ZOGLIN: EntityType = EntityType(Zoglin.TYPE)
+        actual val ZOMBIE: EntityType = EntityType(EntityTypes.ZOMBIE)
+        actual val ZOMBIE_VILLAGER: EntityType = EntityType(EntityTypes.ZOMBIE_VILLAGER)
+        actual val ZOMBIE_VILLAGER_V1: EntityType = EntityType(EntityTypes.DEPRECATED_ZOMBIE_VILLAGER)
 
         //-------- Boss Mobs --------//
-        public actual val ENDER_DRAGON: EntityType = EntityType(EntityTypes.ENDER_DRAGON)
-        public actual val WITHER: EntityType = EntityType(EntityTypes.WITHER)
+        actual val ENDER_DRAGON: EntityType = EntityType(EntityTypes.ENDER_DRAGON)
+        actual val WITHER: EntityType = EntityType(EntityTypes.WITHER)
     }
 }

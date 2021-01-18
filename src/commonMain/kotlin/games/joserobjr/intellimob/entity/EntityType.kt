@@ -19,92 +19,93 @@
 
 package games.joserobjr.intellimob.entity
 
-import games.joserobjr.intellimob.annotation.ExperimentalIntelliMobApi
+import games.joserobjr.intellimob.entity.status.ImmutableEntityStatus
 
 /**
  * @author joserobjr
  * @since 2021-01-12
  */
-@ExperimentalIntelliMobApi
-public expect class EntityType {
+internal expect class EntityType {
+    /**
+     * The default status based on the entity type.
+     */
+    val defaultStatus: ImmutableEntityStatus
     
-    
-    @ExperimentalIntelliMobApi
-    public companion object {
+    companion object {
         //-------- Passive Mobs --------// 
-        public val BAT: EntityType
-        public val CAT: EntityType
-        public val CHICKEN: EntityType
-        public val COD: EntityType
-        public val COW: EntityType
-        public val DONKEY: EntityType
-        public val FOX: EntityType
-        public val HORSE: EntityType
-        public val MOOSHROOM: EntityType
-        public val MULE: EntityType
-        public val OCELOT: EntityType
-        public val PARROT: EntityType
-        public val PIG: EntityType
-        public val RABBIT: EntityType
-        public val SALMON: EntityType
-        public val SHEEP: EntityType
-        public val SKELETON_HORSE: EntityType
-        public val SNOW_GOLEM: EntityType
-        public val SQUID: EntityType
-        public val STRIDER: EntityType
-        public val TROPICAL_FISH: EntityType
-        public val TURTLE: EntityType
-        public val VILLAGER: EntityType
-        public val VILLAGER_V1: EntityType
-        public val WANDERING_TRADER: EntityType
+        val BAT: EntityType
+        val CAT: EntityType
+        val CHICKEN: EntityType
+        val COD: EntityType
+        val COW: EntityType
+        val DONKEY: EntityType
+        val FOX: EntityType
+        val HORSE: EntityType
+        val MOOSHROOM: EntityType
+        val MULE: EntityType
+        val OCELOT: EntityType
+        val PARROT: EntityType
+        val PIG: EntityType
+        val RABBIT: EntityType
+        val SALMON: EntityType
+        val SHEEP: EntityType
+        val SKELETON_HORSE: EntityType
+        val SNOW_GOLEM: EntityType
+        val SQUID: EntityType
+        val STRIDER: EntityType
+        val TROPICAL_FISH: EntityType
+        val TURTLE: EntityType
+        val VILLAGER: EntityType
+        val VILLAGER_V1: EntityType
+        val WANDERING_TRADER: EntityType
 
         //-------- Neutral Mobs --------//
-        public val BEE: EntityType
-        public val CAVE_SPIDER: EntityType
-        public val DOLPHIN: EntityType
-        public val ENDERMAN: EntityType
-        public val IRON_GOLEM: EntityType
-        public val LLAMA: EntityType
-        public val PIGLIN: EntityType
-        public val PANDA: EntityType
-        public val POLAR_BEAR: EntityType
-        public val PUFFERFISH: EntityType
-        public val SPIDER: EntityType
-        public val WOLF: EntityType
-        public val ZOMBIFED_PIGLIN: EntityType
+        val BEE: EntityType
+        val CAVE_SPIDER: EntityType
+        val DOLPHIN: EntityType
+        val ENDERMAN: EntityType
+        val IRON_GOLEM: EntityType
+        val LLAMA: EntityType
+        val PIGLIN: EntityType
+        val PANDA: EntityType
+        val POLAR_BEAR: EntityType
+        val PUFFERFISH: EntityType
+        val SPIDER: EntityType
+        val WOLF: EntityType
+        val ZOMBIFED_PIGLIN: EntityType
 
         //-------- Hostile Mobs --------//
-        public val BLAZE: EntityType
-        public val CREEPER: EntityType
-        public val DROWNED: EntityType
-        public val ELDER_GUARDIAN: EntityType
-        public val ENDERMITE: EntityType
-        public val EVOKER: EntityType
-        public val GHAST: EntityType
-        public val GUARDIAN: EntityType
-        public val HOGLIN: EntityType
-        public val HUSK: EntityType
-        public val MAGMA_CUBE: EntityType
-        public val PHANTOM: EntityType
-        public val PIGLIN_BRUTE: EntityType
-        public val PILLAGER: EntityType
-        public val RAVEGER: EntityType
-        public val SHULKER: EntityType
-        public val SILVERFISH: EntityType
-        public val SKELETON: EntityType
-        public val SLIME: EntityType
-        public val STRAY: EntityType
-        public val VEX: EntityType
-        public val VINDICATOR: EntityType
-        public val WITCH: EntityType
-        public val WITHER_SKELETON: EntityType
-        public val ZOGLIN: EntityType
-        public val ZOMBIE: EntityType
-        public val ZOMBIE_VILLAGER: EntityType
-        public val ZOMBIE_VILLAGER_V1: EntityType
+        val BLAZE: EntityType
+        val CREEPER: EntityType
+        val DROWNED: EntityType
+        val ELDER_GUARDIAN: EntityType
+        val ENDERMITE: EntityType
+        val EVOKER: EntityType
+        val GHAST: EntityType
+        val GUARDIAN: EntityType
+        val HOGLIN: EntityType
+        val HUSK: EntityType
+        val MAGMA_CUBE: EntityType
+        val PHANTOM: EntityType
+        val PIGLIN_BRUTE: EntityType
+        val PILLAGER: EntityType
+        val RAVEGER: EntityType
+        val SHULKER: EntityType
+        val SILVERFISH: EntityType
+        val SKELETON: EntityType
+        val SLIME: EntityType
+        val STRAY: EntityType
+        val VEX: EntityType
+        val VINDICATOR: EntityType
+        val WITCH: EntityType
+        val WITHER_SKELETON: EntityType
+        val ZOGLIN: EntityType
+        val ZOMBIE: EntityType
+        val ZOMBIE_VILLAGER: EntityType
+        val ZOMBIE_VILLAGER_V1: EntityType
 
         //-------- Boss Mobs --------//
-        public val ENDER_DRAGON: EntityType
-        public val WITHER: EntityType
+        val ENDER_DRAGON: EntityType
+        val WITHER: EntityType
     }
 }

@@ -31,7 +31,7 @@ import io.gomint.plugin.*
 internal class IntelliMobGoMintPlugin: Plugin() {
     override fun onInstall() {
         instance = this
-        logger.info("Hello world")
+        logger().info("Hello world")
     }
     
     companion object {

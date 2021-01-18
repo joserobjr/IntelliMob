@@ -19,7 +19,6 @@
 
 package games.joserobjr.intellimob.entity.status
 
-import games.joserobjr.intellimob.annotation.ExperimentalIntelliMobApi
 import games.joserobjr.intellimob.math.DoubleVectorXZ
 import games.joserobjr.intellimob.math.PitchYaw
 
@@ -27,20 +26,23 @@ import games.joserobjr.intellimob.math.PitchYaw
  * @author joserobjr
  * @since 2021-01-11
  */
-@ExperimentalIntelliMobApi
-public data class ImmutableEntityStatus (
+internal data class ImmutableEntityStatus (
     override val headSpeed: PitchYaw,
+    override val headFastSpeed: PitchYaw,
     override val walkSpeed: DoubleVectorXZ,
+    override val sprintSpeed: DoubleVectorXZ,
     override val jumpSpeed: Double,
     override val stepHeight: Double,
     override val canJump: Boolean
 ): EntityStatus {
     override fun toMutable(): MutableEntityStatus = MutableEntityStatus(
         headSpeed = headSpeed,
+        headFastSpeed = headFastSpeed,
         walkSpeed = walkSpeed,
         jumpSpeed = jumpSpeed,
+        sprintSpeed = sprintSpeed,
         stepHeight = stepHeight,
-        canJump = canJump
+        canJump = canJump,
     )
 
     override fun toImmutable(): ImmutableEntityStatus = this

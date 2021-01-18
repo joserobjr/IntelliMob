@@ -22,6 +22,8 @@ package games.joserobjr.intellimob.entity
 import cn.nukkit.entity.mob.*
 import cn.nukkit.entity.passive.*
 import games.joserobjr.intellimob.annotation.ExperimentalIntelliMobApi
+import games.joserobjr.intellimob.entity.status.ImmutableEntityStatus
+import games.joserobjr.intellimob.entity.status.createDefaultStatus
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap
 import java.util.function.IntFunction
 
@@ -29,10 +31,13 @@ import java.util.function.IntFunction
  * @author joserobjr
  * @since 2021-01-12
  */
-@ExperimentalIntelliMobApi
-public actual class EntityType(public val networkId: Int) {
-    @ExperimentalIntelliMobApi
-    public actual companion object {
+internal actual class EntityType(val networkId: Int) {
+    /**
+     * The default status based on the entity type.
+     */
+    actual val defaultStatus: ImmutableEntityStatus by lazy { createDefaultStatus() }
+    
+    actual companion object {
         private val registry = Int2ObjectOpenHashMap<EntityType>()
         
         internal fun fromEntity(entity: RegularEntity): EntityType {
@@ -40,79 +45,79 @@ public actual class EntityType(public val networkId: Int) {
         }
         
         //-------- Passive Mobs --------// 
-        public actual val BAT: EntityType = EntityType(EntityBat.NETWORK_ID)
-        public actual val CAT: EntityType = EntityType(EntityCat.NETWORK_ID)
-        public actual val CHICKEN: EntityType = EntityType(EntityChicken.NETWORK_ID)
-        public actual val COD: EntityType = EntityType(EntityCod.NETWORK_ID)
-        public actual val COW: EntityType = EntityType(EntityCow.NETWORK_ID)
-        public actual val DONKEY: EntityType = EntityType(EntityDonkey.NETWORK_ID)
-        public actual val FOX: EntityType = EntityType(EntityFox.NETWORK_ID)
-        public actual val HORSE: EntityType = EntityType(EntityHorse.NETWORK_ID)
-        public actual val MOOSHROOM: EntityType = EntityType(EntityMooshroom.NETWORK_ID)
-        public actual val MULE: EntityType = EntityType(EntityMule.NETWORK_ID)
-        public actual val OCELOT: EntityType = EntityType(EntityOcelot.NETWORK_ID)
-        public actual val PARROT: EntityType = EntityType(EntityParrot.NETWORK_ID)
-        public actual val PIG: EntityType = EntityType(EntityPig.NETWORK_ID)
-        public actual val RABBIT: EntityType = EntityType(EntityRabbit.NETWORK_ID)
-        public actual val SALMON: EntityType = EntityType(EntitySalmon.NETWORK_ID)
-        public actual val SHEEP: EntityType = EntityType(EntitySheep.NETWORK_ID)
-        public actual val SKELETON_HORSE: EntityType = EntityType(EntitySkeletonHorse.NETWORK_ID)
-        public actual val SNOW_GOLEM: EntityType = EntityType(EntitySnowGolem.NETWORK_ID)
-        public actual val SQUID: EntityType = EntityType(EntitySquid.NETWORK_ID)
-        public actual val STRIDER: EntityType = EntityType(EntityStrider.NETWORK_ID)
-        public actual val TROPICAL_FISH: EntityType = EntityType(EntityTropicalFish.NETWORK_ID)
-        public actual val TURTLE: EntityType = EntityType(EntityTurtle.NETWORK_ID)
-        public actual val VILLAGER: EntityType = EntityType(EntityVillager.NETWORK_ID)
-        public actual val VILLAGER_V1: EntityType = EntityType(EntityVillagerV1.NETWORK_ID)
-        public actual val WANDERING_TRADER: EntityType = EntityType(EntityWanderingTrader.NETWORK_ID)
+        actual val BAT: EntityType = EntityType(EntityBat.NETWORK_ID)
+        actual val CAT: EntityType = EntityType(EntityCat.NETWORK_ID)
+        actual val CHICKEN: EntityType = EntityType(EntityChicken.NETWORK_ID)
+        actual val COD: EntityType = EntityType(EntityCod.NETWORK_ID)
+        actual val COW: EntityType = EntityType(EntityCow.NETWORK_ID)
+        actual val DONKEY: EntityType = EntityType(EntityDonkey.NETWORK_ID)
+        actual val FOX: EntityType = EntityType(EntityFox.NETWORK_ID)
+        actual val HORSE: EntityType = EntityType(EntityHorse.NETWORK_ID)
+        actual val MOOSHROOM: EntityType = EntityType(EntityMooshroom.NETWORK_ID)
+        actual val MULE: EntityType = EntityType(EntityMule.NETWORK_ID)
+        actual val OCELOT: EntityType = EntityType(EntityOcelot.NETWORK_ID)
+        actual val PARROT: EntityType = EntityType(EntityParrot.NETWORK_ID)
+        actual val PIG: EntityType = EntityType(EntityPig.NETWORK_ID)
+        actual val RABBIT: EntityType = EntityType(EntityRabbit.NETWORK_ID)
+        actual val SALMON: EntityType = EntityType(EntitySalmon.NETWORK_ID)
+        actual val SHEEP: EntityType = EntityType(EntitySheep.NETWORK_ID)
+        actual val SKELETON_HORSE: EntityType = EntityType(EntitySkeletonHorse.NETWORK_ID)
+        actual val SNOW_GOLEM: EntityType = EntityType(EntitySnowGolem.NETWORK_ID)
+        actual val SQUID: EntityType = EntityType(EntitySquid.NETWORK_ID)
+        actual val STRIDER: EntityType = EntityType(EntityStrider.NETWORK_ID)
+        actual val TROPICAL_FISH: EntityType = EntityType(EntityTropicalFish.NETWORK_ID)
+        actual val TURTLE: EntityType = EntityType(EntityTurtle.NETWORK_ID)
+        actual val VILLAGER: EntityType = EntityType(EntityVillager.NETWORK_ID)
+        actual val VILLAGER_V1: EntityType = EntityType(EntityVillagerV1.NETWORK_ID)
+        actual val WANDERING_TRADER: EntityType = EntityType(EntityWanderingTrader.NETWORK_ID)
 
         //-------- Neutral Mobs --------//
-        public actual val BEE: EntityType = EntityType(EntityBee.NETWORK_ID)
-        public actual val CAVE_SPIDER: EntityType = EntityType(EntityCaveSpider.NETWORK_ID)
-        public actual val DOLPHIN: EntityType = EntityType(EntityDolphin.NETWORK_ID)
-        public actual val ENDERMAN: EntityType = EntityType(EntityEnderman.NETWORK_ID)
-        public actual val IRON_GOLEM: EntityType = EntityType(EntityIronGolem.NETWORK_ID) 
-        public actual val LLAMA: EntityType = EntityType(EntityLlama.NETWORK_ID)
-        public actual val PIGLIN: EntityType = EntityType(EntityPiglin.NETWORK_ID)
-        public actual val PANDA: EntityType = EntityType(EntityPanda.NETWORK_ID)
-        public actual val POLAR_BEAR: EntityType = EntityType(EntityPolarBear.NETWORK_ID)
-        public actual val PUFFERFISH: EntityType = EntityType(EntityPufferfish.NETWORK_ID)
-        public actual val SPIDER: EntityType = EntityType(EntitySpider.NETWORK_ID)
-        public actual val WOLF: EntityType = EntityType(EntityWolf.NETWORK_ID)
-        public actual val ZOMBIFED_PIGLIN: EntityType = EntityType(EntityZombiePigman.NETWORK_ID)
+        actual val BEE: EntityType = EntityType(EntityBee.NETWORK_ID)
+        actual val CAVE_SPIDER: EntityType = EntityType(EntityCaveSpider.NETWORK_ID)
+        actual val DOLPHIN: EntityType = EntityType(EntityDolphin.NETWORK_ID)
+        actual val ENDERMAN: EntityType = EntityType(EntityEnderman.NETWORK_ID)
+        actual val IRON_GOLEM: EntityType = EntityType(EntityIronGolem.NETWORK_ID) 
+        actual val LLAMA: EntityType = EntityType(EntityLlama.NETWORK_ID)
+        actual val PIGLIN: EntityType = EntityType(EntityPiglin.NETWORK_ID)
+        actual val PANDA: EntityType = EntityType(EntityPanda.NETWORK_ID)
+        actual val POLAR_BEAR: EntityType = EntityType(EntityPolarBear.NETWORK_ID)
+        actual val PUFFERFISH: EntityType = EntityType(EntityPufferfish.NETWORK_ID)
+        actual val SPIDER: EntityType = EntityType(EntitySpider.NETWORK_ID)
+        actual val WOLF: EntityType = EntityType(EntityWolf.NETWORK_ID)
+        actual val ZOMBIFED_PIGLIN: EntityType = EntityType(EntityZombiePigman.NETWORK_ID)
 
         //-------- Hostile Mobs --------//
-        public actual val BLAZE: EntityType = EntityType(EntityBlaze.NETWORK_ID)
-        public actual val CREEPER: EntityType = EntityType(EntityCreeper.NETWORK_ID)
-        public actual val DROWNED: EntityType = EntityType(EntityDrowned.NETWORK_ID)
-        public actual val ELDER_GUARDIAN: EntityType = EntityType(EntityElderGuardian.NETWORK_ID)
-        public actual val ENDERMITE: EntityType = EntityType(EntityEndermite.NETWORK_ID)
-        public actual val EVOKER: EntityType = EntityType(EntityEvoker.NETWORK_ID)
-        public actual val GHAST: EntityType = EntityType(EntityGhast.NETWORK_ID)
-        public actual val GUARDIAN: EntityType = EntityType(EntityGuardian.NETWORK_ID)
-        public actual val HOGLIN: EntityType = EntityType(EntityHoglin.NETWORK_ID)
-        public actual val HUSK: EntityType = EntityType(EntityHusk.NETWORK_ID)
-        public actual val MAGMA_CUBE: EntityType = EntityType(EntityMagmaCube.NETWORK_ID)
-        public actual val PHANTOM: EntityType = EntityType(EntityPhantom.NETWORK_ID)
-        public actual val PIGLIN_BRUTE: EntityType = EntityType(EntityPiglinBrute.NETWORK_ID)
-        public actual val PILLAGER: EntityType = EntityType(EntityPillager.NETWORK_ID)
-        public actual val RAVEGER: EntityType = EntityType(EntityRavager.NETWORK_ID)
-        public actual val SHULKER: EntityType = EntityType(EntityShulker.NETWORK_ID)
-        public actual val SILVERFISH: EntityType = EntityType(EntitySilverfish.NETWORK_ID)
-        public actual val SKELETON: EntityType = EntityType(EntitySkeleton.NETWORK_ID)
-        public actual val SLIME: EntityType = EntityType(EntitySlime.NETWORK_ID)
-        public actual val STRAY: EntityType = EntityType(EntityStray.NETWORK_ID)
-        public actual val VEX: EntityType = EntityType(EntityVex.NETWORK_ID)
-        public actual val VINDICATOR: EntityType = EntityType(EntityVindicator.NETWORK_ID)
-        public actual val WITCH: EntityType = EntityType(EntityWitch.NETWORK_ID)
-        public actual val WITHER_SKELETON: EntityType = EntityType(EntityWitherSkeleton.NETWORK_ID)
-        public actual val ZOGLIN: EntityType = EntityType(EntityZoglin.NETWORK_ID)
-        public actual val ZOMBIE: EntityType = EntityType(EntityZombie.NETWORK_ID)
-        public actual val ZOMBIE_VILLAGER: EntityType = EntityType(EntityZombieVillager.NETWORK_ID)
-        public actual val ZOMBIE_VILLAGER_V1: EntityType = EntityType(EntityZombieVillagerV1.NETWORK_ID)
+        actual val BLAZE: EntityType = EntityType(EntityBlaze.NETWORK_ID)
+        actual val CREEPER: EntityType = EntityType(EntityCreeper.NETWORK_ID)
+        actual val DROWNED: EntityType = EntityType(EntityDrowned.NETWORK_ID)
+        actual val ELDER_GUARDIAN: EntityType = EntityType(EntityElderGuardian.NETWORK_ID)
+        actual val ENDERMITE: EntityType = EntityType(EntityEndermite.NETWORK_ID)
+        actual val EVOKER: EntityType = EntityType(EntityEvoker.NETWORK_ID)
+        actual val GHAST: EntityType = EntityType(EntityGhast.NETWORK_ID)
+        actual val GUARDIAN: EntityType = EntityType(EntityGuardian.NETWORK_ID)
+        actual val HOGLIN: EntityType = EntityType(EntityHoglin.NETWORK_ID)
+        actual val HUSK: EntityType = EntityType(EntityHusk.NETWORK_ID)
+        actual val MAGMA_CUBE: EntityType = EntityType(EntityMagmaCube.NETWORK_ID)
+        actual val PHANTOM: EntityType = EntityType(EntityPhantom.NETWORK_ID)
+        actual val PIGLIN_BRUTE: EntityType = EntityType(EntityPiglinBrute.NETWORK_ID)
+        actual val PILLAGER: EntityType = EntityType(EntityPillager.NETWORK_ID)
+        actual val RAVEGER: EntityType = EntityType(EntityRavager.NETWORK_ID)
+        actual val SHULKER: EntityType = EntityType(EntityShulker.NETWORK_ID)
+        actual val SILVERFISH: EntityType = EntityType(EntitySilverfish.NETWORK_ID)
+        actual val SKELETON: EntityType = EntityType(EntitySkeleton.NETWORK_ID)
+        actual val SLIME: EntityType = EntityType(EntitySlime.NETWORK_ID)
+        actual val STRAY: EntityType = EntityType(EntityStray.NETWORK_ID)
+        actual val VEX: EntityType = EntityType(EntityVex.NETWORK_ID)
+        actual val VINDICATOR: EntityType = EntityType(EntityVindicator.NETWORK_ID)
+        actual val WITCH: EntityType = EntityType(EntityWitch.NETWORK_ID)
+        actual val WITHER_SKELETON: EntityType = EntityType(EntityWitherSkeleton.NETWORK_ID)
+        actual val ZOGLIN: EntityType = EntityType(EntityZoglin.NETWORK_ID)
+        actual val ZOMBIE: EntityType = EntityType(EntityZombie.NETWORK_ID)
+        actual val ZOMBIE_VILLAGER: EntityType = EntityType(EntityZombieVillager.NETWORK_ID)
+        actual val ZOMBIE_VILLAGER_V1: EntityType = EntityType(EntityZombieVillagerV1.NETWORK_ID)
 
         //-------- Boss Mobs --------//
-        public actual val ENDER_DRAGON: EntityType = EntityType(EntityEnderDragon.NETWORK_ID)
-        public actual val WITHER: EntityType = EntityType(EntityWither.NETWORK_ID)
+        actual val ENDER_DRAGON: EntityType = EntityType(EntityEnderDragon.NETWORK_ID)
+        actual val WITHER: EntityType = EntityType(EntityWither.NETWORK_ID)
     }
 }

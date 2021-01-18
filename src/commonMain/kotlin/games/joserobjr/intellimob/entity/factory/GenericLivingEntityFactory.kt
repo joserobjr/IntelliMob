@@ -19,7 +19,6 @@
 
 package games.joserobjr.intellimob.entity.factory
 
-import games.joserobjr.intellimob.annotation.ExperimentalIntelliMobApi
 import games.joserobjr.intellimob.brain.Brain
 import games.joserobjr.intellimob.control.EntityControls
 import games.joserobjr.intellimob.entity.RegularEntity
@@ -29,9 +28,11 @@ import games.joserobjr.intellimob.pathfinding.PathFinder
  * @author joserobjr
  * @since 2021-01-13
  */
-@ExperimentalIntelliMobApi
-public open class GenericLivingEntityFactory {
-    public fun createControls(regularEntity: RegularEntity): EntityControls = TODO()
-    public fun createBrain(regularEntity: RegularEntity): Brain = TODO()
-    public fun createPathFinder(regularEntity: RegularEntity): PathFinder = TODO()
+internal open class GenericLivingEntityFactory {
+    fun createControls(regularEntity: RegularEntity): EntityControls = TODO()
+    fun createPathFinder(regularEntity: RegularEntity): PathFinder = TODO()
+    
+    fun createBrain(regularEntity: RegularEntity): Brain = Brain(regularEntity).apply {
+        
+    }
 }

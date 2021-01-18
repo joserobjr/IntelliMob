@@ -19,7 +19,6 @@
 
 package games.joserobjr.intellimob.entity.api
 
-import games.joserobjr.intellimob.annotation.ExperimentalIntelliMobApi
 import games.joserobjr.intellimob.entity.PlatformEntityType
 import org.cloudburstmc.server.entity.Entity
 import org.cloudburstmc.server.entity.EntityType
@@ -28,9 +27,8 @@ import org.cloudburstmc.server.entity.EntityType
  * @author joserobjr
  * @since 2021-01-12
  */
-@ExperimentalIntelliMobApi
-public interface Piglin: Entity {
-    public companion object {
-        public val TYPE: EntityType<Piglin> = PlatformEntityType.from("piglin", Piglin::class.java)
+internal interface Piglin: Entity {
+    companion object {
+        val TYPE: EntityType<Piglin> = PlatformEntityType.from("piglin", Piglin::class.java)
     }
 }

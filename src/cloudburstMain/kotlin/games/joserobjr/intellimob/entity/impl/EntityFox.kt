@@ -19,7 +19,6 @@
 
 package games.joserobjr.intellimob.entity.impl
 
-import games.joserobjr.intellimob.annotation.ExperimentalIntelliMobApi
 import games.joserobjr.intellimob.entity.api.Fox
 import org.cloudburstmc.server.entity.EntityType
 import org.cloudburstmc.server.entity.impl.passive.Animal
@@ -29,7 +28,6 @@ import org.cloudburstmc.server.level.Location
  * @author joserobjr
  * @since 2021-01-12
  */
-@ExperimentalIntelliMobApi
 internal class EntityFox(type: EntityType<*>?, location: Location?) : Animal(type, location), Fox {
     override fun initEntity() {
         super.initEntity()

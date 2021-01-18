@@ -19,7 +19,6 @@
 
 package games.joserobjr.intellimob.entity.status
 
-import games.joserobjr.intellimob.annotation.ExperimentalIntelliMobApi
 import games.joserobjr.intellimob.math.DoubleVectorXZ
 import games.joserobjr.intellimob.math.PitchYaw
 
@@ -27,29 +26,30 @@ import games.joserobjr.intellimob.math.PitchYaw
  * @author joserobjr
  * @since 2021-01-11
  */
-@ExperimentalIntelliMobApi
-public interface EntityStatus {
+internal interface EntityStatus {
     /**
      * How fast the head can rotate the head in the pitch and yaw axis.
      */
-    public val headSpeed: PitchYaw
-    public val walkSpeed: DoubleVectorXZ
-    public val jumpSpeed: Double
-    public val stepHeight: Double
-    public val canJump: Boolean
+    val headSpeed: PitchYaw
+    val headFastSpeed: PitchYaw
+    val walkSpeed: DoubleVectorXZ
+    val sprintSpeed: DoubleVectorXZ
+    val jumpSpeed: Double
+    val stepHeight: Double
+    val canJump: Boolean
 
     /**
      * Creates a new mutable copy of this status.
      */
-    public fun toMutable(): MutableEntityStatus
+    fun toMutable(): MutableEntityStatus
 
     /**
      * Gets an immutable instance of this status. 
      */
-    public fun toImmutable(): ImmutableEntityStatus
+    fun toImmutable(): ImmutableEntityStatus
 
     /**
      * Gets a view of this entity which cannot be modified externally but the values inside it may change if this is mutable.
      */
-    public fun asImmutableView(): EntityStatus = ImmutableEntityStatusView(this)
+    fun asImmutableView(): EntityStatus = ImmutableEntityStatusView(this)
 }

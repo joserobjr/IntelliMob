@@ -19,7 +19,6 @@
 
 package games.joserobjr.intellimob.control
 
-import games.joserobjr.intellimob.annotation.ExperimentalIntelliMobApi
 import games.joserobjr.intellimob.entity.RegularEntity
 import io.gomint.entity.animal.EntitySquid
 
@@ -27,7 +26,6 @@ import io.gomint.entity.animal.EntitySquid
  * @author joserobjr
  * @since 2021-01-11
  */
-@ExperimentalIntelliMobApi
 internal fun RegularEntity.createControls(): EntityControls {
     return when(this) {
         is EntitySquid -> SquidControls(this)

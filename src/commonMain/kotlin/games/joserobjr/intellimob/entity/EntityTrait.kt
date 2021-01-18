@@ -19,16 +19,13 @@
 
 package games.joserobjr.intellimob.entity
 
-import games.joserobjr.intellimob.annotation.ExperimentalIntelliMobApi
-
 /**
  * All possible characteristics of an entity 
  * 
  * @author joserobjr
  * @since 2021-01-11
  */
-@ExperimentalIntelliMobApi
-public enum class EntityTrait {
+internal enum class EntityTrait {
     /**
      * Never attacks even when attacked.
      */

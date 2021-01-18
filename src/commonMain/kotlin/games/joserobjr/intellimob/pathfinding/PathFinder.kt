@@ -19,12 +19,8 @@
 
 package games.joserobjr.intellimob.pathfinding
 
-import games.joserobjr.intellimob.annotation.ExperimentalIntelliMobApi
-
 /**
  * @author joserobjr
  * @since 2021-01-11
  */
-@ExperimentalIntelliMobApi
-public interface PathFinder {
-}
+internal interface PathFinder

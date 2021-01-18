@@ -25,17 +25,9 @@ package games.joserobjr.intellimob.math
  * @author joserobjr
  * @since 2021-01-11
  */
-public inline class PitchYaw (private val vectorXY: DoubleVectorXY) {
-    public val pitch: Double get() = vectorXY.x
-    public val yaw: Double get() = vectorXY.y
-
-    public operator fun component1(): Double = pitch
-    public operator fun component2(): Double = yaw
-
-    public fun copy(pitch: Double = this.pitch, yaw: Double = this.yaw): PitchYaw =
-        PitchYaw(vectorXY.copy(x = pitch, y = yaw))
-
-    override fun toString(): String {
-        return "PitchYaw(pitch=$pitch, yaw=$yaw)"
-    }
+internal data class PitchYaw(
+    val pitch: Double, 
+    val yaw: Double
+) {
+    constructor(pitch: Float, yaw: Float): this(pitch.toDouble(), yaw = yaw.toDouble())
 }

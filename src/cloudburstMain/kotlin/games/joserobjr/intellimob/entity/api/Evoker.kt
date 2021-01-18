@@ -19,7 +19,6 @@
 
 package games.joserobjr.intellimob.entity.api
 
-import games.joserobjr.intellimob.annotation.ExperimentalIntelliMobApi
 import games.joserobjr.intellimob.entity.PlatformEntityType
 import org.cloudburstmc.server.entity.Entity
 
@@ -27,9 +26,8 @@ import org.cloudburstmc.server.entity.Entity
  * @author joserobjr
  * @since 2021-01-12
  */
-@ExperimentalIntelliMobApi
-public interface Evoker: Entity {
-    public companion object {
-        public val TYPE: PlatformEntityType<Evoker> = PlatformEntityType.from("fox", Evoker::class.java)
+internal interface Evoker: Entity {
+    companion object {
+        val TYPE: PlatformEntityType<Evoker> = PlatformEntityType.from("fox", Evoker::class.java)
     }
 }

@@ -20,7 +20,6 @@
 package games.joserobjr.intellimob
 
 import com.google.inject.Inject
-import games.joserobjr.intellimob.annotation.ExperimentalIntelliMobApi
 import games.joserobjr.intellimob.entity.api.Fox
 import games.joserobjr.intellimob.entity.impl.EntityFox
 import org.cloudburstmc.server.event.Listener
@@ -42,7 +41,6 @@ import java.nio.file.Path
     version = "0.1.0-SNAPSHOT",
     authors = ["joserobjr@powernukkit.org"]
 )
-@OptIn(ExperimentalIntelliMobApi::class)
 internal class IntelliMobCloudburstPlugin @Inject constructor(
     private val description: PluginDescription,
     private val logger: Logger,

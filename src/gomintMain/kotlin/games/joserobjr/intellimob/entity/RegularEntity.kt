@@ -19,17 +19,14 @@
 
 package games.joserobjr.intellimob.entity
 
-import games.joserobjr.intellimob.annotation.ExperimentalIntelliMobApi
 import games.joserobjr.intellimob.brain.Brain
-import games.joserobjr.intellimob.brain.createBrain
 import games.joserobjr.intellimob.brain.wish.Wishes
 import games.joserobjr.intellimob.control.EntityControls
-import games.joserobjr.intellimob.control.createControls
 import games.joserobjr.intellimob.entity.status.EntityStatus
-import games.joserobjr.intellimob.entity.status.createBaseStatus
-import games.joserobjr.intellimob.entity.status.createDefaultStatus
-import games.joserobjr.intellimob.pathfinder.createPathFinder
+import games.joserobjr.intellimob.math.EntityPos
 import games.joserobjr.intellimob.pathfinding.PathFinder
+import games.joserobjr.intellimob.trait.WithEntityLocation
+import games.joserobjr.intellimob.trait.WithTimeSource
 import io.gomint.entity.Entity
 import java.util.*
 import kotlin.properties.ReadOnlyProperty
@@ -41,40 +38,42 @@ import kotlin.reflect.full.declaredMemberProperties
  * @author joserobjr
  * @since 2021-01-11
  */
-public actual typealias RegularEntity = Entity
+internal actual interface RegularEntity: WithEntityLocation, WithTimeSource {
+    val goMintEntity: Entity<*>
 
-@ExperimentalIntelliMobApi
-public actual val RegularEntity.entityType: EntityType by lazyData(EntityType::fromEntity)
+    actual val type: EntityType
 
-/**
- * Allows to apply physical movements to the entity.
- */
-@ExperimentalIntelliMobApi
-public actual val RegularEntity.controls: EntityControls by lazyData(RegularEntity::createControls)
+    /**
+     * Allows to apply physical movements to the entity.
+     */
+    actual val controls: EntityControls
 
-/**
- * Hold and process all intelligence stuff which doesn't require physical interactions.
- */
-@ExperimentalIntelliMobApi
-public actual val RegularEntity.brain: Brain by lazyData(RegularEntity::createBrain)
+    /**
+     * Hold and process all intelligence stuff which doesn't require physical interactions.
+     */
+    actual val brain: Brain
 
-/**
- * The default status based on the entity type.
- */
-@ExperimentalIntelliMobApi
-public actual val RegularEntity.defaultStatus: EntityStatus by lazyData(RegularEntity::createDefaultStatus)
+    /**
+     * The current base status, not modified by environmental conditions.
+     */
+    actual val baseStatus: EntityStatus
 
-/**
- * The current base status, not modified by environmental conditions.
- */
-@ExperimentalIntelliMobApi
-public actual val RegularEntity.baseStatus: EntityStatus by lazyData(RegularEntity::createBaseStatus)
+    /**
+     * The current status, affected environmental conditions.
+     */
+    actual val currentStatus: EntityStatus
 
-/**
- * The intelligence which visualizes the world to realize movement [Wishes] from the [Brain] using the [EntityControls].
- */
-@ExperimentalIntelliMobApi
-public actual val RegularEntity.pathFinder: PathFinder by lazyData(RegularEntity::createPathFinder)
+    /**
+     * The intelligence which visualizes the world to realize movement [Wishes] from the [Brain] using the [EntityControls].
+     */
+    actual val pathFinder: PathFinder
+
+    actual override val position: EntityPos
+
+    actual suspend fun createSnapshot(): EntitySnapshot
+}
+
+internal fun <E> Entity<E>.asRegularEntity(): RegularEntity = GoMintRegularEntity(this)
 
 private inline fun <D: Any> lazyData(crossinline loader: RegularEntity.()-> D) = object : ReadOnlyProperty<RegularEntity, D> {
     private var mutableProperty: KMutableProperty<D?>? = null
@@ -105,7 +104,6 @@ private val RegularEntity.intelliMobData: EntityDataStorage get() {
     }
 }
 
-@OptIn(ExperimentalIntelliMobApi::class)
 private data class EntityDataStorage (
     var type: EntityType? = null,
     var controls: EntityControls? = null,

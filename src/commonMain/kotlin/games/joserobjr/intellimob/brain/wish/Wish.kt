@@ -19,7 +19,6 @@
 
 package games.joserobjr.intellimob.brain.wish
 
-import games.joserobjr.intellimob.annotation.ExperimentalIntelliMobApi
 import games.joserobjr.intellimob.brain.Brain
 import games.joserobjr.intellimob.control.EntityControls
 
@@ -27,7 +26,9 @@ import games.joserobjr.intellimob.control.EntityControls
  * @author joserobjr
  * @since 2021-01-11
  */
-@ExperimentalIntelliMobApi
-public fun interface Wish {
-    public fun EntityControls.execute(brain: Brain): Boolean
+internal fun interface Wish {
+    /**
+     * @return `true` if the wish has been fulfilled and no more executions are needed
+     */
+    fun EntityControls.execute(brain: Brain): Boolean
 }

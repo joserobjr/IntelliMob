@@ -19,9 +19,7 @@
 
 package games.joserobjr.intellimob.control
 
-import games.joserobjr.intellimob.annotation.ExperimentalIntelliMobApi
 import games.joserobjr.intellimob.entity.RegularEntity
-import games.joserobjr.intellimob.entity.defaultStatus
 import games.joserobjr.intellimob.entity.status.EntityStatus
 import games.joserobjr.intellimob.math.DoubleVectorXZ
 import games.joserobjr.intellimob.math.EntityPos
@@ -31,9 +29,8 @@ import games.joserobjr.intellimob.math.PitchYaw
  * @author joserobjr
  * @since 2021-01-11
  */
-@ExperimentalIntelliMobApi
-public open class NoEntityControls(private val entity: RegularEntity) : EntityControls {
-    override val currentStatus: EntityStatus = entity.defaultStatus.toImmutable()
+internal open class NoEntityControls(private val entity: RegularEntity) : EntityControls {
+    override val currentStatus: EntityStatus = entity.type.defaultStatus
     override fun lookAt(pos: EntityPos, speed: PitchYaw): Boolean = false
     override fun jump(speed: Double): Boolean = false
     override fun walkTo(pos: EntityPos, acceptableDistance: Double, speed: DoubleVectorXZ): Boolean = false

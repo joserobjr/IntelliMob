@@ -28,7 +28,7 @@ import kotlin.reflect.KProperty
  * @author joserobjr
  * @since 2021-01-11
  */
-public abstract class AbstractMetadataProperty<V>(protected val key: String?): ReadWriteProperty<Metadatable, V> {
+internal abstract class AbstractMetadataProperty<V>(private val key: String?): ReadWriteProperty<Metadatable, V> {
     override fun setValue(thisRef: Metadatable, property: KProperty<*>, value: V) {
         val keyName = key ?: property.name
         thisRef.getMetadataValue(keyName)?.let {
