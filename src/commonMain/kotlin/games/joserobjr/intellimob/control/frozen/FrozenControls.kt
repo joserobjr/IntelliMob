@@ -17,24 +17,23 @@
  *
  */
 
-package games.joserobjr.intellimob.brain.wish
+package games.joserobjr.intellimob.control.frozen
 
+import games.joserobjr.intellimob.control.api.BodyController
 import games.joserobjr.intellimob.control.api.EntityControls
+import games.joserobjr.intellimob.control.api.HeadController
+import games.joserobjr.intellimob.control.api.JumpController
 import games.joserobjr.intellimob.entity.RegularEntity
-import games.joserobjr.intellimob.math.EntityPos
-import kotlinx.coroutines.Job
 
 /**
+ * The entity's brain will not be able to control it's body.
+ *
  * @author joserobjr
- * @since 2021-01-18
+ * @since 2021-01-19
  */
-internal object WishStayStill: WishMove() {
-    override val target: EntityPos get() = EntityPos(0.0, 0.0, 0.0)
-    override val targetEntity: RegularEntity? get() = null
-    override val isConstant: Boolean get() = false
-    override val sprinting: Boolean get() = false
-
-    override suspend fun EntityControls.start(): Job? {
-        return null
-    }
-}
+internal class FrozenControls(
+    override val owner: RegularEntity
+) : EntityControls,
+    HeadController by FrozenHeadController(owner),
+    BodyController by FrozenBodyController(owner),
+    JumpController by FrozenJumpController(owner)

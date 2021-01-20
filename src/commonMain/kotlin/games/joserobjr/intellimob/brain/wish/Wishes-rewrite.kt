@@ -20,8 +20,8 @@
 package games.joserobjr.intellimob.brain.wish
 
 import games.joserobjr.intellimob.brain.Brain
-import games.joserobjr.intellimob.control.EntityControls
-import games.joserobjr.intellimob.control.PhysicalControl
+import games.joserobjr.intellimob.control.api.EntityControls
+import games.joserobjr.intellimob.control.api.PhysicalControl
 import games.joserobjr.intellimob.coroutines.AI
 import games.joserobjr.intellimob.coroutines.RestartableJob
 import games.joserobjr.intellimob.entity.RegularEntity
@@ -35,6 +35,7 @@ import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.selects.select
+import kotlin.coroutines.cancellation.CancellationException
 import kotlin.time.Duration
 import kotlin.time.ExperimentalTime
 import kotlin.time.seconds
@@ -103,16 +104,22 @@ internal class Wishes(val brain: Brain) {
                             channel.onReceive { wish ->
                                 if (wish != null) {
                                     launch(brain.owner.updateDispatcher) {
-                                        wish.start()
+                                        with(wish) {
+                                            start()
+                                        }
                                     }
                                 }
                             }
                         }
                     }
                 }
+            } catch (e: Throwable) {
+                e.printStackTrace()
             } finally {
                 channels.values.forEach { it.cancel() }
+                coroutineContext.cancelChildren()
             }
+            println("Wish execution stopped")
         }
 
         return job
@@ -131,45 +138,54 @@ internal class Wishes(val brain: Brain) {
         }
     }
 
-    private suspend fun replaceAndJoin(control: PhysicalControl, wish: Wish, parentJob: Job) {
-        val newWish = ActiveWish(wish, parentJob)
+    private suspend fun replaceAndJoin(control: PhysicalControl, wish: Wish) {
+        val newWish = ActiveWish(wish)
         replaceWish(control, newWish)
-        newWish.job.join()
+        println("Wish started, awaiting completition")
+        newWish.job?.join()
+        println("Wish completed")
     }
 
     private fun CoroutineScope.launchWish(control: PhysicalControl, wish: Wish, timeLimit: Duration?): Job {
-        val parentJob = coroutineContext.job
         return launch(Dispatchers.AI) {
-            if (timeLimit != null) {
-                withTimeout(timeLimit.toLongMilliseconds()) {
-                    replaceAndJoin(control, wish, parentJob)
+            try {
+                if (timeLimit != null) {
+                    try {
+                        withTimeout(timeLimit.toLongMilliseconds()) {
+                            replaceAndJoin(control, wish)
+                        }
+                    } catch (e: TimeoutCancellationException) {
+                        coroutineContext.cancelChildren(e)
+                    }
+                } else {
+                    replaceAndJoin(control, wish)
                 }
-            } else {
-                replaceAndJoin(control, wish, parentJob)
+            } catch (e: CancellationException) {
+                e.printStackTrace()
+                throw e
+            } catch (e: Exception) {
+                e.printStackTrace()
+                cancel("An exception has occurred", e)
             }
         }
     }
 
     private inner class ActiveWish(
-        val wish: Wish,
-        parentJob: Job,
+        val wish: Wish
     ) {
-        val job = SupervisorJob(parentJob)
+        val job: Job? = null
         fun stop() {
-            job.cancel()
+            job?.cancel()
         }
 
-        fun start() {
-            CoroutineScope(job + brain.owner.updateDispatcher).launch {
+        fun CoroutineScope.start() {
+            val job = launch(Dispatchers.AI) {
                 val wishJob = with(brain.owner.controls) {
                     with(wish) {
                         start()
                     }
                 }
-                withContext(Dispatchers.AI) {
-                    wishJob?.join()
-                    job.complete()
-                }
+                wishJob?.join()
             }
         }
     }

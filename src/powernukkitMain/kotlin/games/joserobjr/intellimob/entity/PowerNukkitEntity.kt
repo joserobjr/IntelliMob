@@ -21,7 +21,7 @@ package games.joserobjr.intellimob.entity
 
 import cn.nukkit.entity.Entity
 import games.joserobjr.intellimob.brain.Brain
-import games.joserobjr.intellimob.control.EntityControls
+import games.joserobjr.intellimob.control.api.EntityControls
 import games.joserobjr.intellimob.coroutines.Sync
 import games.joserobjr.intellimob.entity.status.EntityStatus
 import games.joserobjr.intellimob.entity.status.MutableEntityStatus
@@ -58,6 +58,29 @@ internal class PowerNukkitEntity(override val powerNukkitEntity: Entity) : Regul
     override val eyePosition: EntityPos get() = with(powerNukkitEntity) { EntityPos(x, y + eyeHeight, z) }
     override val world: RegularWorld get() = powerNukkitEntity.level.asIntelliMobWorld()
     override val boundingBox: BoundingBox get() = powerNukkitEntity.boundingBox?.toIntelliMobBoundingBox() ?: BoundingBox.EMPTY
+    
+    var headYaw: Double = powerNukkitEntity.yaw
+    
+    override var headPitchYaw: PitchYaw 
+        get() = PitchYaw(powerNukkitEntity.pitch, headYaw)
+        set(value) {
+            var changed = false
+            if (powerNukkitEntity.pitch != value.pitch) {
+                changed = true
+                println("Pitch changed ${powerNukkitEntity.pitch} to ${value.pitch}")
+                powerNukkitEntity.pitch = value.pitch
+            }
+            if (value.yaw != headYaw) {
+                changed = true
+                println("Yaw changed ${value.yaw} to ${value.yaw}")
+                headYaw = value.yaw
+                // Hack to force PN to send the move packet because it don't track headYaw
+                powerNukkitEntity.lastPitch = 1000.0
+            }
+            if (changed) {
+                powerNukkitEntity.scheduleUpdate()
+            }
+        }
     
     override suspend fun createSnapshot(): EntitySnapshot = withContext(Dispatchers.Sync) {
         with(powerNukkitEntity) {

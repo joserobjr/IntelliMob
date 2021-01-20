@@ -17,24 +17,12 @@
  *
  */
 
-package games.joserobjr.intellimob.brain.wish
-
-import games.joserobjr.intellimob.control.api.EntityControls
-import games.joserobjr.intellimob.entity.RegularEntity
-import games.joserobjr.intellimob.math.EntityPos
-import kotlinx.coroutines.Job
+package games.joserobjr.intellimob.control.api
 
 /**
+ * Physical interactions with the entity body.
+ * 
  * @author joserobjr
- * @since 2021-01-18
+ * @since 2021-01-11
  */
-internal object WishStayStill: WishMove() {
-    override val target: EntityPos get() = EntityPos(0.0, 0.0, 0.0)
-    override val targetEntity: RegularEntity? get() = null
-    override val isConstant: Boolean get() = false
-    override val sprinting: Boolean get() = false
-
-    override suspend fun EntityControls.start(): Job? {
-        return null
-    }
-}
+internal interface EntityControls: HeadController, JumpController, BodyController

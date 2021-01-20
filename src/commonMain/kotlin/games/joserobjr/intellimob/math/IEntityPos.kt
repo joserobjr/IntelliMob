@@ -20,6 +20,8 @@
 package games.joserobjr.intellimob.math
 
 import games.joserobjr.intellimob.trait.WithEntityPos
+import kotlin.math.atan2
+import kotlin.math.sqrt
 
 /**
  * @author joserobjr
@@ -29,6 +31,18 @@ internal interface IEntityPos: WithEntityPos, IDoubleVectorXYZ {
     fun toBlockPos(): BlockPos = BlockPos(x.toInt(), y.toInt(), z.toInt())
     
     override val position: IEntityPos get() = this
+    
+    fun target(pos: IEntityPos): PitchYaw {
+        val deltaX: Double = pos.x - x
+        val deltaY: Double = pos.y - y
+        val deltaZ: Double = pos.z - z
+        
+        val yaw = (atan2(deltaZ, deltaX) * RAD_TO_DEGREE) - 90.0
+        
+        val pitch = -(atan2(deltaY, sqrt(deltaX * deltaX + deltaZ * deltaZ)) * RAD_TO_DEGREE)
+        
+        return PitchYaw(pitch, yaw)
+    }
 
     operator fun plus(pos: IIntVectorXYZ): EntityPos = EntityPos(x + pos.x, y + pos.y, z + pos.z)
     operator fun minus(pos: IIntVectorXYZ): EntityPos = EntityPos(x - pos.x, y - pos.y, z - pos.z)

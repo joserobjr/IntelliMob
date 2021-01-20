@@ -20,7 +20,7 @@
 package games.joserobjr.intellimob.entity
 
 import games.joserobjr.intellimob.brain.Brain
-import games.joserobjr.intellimob.control.EntityControls
+import games.joserobjr.intellimob.control.api.EntityControls
 import games.joserobjr.intellimob.coroutines.Sync
 import games.joserobjr.intellimob.entity.status.EntityStatus
 import games.joserobjr.intellimob.entity.status.MutableEntityStatus

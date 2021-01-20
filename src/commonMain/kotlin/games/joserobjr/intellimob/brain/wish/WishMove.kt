@@ -19,7 +19,7 @@
 
 package games.joserobjr.intellimob.brain.wish
 
-import games.joserobjr.intellimob.control.EntityControls
+import games.joserobjr.intellimob.control.api.EntityControls
 import games.joserobjr.intellimob.entity.RegularEntity
 import games.joserobjr.intellimob.math.EntityPos
 import kotlinx.coroutines.Job
@@ -40,6 +40,7 @@ internal abstract class WishMove: Wish() {
 
     protected open fun EntityControls.move(): Boolean {
         val target = target ?: return false
+        val currentStatus = owner.currentStatus
         return walkTo(target, speed = if (sprinting) currentStatus.sprintSpeed else currentStatus.walkSpeed)
     }
 }

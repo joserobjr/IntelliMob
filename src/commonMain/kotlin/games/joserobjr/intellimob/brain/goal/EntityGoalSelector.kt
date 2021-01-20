@@ -20,7 +20,7 @@
 package games.joserobjr.intellimob.brain.goal
 
 import games.joserobjr.intellimob.brain.Brain
-import games.joserobjr.intellimob.control.PhysicalControl
+import games.joserobjr.intellimob.control.api.PhysicalControl
 import games.joserobjr.intellimob.coroutines.AI
 import games.joserobjr.intellimob.coroutines.RestartableJob
 import games.joserobjr.intellimob.math.ticks

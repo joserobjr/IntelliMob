@@ -17,24 +17,28 @@
  *
  */
 
-package games.joserobjr.intellimob.brain.wish
+package games.joserobjr.intellimob.control.api
 
-import games.joserobjr.intellimob.control.api.EntityControls
 import games.joserobjr.intellimob.entity.RegularEntity
+import games.joserobjr.intellimob.entity.status.EntityStatus
 import games.joserobjr.intellimob.math.EntityPos
+import games.joserobjr.intellimob.math.PitchYaw
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 
 /**
  * @author joserobjr
- * @since 2021-01-18
+ * @since 2021-01-20
  */
-internal object WishStayStill: WishMove() {
-    override val target: EntityPos get() = EntityPos(0.0, 0.0, 0.0)
-    override val targetEntity: RegularEntity? get() = null
-    override val isConstant: Boolean get() = false
-    override val sprinting: Boolean get() = false
+internal interface HeadController {
+    val owner: RegularEntity
 
-    override suspend fun EntityControls.start(): Job? {
-        return null
-    }
+    /**
+     * Moves the entity head toward a position at given speed.
+     *
+     * This may need to be called multiple times depending on the current [EntityStatus.headSpeed] value and the distance of the position.
+     *
+     * @return `true` if the head has reached the objective and no more calls are needed to look at the position.
+     */
+    fun CoroutineScope.lookAt(pos: EntityPos, speed: PitchYaw = owner.currentStatus.headSpeed): Job
 }

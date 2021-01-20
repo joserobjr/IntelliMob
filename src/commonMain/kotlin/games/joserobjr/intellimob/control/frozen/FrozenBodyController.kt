@@ -17,24 +17,19 @@
  *
  */
 
-package games.joserobjr.intellimob.brain.wish
+package games.joserobjr.intellimob.control.frozen
 
-import games.joserobjr.intellimob.control.api.EntityControls
+import games.joserobjr.intellimob.control.api.BodyController
 import games.joserobjr.intellimob.entity.RegularEntity
+import games.joserobjr.intellimob.math.DoubleVectorXZ
 import games.joserobjr.intellimob.math.EntityPos
-import kotlinx.coroutines.Job
 
 /**
  * @author joserobjr
- * @since 2021-01-18
+ * @since 2021-01-20
  */
-internal object WishStayStill: WishMove() {
-    override val target: EntityPos get() = EntityPos(0.0, 0.0, 0.0)
-    override val targetEntity: RegularEntity? get() = null
-    override val isConstant: Boolean get() = false
-    override val sprinting: Boolean get() = false
-
-    override suspend fun EntityControls.start(): Job? {
-        return null
+internal class FrozenBodyController(override val owner: RegularEntity) : BodyController {
+    override fun walkTo(pos: EntityPos, acceptableDistance: Double, speed: DoubleVectorXZ): Boolean {
+        return false
     }
 }

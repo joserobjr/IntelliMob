@@ -19,7 +19,7 @@
 
 package games.joserobjr.intellimob.brain.wish
 
-import games.joserobjr.intellimob.control.EntityControls
+import games.joserobjr.intellimob.control.api.EntityControls
 import kotlinx.coroutines.Job
 
 /**

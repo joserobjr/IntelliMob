@@ -17,52 +17,33 @@
  *
  */
 
-package games.joserobjr.intellimob.control
+package games.joserobjr.intellimob.control.api
 
 import games.joserobjr.intellimob.entity.RegularEntity
 import games.joserobjr.intellimob.entity.status.EntityStatus
 import games.joserobjr.intellimob.math.DoubleVectorXZ
 import games.joserobjr.intellimob.math.EntityPos
-import games.joserobjr.intellimob.math.PitchYaw
 
 /**
- * Physical interactions with the entity body.
- * 
  * @author joserobjr
- * @since 2021-01-11
+ * @since 2021-01-20
  */
-internal interface EntityControls {
+internal interface BodyController {
     val owner: RegularEntity
     
     /**
-     * The current status affecting the entity. The returned values must consider if the entity is on floor, in water,
-     * etc.
-     */
-    val currentStatus: EntityStatus get() = owner.currentStatus
-
-    /**
-     * Moves the entity head toward a position at given speed. 
-     * 
-     * This may need to be called multiple times depending on the current [EntityStatus.headSpeed] value and the distance of the position.
-     * 
-     * @return `true` if the head has reached the objective and no more calls are needed to look at the position. 
-     */
-    fun lookAt(pos: EntityPos, speed: PitchYaw = currentStatus.headSpeed): Boolean
-
-    /**
-     * The entity receives an upward motion at the given speed.
-     */
-    fun jump(speed: Double = currentStatus.jumpSpeed): Boolean
-
-    /**
      * Moves the entity toward a direction.
-     * 
+     *
      * This may need to be called multiple times depending on the current [EntityStatus.walkSpeed] value and the distance of the position.
-     * 
+     *
      * @param pos The position which the entity wants to reach
      * @param acceptableDistance Determine how precise the entity needs to be in the range.
      * @param speed How fast the entity will move in the axis
      * @return `true` if the entity has reached an acceptable distance to the position and no more calls are needed.
      */
-    fun walkTo(pos: EntityPos, acceptableDistance: Double = currentStatus.stepHeight, speed: DoubleVectorXZ = currentStatus.walkSpeed): Boolean
+    fun walkTo(
+        pos: EntityPos,
+        acceptableDistance: Double = owner.currentStatus.stepHeight,
+        speed: DoubleVectorXZ = owner.currentStatus.walkSpeed
+    ): Boolean
 }

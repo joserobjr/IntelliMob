@@ -36,12 +36,14 @@ internal abstract class AbstractMetadataProperty<V>(private val key: String?): R
             return
         }
 
-        thisRef.setMetadata(key, SimpleMutableMetadataValue(value))
+        thisRef.setMetadata(keyName, SimpleMutableMetadataValue(value))
     }
 
     override fun getValue(thisRef: Metadatable, property: KProperty<*>): V {
         val keyName = key ?: property.name
-        return thisRef.getMetadataValue(keyName)?.value ?: getMissingValue(thisRef, property, keyName)
+        return thisRef.getMetadataValue(keyName)?.value ?: getMissingValue(thisRef, property, keyName).also {
+            setValue(thisRef, property, it)
+        }
     }
     
     protected abstract fun getMissingValue(thisRef: Metadatable, property: KProperty<*>, key: String): V

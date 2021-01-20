@@ -17,15 +17,22 @@
  *
  */
 
-package games.joserobjr.intellimob.control
+package games.joserobjr.intellimob.control.frozen
+
+import games.joserobjr.intellimob.control.api.HeadController
+import games.joserobjr.intellimob.entity.RegularEntity
+import games.joserobjr.intellimob.math.EntityPos
+import games.joserobjr.intellimob.math.PitchYaw
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
 
 /**
  * @author joserobjr
- * @since 2021-01-18
+ * @since 2021-01-20
  */
-internal enum class PhysicalControl {
-    MOVE,
-    LOOK,
-    JUMP,
-    TARGET
+internal class FrozenHeadController(override val owner: RegularEntity): HeadController {
+    override fun CoroutineScope.lookAt(pos: EntityPos, speed: PitchYaw): Job {
+        return Job().also { cancel("The head control is frozen") }
+    }
 }

@@ -29,6 +29,37 @@ internal data class PitchYaw(
     val pitch: Double, 
     val yaw: Double
 ) {
+    fun changeAngle(target: PitchYaw, speed: PitchYaw): PitchYaw {
+        val pitch = subtractAngles(pitch, target.pitch)
+        val yaw = subtractAngles(yaw, target.yaw)
+        
+        val deltaPith = pitch.coerceIn(-speed.pitch, speed.pitch)
+        val deltaYaw = yaw.coerceIn(-speed.yaw, speed.yaw) 
+        return PitchYaw(
+            this.pitch + deltaPith,
+            this.yaw + deltaYaw
+        )
+    }
+    
+    operator fun minus(other: PitchYaw): PitchYaw {
+        return PitchYaw(subtractAngles(pitch, other.pitch), subtractAngles(yaw, other.yaw))
+    }
+
+    private fun subtractAngles(start: Double, end: Double): Double {
+        return wrapDegrees(end - start)
+    }
+
+    private fun wrapDegrees(from: Double): Double {
+        var to = from % 360.0
+        if (to >= 180.0) {
+            to -= 360.0
+        }
+        if (to < -180.0) {
+            to += 360.0
+        }
+        return to
+    }
+
     constructor(pitch: Float, yaw: Float): this(pitch.toDouble(), yaw = yaw.toDouble())
     companion object {
         val ZERO = PitchYaw(0.0, 0.0)

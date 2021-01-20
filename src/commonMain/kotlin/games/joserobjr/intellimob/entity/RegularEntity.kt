@@ -22,10 +22,11 @@ package games.joserobjr.intellimob.entity
 import games.joserobjr.intellimob.block.LiquidState
 import games.joserobjr.intellimob.brain.Brain
 import games.joserobjr.intellimob.brain.wish.Wishes
-import games.joserobjr.intellimob.control.EntityControls
+import games.joserobjr.intellimob.control.api.EntityControls
 import games.joserobjr.intellimob.entity.status.EntityStatus
 import games.joserobjr.intellimob.entity.status.MutableEntityStatus
 import games.joserobjr.intellimob.math.EntityPos
+import games.joserobjr.intellimob.math.PitchYaw
 import games.joserobjr.intellimob.pathfinding.PathFinder
 import games.joserobjr.intellimob.trait.WithBoundingBox
 import games.joserobjr.intellimob.trait.WithEntityLocation
@@ -72,6 +73,8 @@ internal interface RegularEntity: PlatformEntity, WithEntityLocation, WithTimeSo
     override val position: EntityPos
     
     val eyePosition: EntityPos
+
+    var headPitchYaw: PitchYaw
     
     suspend fun createSnapshot(): EntitySnapshot
     

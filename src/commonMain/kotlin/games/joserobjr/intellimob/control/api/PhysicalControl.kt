@@ -17,24 +17,15 @@
  *
  */
 
-package games.joserobjr.intellimob.brain.wish
-
-import games.joserobjr.intellimob.control.api.EntityControls
-import games.joserobjr.intellimob.entity.RegularEntity
-import games.joserobjr.intellimob.math.EntityPos
-import kotlinx.coroutines.Job
+package games.joserobjr.intellimob.control.api
 
 /**
  * @author joserobjr
  * @since 2021-01-18
  */
-internal object WishStayStill: WishMove() {
-    override val target: EntityPos get() = EntityPos(0.0, 0.0, 0.0)
-    override val targetEntity: RegularEntity? get() = null
-    override val isConstant: Boolean get() = false
-    override val sprinting: Boolean get() = false
-
-    override suspend fun EntityControls.start(): Job? {
-        return null
-    }
+internal enum class PhysicalControl {
+    MOVE,
+    LOOK,
+    JUMP,
+    TARGET
 }

@@ -17,29 +17,29 @@
  *
  */
 
-package games.joserobjr.intellimob.control
+package games.joserobjr.intellimob.listener
 
-import games.joserobjr.intellimob.entity.RegularEntity
-import games.joserobjr.intellimob.math.DoubleVectorXZ
-import games.joserobjr.intellimob.math.EntityPos
-import games.joserobjr.intellimob.math.PitchYaw
+import cn.nukkit.event.EventHandler
+import cn.nukkit.event.EventPriority
+import cn.nukkit.event.Listener
+import cn.nukkit.event.level.LevelLoadEvent
+import games.joserobjr.intellimob.intelliMob
+import games.joserobjr.intellimob.world.asIntelliMobWorld
 
 /**
- * The entity's brain will not be able to control it's body.
- * 
  * @author joserobjr
- * @since 2021-01-19
+ * @since 2021-01-20
  */
-internal class FrozenControls(override val owner: RegularEntity) : EntityControls {
-    override fun lookAt(pos: EntityPos, speed: PitchYaw): Boolean {
-        return false
+internal object WorldListener: Listener {
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    fun onWorldLoad(ev: LevelLoadEvent) {
+        check(!ev.level.asIntelliMobWorld().job.isCompleted) {
+            "The AI job for the level ${ev.level} is completed on load. This is an IntelliMob bug, pease report."
+        }
     }
 
-    override fun jump(speed: Double): Boolean {
-        return false
-    }
-
-    override fun walkTo(pos: EntityPos, acceptableDistance: Double, speed: DoubleVectorXZ): Boolean {
-        return false
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    fun onWorldUnload(ev: LevelLoadEvent) {
+        ev.level.removeMetadata("job", intelliMob)
     }
 }

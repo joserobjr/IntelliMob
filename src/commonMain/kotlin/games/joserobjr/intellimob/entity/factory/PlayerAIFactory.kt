@@ -20,8 +20,8 @@
 package games.joserobjr.intellimob.entity.factory
 
 import games.joserobjr.intellimob.brain.Brain
-import games.joserobjr.intellimob.control.EntityControls
-import games.joserobjr.intellimob.control.FrozenControls
+import games.joserobjr.intellimob.control.api.EntityControls
+import games.joserobjr.intellimob.control.frozen.FrozenControls
 import games.joserobjr.intellimob.entity.RegularEntity
 
 /**
