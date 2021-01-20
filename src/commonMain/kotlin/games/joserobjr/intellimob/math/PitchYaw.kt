@@ -41,6 +41,9 @@ internal data class PitchYaw(
         )
     }
     
+    fun isSimilarTo(other: PitchYaw, epsilon: PitchYaw = EPSILON) = pitch.isSimilarTo(other.pitch, epsilon.pitch) && yaw.isSimilarTo(other.yaw, epsilon.yaw)
+    fun isNotSimilarTo(other: PitchYaw, epsilon: PitchYaw = EPSILON) = !isSimilarTo(other, epsilon)
+    
     operator fun minus(other: PitchYaw): PitchYaw {
         return PitchYaw(subtractAngles(pitch, other.pitch), subtractAngles(yaw, other.yaw))
     }
@@ -63,5 +66,6 @@ internal data class PitchYaw(
     constructor(pitch: Float, yaw: Float): this(pitch.toDouble(), yaw = yaw.toDouble())
     companion object {
         val ZERO = PitchYaw(0.0, 0.0)
+        val EPSILON = PitchYaw(0.0001, 0.0001)
     }
 }

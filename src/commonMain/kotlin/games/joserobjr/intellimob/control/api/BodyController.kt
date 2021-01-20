@@ -19,7 +19,6 @@
 
 package games.joserobjr.intellimob.control.api
 
-import games.joserobjr.intellimob.entity.RegularEntity
 import games.joserobjr.intellimob.entity.status.EntityStatus
 import games.joserobjr.intellimob.math.DoubleVectorXZ
 import games.joserobjr.intellimob.math.EntityPos
@@ -28,9 +27,7 @@ import games.joserobjr.intellimob.math.EntityPos
  * @author joserobjr
  * @since 2021-01-20
  */
-internal interface BodyController {
-    val owner: RegularEntity
-    
+internal interface BodyController: Controller {
     /**
      * Moves the entity toward a direction.
      *

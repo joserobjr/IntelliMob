@@ -28,12 +28,12 @@ private const val EPSILON_F = 0.000001F
  * @author joserobjr
  * @since 2021-01-20
  */
-internal fun Double.similar(other: Double, epsilon: Double = EPSILON_D) = abs(this - other) < epsilon 
-internal fun Float.similar(other: Float, epsilon: Float = EPSILON_F) = abs(this - other) < epsilon
-internal fun Float.similar(other: Double, epsilon: Double = EPSILON_D) = toDouble().similar(other, epsilon)
-internal fun Double.similar(other: Float, epsilon: Double = EPSILON_D) = similar(other.toDouble(), epsilon)
+internal fun Double.isSimilarTo(other: Double, epsilon: Double = EPSILON_D) = abs(this - other) < epsilon 
+internal fun Float.isSimilarTo(other: Float, epsilon: Float = EPSILON_F) = abs(this - other) < epsilon
+internal fun Float.isSimilarTo(other: Double, epsilon: Double = EPSILON_D) = toDouble().isSimilarTo(other, epsilon)
+internal fun Double.isSimilarTo(other: Float, epsilon: Double = EPSILON_D) = isSimilarTo(other.toDouble(), epsilon)
 
-internal fun Double.notSimilar(other: Double, epsilon: Double = EPSILON_D) = !similar(other, epsilon) 
-internal fun Float.notSimilar(other: Float, epsilon: Float = EPSILON_F) = !similar(other, epsilon) 
-internal fun Float.notSimilar(other: Double, epsilon: Double = EPSILON_D) = !similar(other, epsilon) 
-internal fun Double.notSimilar(other: Float, epsilon: Double = EPSILON_D) = !similar(other, epsilon) 
+internal fun Double.isNotSimilarTo(other: Double, epsilon: Double = EPSILON_D) = !isSimilarTo(other, epsilon) 
+internal fun Float.isNotSimilarTo(other: Float, epsilon: Float = EPSILON_F) = !isSimilarTo(other, epsilon) 
+internal fun Float.isNotSimilarTo(other: Double, epsilon: Double = EPSILON_D) = !isSimilarTo(other, epsilon) 
+internal fun Double.isNotSimilarTo(other: Float, epsilon: Double = EPSILON_D) = !isSimilarTo(other, epsilon) 

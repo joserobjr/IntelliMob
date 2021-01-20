@@ -75,6 +75,8 @@ internal interface RegularEntity: PlatformEntity, WithEntityLocation, WithTimeSo
     val eyePosition: EntityPos
 
     var headPitchYaw: PitchYaw
+
+    var bodyPitchYaw: PitchYaw
     
     suspend fun createSnapshot(): EntitySnapshot
     

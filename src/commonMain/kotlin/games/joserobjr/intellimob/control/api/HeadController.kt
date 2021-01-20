@@ -19,7 +19,6 @@
 
 package games.joserobjr.intellimob.control.api
 
-import games.joserobjr.intellimob.entity.RegularEntity
 import games.joserobjr.intellimob.entity.status.EntityStatus
 import games.joserobjr.intellimob.math.EntityPos
 import games.joserobjr.intellimob.math.PitchYaw
@@ -30,9 +29,7 @@ import kotlinx.coroutines.Job
  * @author joserobjr
  * @since 2021-01-20
  */
-internal interface HeadController {
-    val owner: RegularEntity
-
+internal interface HeadController: Controller {
     /**
      * Moves the entity head toward a position at given speed.
      *

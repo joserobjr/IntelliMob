@@ -20,10 +20,12 @@
 package games.joserobjr.intellimob.control.head
 
 import games.joserobjr.intellimob.control.api.HeadController
+import games.joserobjr.intellimob.coroutines.AI
 import games.joserobjr.intellimob.entity.RegularEntity
 import games.joserobjr.intellimob.math.EntityPos
 import games.joserobjr.intellimob.math.PitchYaw
 import games.joserobjr.intellimob.math.ticks
+import games.joserobjr.intellimob.trait.update
 import games.joserobjr.intellimobjvm.atomic.atomic
 import kotlinx.coroutines.*
 import kotlin.time.ExperimentalTime
@@ -32,30 +34,49 @@ import kotlin.time.ExperimentalTime
  * @author joserobjr
  * @since 2021-01-20
  */
-internal open class GenericHeadController(final override val owner: RegularEntity) : HeadController {
+internal open class GenericHeadController(final override val owner: RegularEntity, val returnSpeed: PitchYaw = DEFAULT_RETURN_SPEED) : HeadController {
     var keepAlignedToHorizon = false
-    var activeTask = atomic<Job>(Job().apply { complete() })
+    private val activeTask = atomic<Job>(Job().apply { complete() })
+    private val delayHeadReturn = atomic<Job>(Job().apply { complete() })
     
     @OptIn(ExperimentalTime::class)
     override fun CoroutineScope.lookAt(pos: EntityPos, speed: PitchYaw): Job {
         return activeTask.updateAndGet { old ->
             old.cancel(CancellationException("A new task has started"))
-            launch(owner.updateDispatcher) {
+            launch(Dispatchers.AI) {
                 while (true) {
-                    var previous = owner.headPitchYaw
-                    
-                    if (keepAlignedToHorizon && previous.pitch != 0.0) {
-                        previous = previous.copy(pitch = 0.0)
-                    }
-                    
-                    owner.headPitchYaw = previous.changeAngle(owner.eyePosition.target(pos), speed)
+                    updateAngle(owner.eyePosition.target(pos), speed)
                     delay(1.ticks)
                 }
             }
         }
     }
     
-    protected suspend fun idleTask() {
+    @OptIn(ExperimentalTime::class)
+    override suspend fun idleTask() {
+        if (activeTask.get().isCompleted) {
+            updateAngle(owner.bodyPitchYaw, returnSpeed)
+        }
+    }
+    
+    private suspend fun updateAngle(target: PitchYaw, speed: PitchYaw) {
+        val previous = owner.headPitchYaw
+
+        var force = false
+        var updated = previous.changeAngle(target, speed)
+        if (keepAlignedToHorizon && updated.pitch != 0.0) {
+            updated = updated.copy(pitch = 0.0)
+            force = true
+        }
         
+        if (force || previous.isNotSimilarTo(updated)) {
+            owner.update {
+                headPitchYaw = updated
+            }
+        }
+    }
+    
+    companion object {
+        private val DEFAULT_RETURN_SPEED = PitchYaw(10.0, 10.0)
     }
 }

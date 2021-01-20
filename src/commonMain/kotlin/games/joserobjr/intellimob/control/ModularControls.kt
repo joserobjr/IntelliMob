@@ -31,7 +31,14 @@ import games.joserobjr.intellimob.entity.RegularEntity
  */
 internal class ModularControls(
     override val owner: RegularEntity,
-    body: BodyController,
-    jump: JumpController,
-    head: HeadController,
-) : EntityControls, BodyController by body, JumpController by jump, HeadController by head
+    private val body: BodyController,
+    private val jump: JumpController,
+    private val head: HeadController,
+) : EntityControls, BodyController by body, JumpController by jump, HeadController by head {
+    
+    override suspend fun idleTask() {
+        body.idleTask()
+        jump.idleTask()
+        head.idleTask()
+    }
+}

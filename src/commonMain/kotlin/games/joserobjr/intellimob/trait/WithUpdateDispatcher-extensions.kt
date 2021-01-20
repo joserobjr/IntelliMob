@@ -17,18 +17,22 @@
  *
  */
 
-package games.joserobjr.intellimob.control.frozen
+package games.joserobjr.intellimob.trait
 
-import games.joserobjr.intellimob.control.ModularControls
-import games.joserobjr.intellimob.entity.RegularEntity
+import kotlinx.coroutines.withContext
 
 /**
- * The entity's brain will not be able to control it's body.
- *
  * @author joserobjr
- * @since 2021-01-19
+ * @since 2021-01-20
  */
-@Suppress("FunctionName")
-internal fun FrozenControls(
-    owner: RegularEntity
-) = ModularControls(owner, FrozenBodyController(owner), FrozenJumpController(owner), FrozenHeadController(owner))
+internal suspend inline fun <T: WithUpdateDispatcher> T.update(crossinline updater: T.() -> Unit) {
+    return withContext(updateDispatcher) {
+        updater()
+    }
+}
+
+internal suspend inline fun <T: WithUpdateDispatcher, R> T.updateAndGet(crossinline updater: T.() -> R): R {
+    return withContext(updateDispatcher) {
+        updater()
+    }
+}

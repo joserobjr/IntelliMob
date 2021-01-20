@@ -22,11 +22,14 @@ package games.joserobjr.intellimob.brain
 import games.joserobjr.intellimob.brain.goal.EntityGoalSelector
 import games.joserobjr.intellimob.brain.goal.EntityGoalSelectorType
 import games.joserobjr.intellimob.brain.wish.Wishes
+import games.joserobjr.intellimob.coroutines.AI
 import games.joserobjr.intellimob.coroutines.RestartableJob
 import games.joserobjr.intellimob.entity.RegularEntity
+import games.joserobjr.intellimob.math.ticks
 import games.joserobjr.intellimob.trait.WithTimeSource
-import kotlinx.coroutines.cancel
+import kotlinx.coroutines.*
 import kotlin.time.ExperimentalTime
+import kotlin.time.measureTime
 
 /**
  * @author joserobjr
@@ -56,9 +59,22 @@ internal class Brain(
             with(attackGoals) {
                 checkNotNull(startSelecting()) { "Could not start the attack goals selector" }
             }
+            with(CoroutineScope(job + Dispatchers.AI + CoroutineName("EntityControllers"))) {
+                startEntityControllers()
+            }
         } catch (e: Throwable) {
             job.cancel("Some thinking jobs has failed to start", e)
             throw e
+        }
+    }
+    
+    @OptIn(ExperimentalTime::class)
+    private fun CoroutineScope.startEntityControllers() = launch { 
+        while (true) {
+            val duration = measureTime {
+                owner.controls.idleTask()
+            }
+            delay(1.ticks - duration)
         }
     }
 }

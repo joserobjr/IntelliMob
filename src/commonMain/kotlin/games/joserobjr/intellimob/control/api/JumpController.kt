@@ -19,15 +19,11 @@
 
 package games.joserobjr.intellimob.control.api
 
-import games.joserobjr.intellimob.entity.RegularEntity
-
 /**
  * @author joserobjr
  * @since 2021-01-20
  */
-internal interface JumpController {
-    val owner: RegularEntity
-    
+internal interface JumpController: Controller {
     /**
      * The entity receives an upward motion at the given speed.
      */

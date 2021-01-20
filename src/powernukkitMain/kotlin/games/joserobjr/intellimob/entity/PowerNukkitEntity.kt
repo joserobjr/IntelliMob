@@ -59,6 +59,8 @@ internal class PowerNukkitEntity(override val powerNukkitEntity: Entity) : Regul
     override val world: RegularWorld get() = powerNukkitEntity.level.asIntelliMobWorld()
     override val boundingBox: BoundingBox get() = powerNukkitEntity.boundingBox?.toIntelliMobBoundingBox() ?: BoundingBox.EMPTY
     
+    private var bodyPitch = 0.0
+    
     override var headPitchYaw: PitchYaw 
         get() = with(powerNukkitEntity) { PitchYaw(pitch, yaw) }
         set(value) {
@@ -73,6 +75,13 @@ internal class PowerNukkitEntity(override val powerNukkitEntity: Entity) : Regul
                     yaw = value.yaw
                 //}
             }
+        }
+
+    override var bodyPitchYaw: PitchYaw
+        get() = with(powerNukkitEntity) { PitchYaw(bodyPitch, yaw) }
+        set(value) {
+            bodyPitch = value.pitch
+            powerNukkitEntity.yaw = value.yaw
         }
     
     override suspend fun createSnapshot(): EntitySnapshot = withContext(Dispatchers.Sync) {
