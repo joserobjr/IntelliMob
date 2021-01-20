@@ -59,24 +59,19 @@ internal class PowerNukkitEntity(override val powerNukkitEntity: Entity) : Regul
     override val world: RegularWorld get() = powerNukkitEntity.level.asIntelliMobWorld()
     override val boundingBox: BoundingBox get() = powerNukkitEntity.boundingBox?.toIntelliMobBoundingBox() ?: BoundingBox.EMPTY
     
-    var headYaw: Double = powerNukkitEntity.yaw
-    
     override var headPitchYaw: PitchYaw 
-        get() = PitchYaw(powerNukkitEntity.pitch, headYaw)
+        get() = with(powerNukkitEntity) { PitchYaw(pitch, yaw) }
         set(value) {
-            var changed = false
-            if (powerNukkitEntity.pitch != value.pitch) {
-                changed = true
-                powerNukkitEntity.pitch = value.pitch
-            }
-            if (value.yaw != headYaw) {
-                changed = true
-                headYaw = value.yaw
-                // Hack to force PN to send the move packet because it don't track headYaw
-                powerNukkitEntity.lastPitch = 1000.0
-            }
-            if (changed) {
-                powerNukkitEntity.scheduleUpdate()
+            with(powerNukkitEntity) {
+                //var changed = false
+                //if (pitch.notSimilar(value.pitch)) {
+                    //changed = true
+                    pitch = value.pitch
+                //}
+                //if (yaw.notSimilar(value.yaw)) {
+                    //changed = true
+                    yaw = value.yaw
+                //}
             }
         }
     

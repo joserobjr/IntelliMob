@@ -29,8 +29,8 @@ import cn.nukkit.event.entity.EntityEvent
 import cn.nukkit.event.entity.EntitySpawnEvent
 import games.joserobjr.intellimob.coroutines.AI
 import games.joserobjr.intellimob.entity.asRegularEntity
+import games.joserobjr.intellimob.exception.DespawnCancellationException
 import games.joserobjr.intellimob.intelliMob
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -58,7 +58,7 @@ internal object EntityListener: Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     fun onEntityDespawnEvent(ev: EntityDespawnEvent) {
         ev.entity.takeIf { it.hasMetadata("regularEntity") }?.apply {
-            asRegularEntity().job.cancel(CancellationException("The entity despawned"))
+            asRegularEntity().job.cancel(DespawnCancellationException())
             removeMetadata("regularEntity", intelliMob)
         }
     }

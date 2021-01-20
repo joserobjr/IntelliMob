@@ -23,7 +23,6 @@ import cn.nukkit.entity.Entity
 import cn.nukkit.plugin.PluginBase
 import games.joserobjr.intellimob.entity.EntityIronGolem
 import games.joserobjr.intellimob.listener.EntityListener
-import games.joserobjr.intellimob.listener.PacketListener
 import games.joserobjr.intellimob.listener.WorldListener
 
 /**
@@ -37,7 +36,7 @@ internal class IntelliMobPowerNukkitPlugin: PluginBase() {
         server.pluginManager.let { manager ->
             manager.registerEvents(WorldListener, this)
             manager.registerEvents(EntityListener, this)
-            manager.registerEvents(PacketListener, this)
+            //manager.registerEvents(PacketListener, this)
         }
     }
     

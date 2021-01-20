@@ -26,6 +26,7 @@ import games.joserobjr.intellimob.control.api.PhysicalControl
 import games.joserobjr.intellimob.coroutines.AI
 import games.joserobjr.intellimob.coroutines.RestartableJob
 import games.joserobjr.intellimob.entity.RegularEntity
+import games.joserobjr.intellimob.exception.DespawnCancellationException
 import games.joserobjr.intellimob.math.EntityPos
 import games.joserobjr.intellimob.math.IDoubleVectorXYZ
 import games.joserobjr.intellimobjvm.collection.asMap
@@ -114,13 +115,20 @@ internal class Wishes(val brain: Brain) {
                         }
                     }
                 }
+            } catch (e: DespawnCancellationException) {
+                log.info { "The entity despawned" }
+                throw e
+            } catch (e: CancellationException) {
+                log.warn(e) { "An unexpected cancellation happened while executing the wishes" }
+                throw e
             } catch (e: Throwable) {
-                e.printStackTrace()
+                log.error(e) { "An uncaught exception happened while executing the wishes" }
+                throw e
             } finally {
                 channels.values.forEach { it.cancel() }
                 coroutineContext.cancelChildren()
+                log.info { "Wish execution stopped" }
             }
-            log.info { "Wish execution stopped" }
         }
 
         return job
@@ -168,11 +176,11 @@ internal class Wishes(val brain: Brain) {
                     replaceAndJoin(control, wish)
                 }
             } catch (e: CancellationException) {
-                e.printStackTrace()
                 throw e
             } catch (e: Exception) {
-                e.printStackTrace()
+                log.warn(e) { "An exception occurred while executing the wish ${wish::class}" }
                 cancel("An exception has occurred", e)
+                throw e
             }
         }
     }

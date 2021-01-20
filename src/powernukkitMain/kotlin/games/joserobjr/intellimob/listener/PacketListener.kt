@@ -26,8 +26,6 @@ import cn.nukkit.event.Listener
 import cn.nukkit.event.server.BatchPacketsEvent
 import cn.nukkit.network.protocol.DataPacket
 import cn.nukkit.network.protocol.MoveEntityAbsolutePacket
-import games.joserobjr.intellimob.entity.PowerNukkitEntity
-import games.joserobjr.intellimob.entity.asRegularEntity
 
 /**
  * @author joserobjr
@@ -44,9 +42,9 @@ internal object PacketListener: Listener {
     }
     
     private fun onMoveEntityAbsolute(players: Array<Player>, packet: MoveEntityAbsolutePacket) {
-        val entity = players.firstOrNull()?.level?.getEntity(packet.eid)?.asRegularEntity() as? PowerNukkitEntity ?: return
-        packet.yaw = entity.headYaw
-        packet.reEncode()
+//        val entity = players.firstOrNull()?.level?.getEntity(packet.eid)?.asRegularEntity() as? PowerNukkitEntity ?: return
+//        packet.yaw = entity.headYaw
+//        packet.reEncode()
     }
     
     private fun DataPacket.reEncode() {
