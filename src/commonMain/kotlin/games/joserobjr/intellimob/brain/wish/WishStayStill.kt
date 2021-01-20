@@ -23,6 +23,9 @@ import games.joserobjr.intellimob.control.api.EntityControls
 import games.joserobjr.intellimob.entity.RegularEntity
 import games.joserobjr.intellimob.math.EntityPos
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 /**
  * @author joserobjr
@@ -34,7 +37,11 @@ internal object WishStayStill: WishMove() {
     override val isConstant: Boolean get() = false
     override val sprinting: Boolean get() = false
 
-    override suspend fun EntityControls.start(): Job? {
-        return null
+    override suspend fun EntityControls.start(): Job {
+        return coroutineScope { 
+            launch { 
+                awaitCancellation()
+            }
+        }
     }
 }

@@ -19,6 +19,7 @@
 
 package games.joserobjr.intellimob.brain.goal
 
+import com.github.michaelbull.logging.InlineLogger
 import games.joserobjr.intellimob.brain.Brain
 import games.joserobjr.intellimob.control.api.PhysicalControl
 import games.joserobjr.intellimob.coroutines.AI
@@ -31,6 +32,7 @@ import games.joserobjr.intellimobjvm.atomic.update
 import games.joserobjr.intellimobjvm.collection.mutableSortedSetOf
 import kotlinx.coroutines.*
 import kotlin.time.ExperimentalTime
+import kotlin.time.TimeSource
 import kotlin.time.measureTime
 import kotlin.time.seconds
 
@@ -118,9 +120,26 @@ internal class EntityGoalSelector(
         
         fun CoroutineScope.start() {
             _activeJob.update { old->
-                old?.cancel()
-                with(goal) {
-                    start(brain, memory)
+                launch {
+                    if (old != null) {
+                        log.info { "X Cancelling old goal" }
+                        old.cancelAndJoin()
+                    }
+                    with(goal) {
+                        val name = "${goal::class.simpleName}"
+                        val time = TimeSource.Monotonic.markNow()
+                        try {
+                            log.info { "+ Starting $name" }
+                            val job = start(brain, memory)
+                            if (job == null) {
+                                log.info { "@ Goal $name didn't create a job!" }
+                            } else {
+                                job.join()
+                            }
+                        } finally {
+                            log.info { "- Completed $name in ${time.elapsedNow()}" }
+                        }
+                    }
                 }
             }
         }
@@ -175,5 +194,6 @@ internal class EntityGoalSelector(
     companion object {
         @ExperimentalTime
         private val ONE_TICK = 1.ticks
+        private val log = InlineLogger()
     }
 }

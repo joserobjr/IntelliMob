@@ -19,10 +19,13 @@
 
 package games.joserobjr.intellimob.listener
 
+import cn.nukkit.Player
+import cn.nukkit.entity.EntityCreature
 import cn.nukkit.event.EventHandler
 import cn.nukkit.event.EventPriority
 import cn.nukkit.event.Listener
 import cn.nukkit.event.entity.EntityDespawnEvent
+import cn.nukkit.event.entity.EntityEvent
 import cn.nukkit.event.entity.EntitySpawnEvent
 import games.joserobjr.intellimob.coroutines.AI
 import games.joserobjr.intellimob.entity.asRegularEntity
@@ -37,22 +40,26 @@ import kotlinx.coroutines.launch
  * @since 2021-01-20
  */
 internal object EntityListener: Listener {
+    private val EntityEvent.creature get() = (entity as? EntityCreature).takeUnless { it is Player } 
+    
     @EventHandler(priority = EventPriority.LOWEST)
     fun onEntityPreSpawn(ev: EntitySpawnEvent) {
-        ev.entity.asRegularEntity() // Setup the AI on first call
+        ev.creature?.asRegularEntity() // Setup the AI on first call
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     fun onEntityPostSpawn(ev: EntitySpawnEvent) {
-        val entity = ev.entity.asRegularEntity()
-        CoroutineScope(Dispatchers.AI + entity.job).launch {
-            entity.brain.startThinking()
+        val creature = ev.creature?.asRegularEntity() ?: return
+        CoroutineScope(Dispatchers.AI + creature.job).launch {
+            creature.brain.startThinking()
         }
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     fun onEntityDespawnEvent(ev: EntityDespawnEvent) {
-        ev.entity.asRegularEntity().job.cancel(CancellationException("The entity despawned"))
-        ev.entity.removeMetadata("regularEntity", intelliMob)
+        ev.entity.takeIf { it.hasMetadata("regularEntity") }?.apply {
+            asRegularEntity().job.cancel(CancellationException("The entity despawned"))
+            removeMetadata("regularEntity", intelliMob)
+        }
     }
 }

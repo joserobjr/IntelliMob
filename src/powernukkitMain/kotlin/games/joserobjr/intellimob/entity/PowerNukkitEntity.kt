@@ -67,12 +67,10 @@ internal class PowerNukkitEntity(override val powerNukkitEntity: Entity) : Regul
             var changed = false
             if (powerNukkitEntity.pitch != value.pitch) {
                 changed = true
-                println("Pitch changed ${powerNukkitEntity.pitch} to ${value.pitch}")
                 powerNukkitEntity.pitch = value.pitch
             }
             if (value.yaw != headYaw) {
                 changed = true
-                println("Yaw changed ${value.yaw} to ${value.yaw}")
                 headYaw = value.yaw
                 // Hack to force PN to send the move packet because it don't track headYaw
                 powerNukkitEntity.lastPitch = 1000.0

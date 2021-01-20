@@ -19,6 +19,7 @@
 
 package games.joserobjr.intellimob.brain.wish
 
+import com.github.michaelbull.logging.InlineLogger
 import games.joserobjr.intellimob.brain.Brain
 import games.joserobjr.intellimob.control.api.EntityControls
 import games.joserobjr.intellimob.control.api.PhysicalControl
@@ -32,12 +33,12 @@ import games.joserobjr.intellimobjvm.collection.toEnumMap
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.selects.select
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.time.Duration
 import kotlin.time.ExperimentalTime
+import kotlin.time.TimeSource
 import kotlin.time.seconds
 
 /**
@@ -119,7 +120,7 @@ internal class Wishes(val brain: Brain) {
                 channels.values.forEach { it.cancel() }
                 coroutineContext.cancelChildren()
             }
-            println("Wish execution stopped")
+            log.info { "Wish execution stopped" }
         }
 
         return job
@@ -141,9 +142,15 @@ internal class Wishes(val brain: Brain) {
     private suspend fun replaceAndJoin(control: PhysicalControl, wish: Wish) {
         val newWish = ActiveWish(wish)
         replaceWish(control, newWish)
-        println("Wish started, awaiting completition")
-        newWish.job?.join()
-        println("Wish completed")
+        val name = "${wish::class.simpleName}"
+        val start = TimeSource.Monotonic.markNow()
+        try {
+            log.info { "> Wish $name started" }
+            newWish.job.first().join()
+        } finally {
+            val took = start.elapsedNow()
+            log.info { "< Wish $name completed. Took $took" }
+        }
     }
 
     private fun CoroutineScope.launchWish(control: PhysicalControl, wish: Wish, timeLimit: Duration?): Job {
@@ -173,9 +180,10 @@ internal class Wishes(val brain: Brain) {
     private inner class ActiveWish(
         val wish: Wish
     ) {
-        val job: Job? = null
-        fun stop() {
-            job?.cancel()
+        private val _job = MutableStateFlow<Job?>(null)
+        val job = _job.filterNotNull().take(1) 
+        suspend fun stop() {
+            job.first().cancelAndJoin()
         }
 
         fun CoroutineScope.start() {
@@ -187,7 +195,17 @@ internal class Wishes(val brain: Brain) {
                 }
                 wishJob?.join()
             }
+            repeat(100000) {
+                if (_job.tryEmit(job)) {
+                    return
+                }
+            }
+            throw IllegalStateException("Could not emit the job to the state flow")
         }
+    }
+    
+    companion object {
+        private val log = InlineLogger()
     }
 }
 

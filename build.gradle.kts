@@ -71,7 +71,9 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesVersion")
+                implementation(kotlin("reflect"))
                 implementation(project(":jvm-expectations"))
+                implementation("com.michael-bull.kotlin-inline-logger:kotlin-inline-logger:1.0.2")
             }
         }
         val commonTest by getting {
@@ -83,6 +85,7 @@ kotlin {
         val powernukkitMain by getting {
             dependencies {
                 implementation("org.powernukkit:powernukkit:${findProperty("powernukkit.version")}")
+                runtimeOnly("org.apache.logging.log4j:log4j-slf4j-impl:2.14.0")
             }
         }
         val powernukkitTest by getting {
@@ -97,7 +100,6 @@ kotlin {
                 val gomintVersion = findProperty("gomint.version")
                 implementation("io.gomint:gomint-api:$gomintVersion")
                 runtimeOnly("io.gomint:gomint-server:$gomintVersion")
-                implementation(kotlin("reflect"))
             }
         }
         val gomintTest by getting {

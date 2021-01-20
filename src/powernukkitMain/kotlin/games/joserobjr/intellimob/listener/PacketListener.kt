@@ -45,7 +45,6 @@ internal object PacketListener: Listener {
     
     private fun onMoveEntityAbsolute(players: Array<Player>, packet: MoveEntityAbsolutePacket) {
         val entity = players.firstOrNull()?.level?.getEntity(packet.eid)?.asRegularEntity() as? PowerNukkitEntity ?: return
-        println("Changing packet, was ${packet.headYaw} now is ${entity.headYaw}")
         packet.yaw = entity.headYaw
         packet.reEncode()
     }
