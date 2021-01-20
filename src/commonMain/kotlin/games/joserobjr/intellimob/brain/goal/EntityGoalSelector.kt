@@ -24,12 +24,15 @@ import games.joserobjr.intellimob.control.PhysicalControl
 import games.joserobjr.intellimob.coroutines.AI
 import games.joserobjr.intellimob.coroutines.RestartableJob
 import games.joserobjr.intellimob.math.ticks
+import games.joserobjr.intellimobjvm.atomic.AtomicRef
+import games.joserobjr.intellimobjvm.atomic.atomic
+import games.joserobjr.intellimobjvm.atomic.getValue
+import games.joserobjr.intellimobjvm.atomic.update
 import games.joserobjr.intellimobjvm.collection.mutableSortedSetOf
-import kotlinx.atomicfu.atomic
-import kotlinx.atomicfu.update
 import kotlinx.coroutines.*
 import kotlin.time.ExperimentalTime
 import kotlin.time.measureTime
+import kotlin.time.seconds
 
 /**
  * @author joserobjr
@@ -49,12 +52,20 @@ internal class EntityGoalSelector(
         val job = _selectingJob.startSupervisorJob(thinkingJob) ?: return null
         return CoroutineScope(job + Dispatchers.AI + CoroutineName("Goal Selector Type $type")).launch {
             val activeGoals = mutableSortedSetOf<AddedGoal>()
+            var lastGoalsObj = goals
             while (true) {
                 val updateTime = measureTime {
+                    if (activeGoals.isEmpty() && goals.isEmpty()) {
+                        delay(5.seconds)
+                        return@measureTime
+                    }
                     val goals = goals
-                    val removedGoals = activeGoals - goals
-                    removedGoals.forEach { it.stop() }
-                    activeGoals -= removedGoals
+                    if (goals !== lastGoalsObj) {
+                        val removedGoals = activeGoals - goals
+                        removedGoals.forEach { it.stop() }
+                        activeGoals -= removedGoals
+                        lastGoalsObj = goals
+                    }
                     activeGoals.removeAll { it.activeJob?.isActive != true }
 
                     goals.forEach { goal ->
@@ -100,7 +111,7 @@ internal class EntityGoalSelector(
         val goal: Goal,
         val priority: Int
     ): Comparable<AddedGoal> {
-        private val _activeJob = atomic<Job?>(null)
+        private val _activeJob = AtomicRef<Job?>(null)
         val activeJob by _activeJob
         val brain get() = selector.brain
         

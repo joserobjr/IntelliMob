@@ -21,33 +21,37 @@ package games.joserobjr.intellimob.entity.factory
 
 import games.joserobjr.intellimob.brain.Brain
 import games.joserobjr.intellimob.control.EntityControls
-import games.joserobjr.intellimob.control.FrozenControls
-import games.joserobjr.intellimob.entity.EntityType
 import games.joserobjr.intellimob.entity.RegularEntity
-import games.joserobjr.intellimob.entity.factory.passive.PigAI
 import games.joserobjr.intellimob.entity.status.ImmutableEntityStatus
 import games.joserobjr.intellimob.entity.status.MutableEntityStatus
 import games.joserobjr.intellimob.pathfinding.PathFinder
-import games.joserobjr.intellimob.pathfinding.StationaryPathFinder
 
 /**
  * @author joserobjr
- * @since 2021-01-19
+ * @since 2021-01-20
  */
-internal interface EntityAIFactory {
-    fun createControls(regularEntity: RegularEntity): EntityControls = FrozenControls(regularEntity)
-    fun createPathFinder(regularEntity: RegularEntity): PathFinder = StationaryPathFinder
-    fun createBrain(regularEntity: RegularEntity): Brain
-    fun createBaseStatus(regularEntity: RegularEntity): MutableEntityStatus = regularEntity.type.defaultStatus.toMutable()
-    fun createDefaultStatus(): ImmutableEntityStatus
+internal object UninitializedAI: EntityAIFactory {
+    private fun fail(): Nothing {
+        throw IllegalStateException("The entity AI factory has not been initialized yet")
+    }
+    
+    override fun createBrain(regularEntity: RegularEntity): Brain {
+        fail()
+    }
 
-    companion object {
-        fun fromVanillaType(vanillaType: EntityType.Vanilla): EntityAIFactory {
-            return when (vanillaType) {
-                EntityType.PLAYER -> PlayerAI
-                EntityType.PIG -> PigAI()
-                else -> GenericEntityAIFactory
-            }
-        }
+    override fun createDefaultStatus(): ImmutableEntityStatus {
+        fail()
+    }
+
+    override fun createControls(regularEntity: RegularEntity): EntityControls {
+        fail()
+    }
+
+    override fun createPathFinder(regularEntity: RegularEntity): PathFinder {
+        fail()
+    }
+
+    override fun createBaseStatus(regularEntity: RegularEntity): MutableEntityStatus {
+        fail()
     }
 }

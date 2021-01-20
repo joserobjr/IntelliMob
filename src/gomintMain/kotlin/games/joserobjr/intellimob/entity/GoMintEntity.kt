@@ -41,7 +41,7 @@ internal class GoMintEntity<E>(override val goMintEntity: Entity<E>) : RegularEn
     override val updateDispatcher: CoroutineDispatcher get() = world.updateDispatcher
     override val type: EntityType = EntityType.fromEntity(this)
 
-    override val baseStatus: MutableEntityStatus = type.aiFactory.createBaseStatus()
+    override val baseStatus: MutableEntityStatus = type.aiFactory.createBaseStatus(this)
     override var controls: EntityControls = type.aiFactory.createControls(this)
     override var pathFinder: PathFinder = type.aiFactory.createPathFinder(this)
     override val brain: Brain = type.aiFactory.createBrain(this)

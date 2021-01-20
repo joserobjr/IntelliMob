@@ -17,17 +17,31 @@
  *
  */
 
-@file:Suppress("NOTHING_TO_INLINE")
+package games.joserobjr.intellimobjvm.functions
 
-package games.joserobjr.intellimob.entity
-
-import org.cloudburstmc.server.entity.Entity
 
 /**
- * @author joserobjr
- * @since 2021-01-18
+ * Represents an operation upon two `int`-valued operands and producing an
+ * `int`-valued result.   This is the primitive type specialization of
+ * [BinaryOperator] for `int`.
+ *
+ *
+ * This is a [functional interface](package-summary.html)
+ * whose functional method is [.applyAsInt].
+ *
+ * @see BinaryOperator
+ *
+ * @see IntUnaryOperator
+ *
+ * @since 1.8
  */
-internal inline fun Entity.asRegularEntity(): RegularEntity {
-    return CloudburstEntity(this)
+public expect fun interface IntBinaryOperator {
+    /**
+     * Applies this operator to the given operands.
+     *
+     * @param left the first operand
+     * @param right the second operand
+     * @return the operator result
+     */
+    public fun applyAsInt(left: Int, right: Int): Int
 }
-

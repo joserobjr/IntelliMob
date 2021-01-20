@@ -17,10 +17,8 @@
  *
  */
 
-repositories {
-    mavenCentral()
-}
+package games.joserobjr.intellimobjvm.functions
 
-dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.4.21")
-}
+import java.util.function.UnaryOperator
+
+public actual typealias UnaryOperator<T> = UnaryOperator<T>

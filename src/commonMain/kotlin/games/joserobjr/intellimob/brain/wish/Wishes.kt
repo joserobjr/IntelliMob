@@ -24,8 +24,10 @@ import games.joserobjr.intellimob.control.EntityControls
 import games.joserobjr.intellimob.entity.RegularEntity
 import games.joserobjr.intellimob.math.EntityPos
 import games.joserobjr.intellimob.math.IDoubleVectorXYZ
-import kotlinx.atomicfu.atomic
-import kotlinx.atomicfu.update
+import games.joserobjr.intellimobjvm.atomic.atomic
+import games.joserobjr.intellimobjvm.atomic.getValue
+import games.joserobjr.intellimobjvm.atomic.update
+import games.joserobjr.intellimobjvm.atomic.value
 import kotlin.time.*
 
 /**

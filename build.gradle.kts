@@ -20,18 +20,9 @@
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 
-buildscript {
-    val atomicfuVersion = "0.15.1"
-    dependencies {
-        classpath("org.jetbrains.kotlinx:atomicfu-gradle-plugin:$atomicfuVersion")
-    }
-}
-
 plugins {
     kotlin("multiplatform") version "1.4.21"
 }
-
-apply(plugin = "kotlinx-atomicfu")
 
 group = "games.joserobjr"
 version = "0.1.0-SNAPSHOT"

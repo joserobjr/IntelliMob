@@ -39,6 +39,9 @@ internal expect sealed class EntityType {
     }
     
     companion object {
+        //-------- Human Players --------//
+        val PLAYER: Vanilla
+        
         //-------- Passive Mobs --------// 
         val BAT: Vanilla
         val CAT: Vanilla

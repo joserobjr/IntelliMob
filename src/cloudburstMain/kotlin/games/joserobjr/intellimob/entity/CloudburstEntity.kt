@@ -38,12 +38,12 @@ import kotlin.time.TimeSource
  * @author joserobjr
  * @since 2021-01-17
  */
-internal class CloudburstRegularEntity(override val cloudburstEntity: Entity) : RegularEntity {
+internal class CloudburstEntity(override val cloudburstEntity: Entity) : RegularEntity {
     override val job: Job = SupervisorJob(world.job)
     override val updateDispatcher: CoroutineDispatcher get() = world.updateDispatcher
     override val type: EntityType by lazy { fromEntity(this) }
 
-    override val baseStatus: MutableEntityStatus = type.aiFactory.createBaseStatus()
+    override val baseStatus: MutableEntityStatus = type.aiFactory.createBaseStatus(this)
     override var controls: EntityControls = type.aiFactory.createControls(this)
     override var pathFinder: PathFinder = type.aiFactory.createPathFinder(this)
     override val brain: Brain = type.aiFactory.createBrain(this)
@@ -62,7 +62,7 @@ internal class CloudburstRegularEntity(override val cloudburstEntity: Entity) : 
     override suspend fun createSnapshot(): EntitySnapshot = withContext(Dispatchers.Sync) {
         with(cloudburstEntity) {
             EntitySnapshot(
-                type = this@CloudburstRegularEntity.type,
+                type = this@CloudburstEntity.type,
                 location = EntityLocation(world, x, y, z),
                 pitchYaw = PitchYaw(pitch, yaw),
                 status = currentStatus

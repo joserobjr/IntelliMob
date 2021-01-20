@@ -17,7 +17,7 @@
  *
  */
 
-@file:Suppress("FunctionName", "UNCHECKED_CAST", "NOTHING_TO_INLINE")
+@file:Suppress("FunctionName", "UNCHECKED_CAST", "NOTHING_TO_INLINE", "EXTENSION_SHADOWED_BY_MEMBER")
 @file:JvmName("EnumMapCommonExtensions")
 
 package games.joserobjr.intellimobjvm.collection

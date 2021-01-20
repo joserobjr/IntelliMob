@@ -26,7 +26,6 @@ import games.joserobjr.intellimob.control.EntityControls
 import games.joserobjr.intellimob.control.FrozenControls
 import games.joserobjr.intellimob.entity.RegularEntity
 import games.joserobjr.intellimob.entity.status.ImmutableEntityStatus
-import games.joserobjr.intellimob.entity.status.MutableEntityStatus
 import games.joserobjr.intellimob.math.DoubleVectorXZ
 import games.joserobjr.intellimob.math.PitchYaw
 import games.joserobjr.intellimob.pathfinding.PathFinder
@@ -39,7 +38,6 @@ import games.joserobjr.intellimob.pathfinding.StationaryPathFinder
 internal open class LivingEntityAIFactory: EntityAIFactory {
     override fun createControls(regularEntity: RegularEntity): EntityControls = FrozenControls(regularEntity)
     override fun createPathFinder(regularEntity: RegularEntity): PathFinder = StationaryPathFinder
-    override fun createBaseStatus(): MutableEntityStatus = createDefaultStatus().toMutable()
 
     override fun createDefaultStatus(): ImmutableEntityStatus = ImmutableEntityStatus(
         headSpeed = PitchYaw(40.0, 10.0),
@@ -47,7 +45,7 @@ internal open class LivingEntityAIFactory: EntityAIFactory {
         walkSpeed = DoubleVectorXZ(.7),
         sprintSpeed = DoubleVectorXZ(1.0),
         flySpeed = DoubleVectorXZ(.4),
-        jumpSpeed = 1.0,
+        jumpSpeed = .42,
         stepHeight = .6,
         canJump = true,
     )

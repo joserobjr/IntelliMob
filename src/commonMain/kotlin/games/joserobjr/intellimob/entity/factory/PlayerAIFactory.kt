@@ -17,17 +17,23 @@
  *
  */
 
-@file:Suppress("NOTHING_TO_INLINE")
+package games.joserobjr.intellimob.entity.factory
 
-package games.joserobjr.intellimob.entity
-
-import org.cloudburstmc.server.entity.Entity
+import games.joserobjr.intellimob.brain.Brain
+import games.joserobjr.intellimob.control.EntityControls
+import games.joserobjr.intellimob.control.FrozenControls
+import games.joserobjr.intellimob.entity.RegularEntity
 
 /**
  * @author joserobjr
- * @since 2021-01-18
+ * @since 2021-01-20
  */
-internal inline fun Entity.asRegularEntity(): RegularEntity {
-    return CloudburstEntity(this)
-}
+internal object PlayerAIFactory: LivingEntityAIFactory() {
+    override fun createBrain(regularEntity: RegularEntity): Brain {
+        return Brain(regularEntity)
+    }
 
+    override fun createControls(regularEntity: RegularEntity): EntityControls {
+        return FrozenControls(regularEntity)
+    }
+}

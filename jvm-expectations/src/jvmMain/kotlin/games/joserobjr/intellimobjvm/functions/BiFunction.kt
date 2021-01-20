@@ -17,17 +17,12 @@
  *
  */
 
-@file:Suppress("NOTHING_TO_INLINE")
+package games.joserobjr.intellimobjvm.functions
 
-package games.joserobjr.intellimob.entity
-
-import org.cloudburstmc.server.entity.Entity
+import java.util.function.BiFunction
 
 /**
  * @author joserobjr
- * @since 2021-01-18
+ * @since 2021-01-19
  */
-internal inline fun Entity.asRegularEntity(): RegularEntity {
-    return CloudburstEntity(this)
-}
-
+public actual typealias BiFunction<T, U, R> = BiFunction<T, U, R>

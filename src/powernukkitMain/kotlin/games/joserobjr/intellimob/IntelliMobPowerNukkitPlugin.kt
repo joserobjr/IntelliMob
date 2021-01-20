@@ -65,19 +65,14 @@ internal class IntelliMobPowerNukkitPlugin: PluginBase() {
     }
     
     private object EntityListener: Listener {
-        @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
+        @EventHandler(priority = EventPriority.HIGHEST)
         fun onEntityPreSpawn(ev: EntitySpawnEvent) {
             ev.entity.asRegularEntity() // Setup the AI on first call
         }
         
-        @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = false)
+        @EventHandler(priority = EventPriority.MONITOR)
         fun onEntityPostSpawn(ev: EntitySpawnEvent) {
             val entity = ev.entity.asRegularEntity()
-            if (ev.isCancelled) {
-                entity.job.cancel(CancellationException("The spawn event was cancelled"))
-                ev.entity.removeMetadata("regularEntity", intelliMob)
-                return
-            }
             CoroutineScope(Dispatchers.AI + entity.job).launch { 
                 entity.brain.startThinking()
             }

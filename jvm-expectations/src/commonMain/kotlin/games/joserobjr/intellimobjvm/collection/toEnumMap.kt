@@ -17,6 +17,7 @@
  *
  */
 
+@file:Suppress("FunctionName", "UNCHECKED_CAST", "NOTHING_TO_INLINE", "EXTENSION_SHADOWED_BY_MEMBER")
 package games.joserobjr.intellimobjvm.collection
 
 import kotlin.jvm.JvmName

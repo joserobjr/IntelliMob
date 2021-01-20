@@ -21,9 +21,11 @@ package games.joserobjr.intellimob.entity
 
 import games.joserobjr.intellimob.entity.factory.EntityAIFactory
 import games.joserobjr.intellimob.entity.factory.GenericEntityAIFactory
+import games.joserobjr.intellimob.entity.factory.UninitializedAI
 import games.joserobjr.intellimob.entity.status.ImmutableEntityStatus
 import games.joserobjr.intellimob.entity.status.createDefaultStatus
 import io.gomint.entity.Entity
+import io.gomint.entity.EntityPlayer
 import io.gomint.entity.animal.*
 import io.gomint.entity.monster.*
 import io.gomint.entity.passive.EntityVillager
@@ -45,7 +47,12 @@ internal actual sealed class EntityType {
     actual val defaultStatus: ImmutableEntityStatus by lazy { createDefaultStatus() }
     
     internal actual class Vanilla(override val platformType: KClass<out Entity<*>>?): EntityType() {
-        actual override var aiFactory = EntityAIFactory.fromVanillaType(this)
+        actual override var aiFactory: EntityAIFactory = UninitializedAI
+            get() {
+                field.takeUnless { it == UninitializedAI }?.let { return it }
+                field = EntityAIFactory.fromVanillaType(this)
+                return field
+            }
         init {
             if (platformType != null) {
                 registry[platformType] = this
@@ -68,6 +75,9 @@ internal actual sealed class EntityType {
             }
             return registry.computeIfAbsent(entityClass, ::Custom)
         }
+
+        //-------- Human Players --------//
+        actual val PLAYER = Vanilla(EntityPlayer::class)
         
         //-------- Passive Mobs --------// 
         actual val BAT = Vanilla(EntityBat::class)

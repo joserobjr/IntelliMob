@@ -30,4 +30,7 @@ internal data class PitchYaw(
     val yaw: Double
 ) {
     constructor(pitch: Float, yaw: Float): this(pitch.toDouble(), yaw = yaw.toDouble())
+    companion object {
+        val ZERO = PitchYaw(0.0, 0.0)
+    }
 }

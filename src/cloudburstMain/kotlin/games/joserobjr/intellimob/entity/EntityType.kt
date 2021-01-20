@@ -22,6 +22,7 @@ package games.joserobjr.intellimob.entity
 import games.joserobjr.intellimob.entity.api.*
 import games.joserobjr.intellimob.entity.factory.EntityAIFactory
 import games.joserobjr.intellimob.entity.factory.GenericEntityAIFactory
+import games.joserobjr.intellimob.entity.factory.UninitializedAI
 import games.joserobjr.intellimob.entity.status.ImmutableEntityStatus
 import org.cloudburstmc.server.entity.EntityTypes
 import java.util.concurrent.ConcurrentHashMap
@@ -41,7 +42,12 @@ internal actual sealed class EntityType {
     actual abstract var aiFactory: EntityAIFactory
     
     internal actual class Vanilla(override val platformType: PlatformEntityType<*>) : EntityType() {
-        actual override var aiFactory: EntityAIFactory = EntityAIFactory.fromVanillaType(this)
+        actual override var aiFactory: EntityAIFactory = UninitializedAI
+            get() {
+                field.takeUnless { it == UninitializedAI }?.let { return it }
+                field = EntityAIFactory.fromVanillaType(this)
+                return field
+            }
         init {
             registry[platformType] = this
         }
@@ -56,6 +62,9 @@ internal actual sealed class EntityType {
         internal fun fromEntity(entity: RegularEntity): EntityType {
             return registry.computeIfAbsent(entity.type.platformType, ::Custom)
         }
+
+        //-------- Human Players --------//
+        actual val PLAYER = Vanilla(EntityTypes.PLAYER)
         
         //-------- Passive Mobs --------// 
         actual val BAT = Vanilla(EntityTypes.BAT)

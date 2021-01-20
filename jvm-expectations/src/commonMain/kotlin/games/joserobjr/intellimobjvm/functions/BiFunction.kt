@@ -17,17 +17,30 @@
  *
  */
 
-@file:Suppress("NOTHING_TO_INLINE")
+package games.joserobjr.intellimobjvm.functions
 
-package games.joserobjr.intellimob.entity
-
-import org.cloudburstmc.server.entity.Entity
 
 /**
- * @author joserobjr
- * @since 2021-01-18
+ * Represents a function that accepts two arguments and produces a result.
+ * This is the two-arity specialization of [Function].
+ *
+ *
+ * This is a functional interface
+ * whose functional method is [apply].
+ *
+ * @param T the type of the first argument to the function
+ * @param U the type of the second argument to the function
+ * @param R the type of the result of the function
+ *
+ * @see Function
  */
-internal inline fun Entity.asRegularEntity(): RegularEntity {
-    return CloudburstEntity(this)
+public expect fun interface BiFunction<T, U, R> {
+    /**
+     * Applies this function to the given arguments.
+     *
+     * @param t the first function argument
+     * @param u the second function argument
+     * @return the function result
+     */
+    public fun apply(t: T, u: U): R
 }
-

@@ -19,10 +19,12 @@
 
 package games.joserobjr.intellimob.entity
 
+import cn.nukkit.Player
 import cn.nukkit.entity.mob.*
 import cn.nukkit.entity.passive.*
 import games.joserobjr.intellimob.entity.factory.EntityAIFactory
 import games.joserobjr.intellimob.entity.factory.GenericEntityAIFactory
+import games.joserobjr.intellimob.entity.factory.UninitializedAI
 import games.joserobjr.intellimob.entity.status.ImmutableEntityStatus
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap
 import java.util.function.IntFunction
@@ -40,7 +42,13 @@ internal actual sealed class EntityType(val networkId: Int) {
     actual abstract var aiFactory: EntityAIFactory
     
     internal actual class Vanilla(networkId: Int): EntityType(networkId) {
-        actual override var aiFactory = EntityAIFactory.fromVanillaType(this)
+        actual override var aiFactory: EntityAIFactory = UninitializedAI
+            get() {
+                field.takeUnless { it == UninitializedAI }?.let { return it }
+                field = EntityAIFactory.fromVanillaType(this)
+                return field
+            }
+        
         init {
             registry[networkId] = this
         }
@@ -56,6 +64,9 @@ internal actual sealed class EntityType(val networkId: Int) {
         internal fun fromEntity(entity: RegularEntity): EntityType {
             return registry.computeIfAbsent(entity.powerNukkitEntity.networkId, IntFunction(::Custom))
         }
+        
+        //-------- Human Players --------//
+        actual val PLAYER = Vanilla(Player.NETWORK_ID)
         
         //-------- Passive Mobs --------// 
         actual val BAT = Vanilla(EntityBat.NETWORK_ID)

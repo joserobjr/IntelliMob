@@ -17,17 +17,27 @@
  *
  */
 
-@file:Suppress("NOTHING_TO_INLINE")
+package games.joserobjr.intellimob.entity.factory
 
-package games.joserobjr.intellimob.entity
-
-import org.cloudburstmc.server.entity.Entity
+import games.joserobjr.intellimob.entity.status.ImmutableEntityStatus
+import games.joserobjr.intellimob.math.DoubleVectorXZ
+import games.joserobjr.intellimob.math.PitchYaw
 
 /**
  * @author joserobjr
- * @since 2021-01-18
+ * @since 2021-01-20
  */
-internal inline fun Entity.asRegularEntity(): RegularEntity {
-    return CloudburstEntity(this)
+internal object PlayerAI: NoDefaultAI() {
+    override fun createDefaultStatus(): ImmutableEntityStatus {
+        return ImmutableEntityStatus(
+            headSpeed = PitchYaw.ZERO,
+            headFastSpeed = PitchYaw.ZERO,
+            walkSpeed = DoubleVectorXZ(.1),
+            sprintSpeed = DoubleVectorXZ(.103),
+            flySpeed = DoubleVectorXZ(.05),
+            jumpSpeed = .42,
+            stepHeight = .6,
+            canJump = true
+        )
+    }
 }
-

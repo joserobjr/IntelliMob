@@ -17,17 +17,26 @@
  *
  */
 
-@file:Suppress("NOTHING_TO_INLINE")
+package games.joserobjr.intellimobjvm.functions
 
-package games.joserobjr.intellimob.entity
-
-import org.cloudburstmc.server.entity.Entity
 
 /**
- * @author joserobjr
- * @since 2021-01-18
+ * Represents a function that accepts one argument and produces a result.
+ *
+ *
+ * This is a functional interface
+ * whose functional method is [apply].
+ *
+ * @param T the type of the input to the function
+ * @param R the type of the result of the function
  */
-internal inline fun Entity.asRegularEntity(): RegularEntity {
-    return CloudburstEntity(this)
+public expect fun interface Function<T, R> {
+    /**
+     * Applies this function to the given argument.
+     *
+     * @param t the function argument
+     * @return the function result
+     */
+    public fun apply(t: T): R
 }
 

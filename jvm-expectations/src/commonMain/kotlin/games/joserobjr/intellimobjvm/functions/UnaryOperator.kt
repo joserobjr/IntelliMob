@@ -17,17 +17,20 @@
  *
  */
 
-@file:Suppress("NOTHING_TO_INLINE")
+package games.joserobjr.intellimobjvm.functions
 
-package games.joserobjr.intellimob.entity
-
-import org.cloudburstmc.server.entity.Entity
 
 /**
- * @author joserobjr
- * @since 2021-01-18
+ * Represents an operation on a single operand that produces a result of the
+ * same type as its operand.  This is a specialization of `Function` for
+ * the case where the operand and result are of the same type.
+ *
+ *
+ * This is a functional interface
+ * whose functional method is [apply].
+ *
+ * @param T the type of the operand and result of the operator
+ *
+ * @see Function
  */
-internal inline fun Entity.asRegularEntity(): RegularEntity {
-    return CloudburstEntity(this)
-}
-
+public expect fun interface UnaryOperator<T> : Function<T, T>

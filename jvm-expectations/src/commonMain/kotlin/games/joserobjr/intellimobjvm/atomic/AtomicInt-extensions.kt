@@ -17,17 +17,29 @@
  *
  */
 
-@file:Suppress("NOTHING_TO_INLINE")
+package games.joserobjr.intellimobjvm.atomic
 
-package games.joserobjr.intellimob.entity
-
-import org.cloudburstmc.server.entity.Entity
+import games.joserobjr.intellimobjvm.functions.IntUnaryOperator
+import kotlin.reflect.KProperty
 
 /**
  * @author joserobjr
- * @since 2021-01-18
+ * @since 2021-01-19
  */
-internal inline fun Entity.asRegularEntity(): RegularEntity {
-    return CloudburstEntity(this)
+public operator fun AtomicInt.getValue(thisRef: Any?, property: KProperty<*>): Int {
+    return get()
 }
 
+public operator fun AtomicInt.setValue(thisRef: Any?, property: KProperty<*>, value: Int) {
+    set(value)
+}
+
+public fun AtomicInt.update(updateFunction: IntUnaryOperator) {
+    getAndUpdate(updateFunction)
+}
+
+public var AtomicInt.value: Int
+    get() = get()
+    set(value) {
+        set(value)
+    }
