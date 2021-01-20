@@ -19,28 +19,35 @@
 
 package games.joserobjr.intellimob.brain.goal
 
-import games.joserobjr.intellimob.brain.Brain
-import games.joserobjr.intellimob.control.api.PhysicalControl
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlin.time.ExperimentalTime
+import games.joserobjr.intellimobjvm.ref.WeakReference
 
 /**
  * @author joserobjr
- * @since 2021-01-17
+ * @since 2021-01-20
  */
-internal object SwimUpGoal: Goal(setOf(PhysicalControl.JUMP)) {
-    override val defaultPriority: Int
-        get() = -1_000_000
-
-    override suspend fun canStart(brain: Brain, memory: GoalMemory?): Boolean {
-        return brain.owner.isEyeUnderWater()
-    }
-
-    @OptIn(ExperimentalTime::class)
-    override fun CoroutineScope.start(brain: Brain, memory: GoalMemory?): Job {
-        return with(brain.wishes) {
-            jumpUntil { !brain.owner.isEyeUnderWater() }
+internal inline class GoalMemory(val contents: MutableMap<String, Any?> = mutableMapOf()) {
+    inline operator fun <reified V> get(key: String): V? {
+        val any = getAny(key)
+        if (any is WeakReference<*> && V::class != WeakReference::class) {
+            val unboxed = any.get()
+            if (unboxed is V) {
+                return unboxed
+            }
         }
+        return any as V
+    }
+    operator fun contains(key: String) = key in contents
+    operator fun minusAssign(key: String) {
+        contents -= key
+    }
+    operator fun plusAssign(key: String) {
+        contents.getOrPut(key) { null }
+    }
+    operator fun set(key: String, value: Any?) {
+        contents[key] = value
+    }
+    fun getAny(key: String) = contents[key]
+    fun setWeak(key: String, value: Any?) {
+        this[key] = WeakReference(value)
     }
 }

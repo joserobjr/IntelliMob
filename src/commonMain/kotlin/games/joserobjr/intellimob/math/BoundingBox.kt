@@ -66,7 +66,16 @@ internal class BoundingBox(
         return thatMin.x < thisMax.x && thatMin.y < thisMax.y && thatMin.z < thisMax.z &&
                 thatMax.x > thisMin.x && thatMax.y > thisMin.y && thatMax.z > thisMin.z
     }
+
+    fun expandBy(x: Float, y: Float, z: Float) = expandBy(x.toDouble(), y.toDouble(), z.toDouble())
     
+    fun expandBy(x: Double, y: Double, z: Double): BoundingBox {
+        return BoundingBox(
+            minPosInclusive.x - x, minPosInclusive.y - y, minPosInclusive.z - z,
+            maxPosExclusive.x + x, maxPosExclusive.y + y, maxPosExclusive.z + z
+        )
+    }
+
     operator fun plus(pos: IBlockPos): BoundingBox {
         return BoundingBox(minPosInclusive + pos, maxPosExclusive + pos)
     }
@@ -78,7 +87,7 @@ internal class BoundingBox(
     operator fun minus(pos: IEntityPos): BoundingBox {
         return BoundingBox(minPosInclusive - pos, maxPosExclusive - pos)
     }
-    
+
     operator fun minus(pos: IBlockPos): BoundingBox {
         return BoundingBox(minPosInclusive - pos, maxPosExclusive - pos)
     }

@@ -17,30 +17,12 @@
  *
  */
 
-package games.joserobjr.intellimob.brain.goal
+package games.joserobjr.intellimobjvm.ref
 
-import games.joserobjr.intellimob.brain.Brain
-import games.joserobjr.intellimob.control.api.PhysicalControl
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlin.time.ExperimentalTime
+import java.lang.ref.WeakReference
 
 /**
  * @author joserobjr
- * @since 2021-01-17
+ * @since 2021-01-20
  */
-internal object SwimUpGoal: Goal(setOf(PhysicalControl.JUMP)) {
-    override val defaultPriority: Int
-        get() = -1_000_000
-
-    override suspend fun canStart(brain: Brain, memory: GoalMemory?): Boolean {
-        return brain.owner.isEyeUnderWater()
-    }
-
-    @OptIn(ExperimentalTime::class)
-    override fun CoroutineScope.start(brain: Brain, memory: GoalMemory?): Job {
-        return with(brain.wishes) {
-            jumpUntil { !brain.owner.isEyeUnderWater() }
-        }
-    }
-}
+public actual typealias WeakReference<T> = WeakReference<T>

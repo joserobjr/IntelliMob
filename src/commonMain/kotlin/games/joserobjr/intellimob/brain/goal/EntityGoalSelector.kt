@@ -114,12 +114,13 @@ internal class EntityGoalSelector(
         private val _activeJob = AtomicRef<Job?>(null)
         val activeJob by _activeJob
         val brain get() = selector.brain
+        val memory = if (goal.needsMemory) GoalMemory() else null
         
         fun CoroutineScope.start() {
             _activeJob.update { old->
                 old?.cancel()
                 with(goal) {
-                    start(brain)
+                    start(brain, memory)
                 }
             }
         }
@@ -132,7 +133,7 @@ internal class EntityGoalSelector(
             if (activeJob?.isActive == true) {
                 return false
             }
-            return goal.canStart(brain)
+            return goal.canStart(brain, memory)
         }
 
         override fun compareTo(other: AddedGoal): Int {

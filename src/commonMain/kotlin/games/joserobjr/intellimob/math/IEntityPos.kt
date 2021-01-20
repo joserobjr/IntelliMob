@@ -44,6 +44,13 @@ internal interface IEntityPos: WithEntityPos, IDoubleVectorXYZ {
         return PitchYaw(pitch, yaw)
     }
 
+    fun squaredDistance(position: EntityPos): Double {
+        val x = x - position.x
+        val y = y - position.y
+        val z = z - position.z
+        return x.squared() + y.squared() + z.squared()
+    }
+
     operator fun plus(pos: IIntVectorXYZ): EntityPos = EntityPos(x + pos.x, y + pos.y, z + pos.z)
     operator fun minus(pos: IIntVectorXYZ): EntityPos = EntityPos(x - pos.x, y - pos.y, z - pos.z)
 

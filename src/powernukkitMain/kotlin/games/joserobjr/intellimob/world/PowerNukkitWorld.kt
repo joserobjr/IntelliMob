@@ -25,6 +25,7 @@ import games.joserobjr.intellimob.block.BlockState
 import games.joserobjr.intellimob.block.PowerNukkitBlock
 import games.joserobjr.intellimob.block.RegularBlock
 import games.joserobjr.intellimob.block.asIntelliMobBlockState
+import games.joserobjr.intellimob.coroutines.AI
 import games.joserobjr.intellimob.coroutines.Sync
 import games.joserobjr.intellimob.entity.EntitySnapshot
 import games.joserobjr.intellimob.entity.RegularEntity
@@ -32,10 +33,11 @@ import games.joserobjr.intellimob.entity.asRegularEntity
 import games.joserobjr.intellimob.math.*
 import games.joserobjr.intellimob.metadata.lazyMetadata
 import games.joserobjr.intellimob.timesource.ServerTickTimeSource
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.toList
 import java.util.function.Predicate
 import kotlin.time.ExperimentalTime
 import kotlin.time.TimeSource
@@ -103,5 +105,35 @@ internal inline class PowerNukkitWorld(override val powerNukkitLevel: Level): Re
     
     private companion object {
         private val Level.job: Job by lazyMetadata<Level, Job> { SupervisorJob() }
+    }
+
+    override suspend fun findClosestPlayer(
+        position: EntityPos,
+        bounds: BoundingBox?,
+        loadChunks: Boolean,
+        condition: (suspend (RegularEntity) -> Boolean)?
+    ): RegularEntity? {
+        val players = withContext(world.updateDispatcher) {
+            world.powerNukkitLevel.players.values.toList()
+        }
+        return withContext(Dispatchers.AI) {
+            players.asFlow()
+                .let { flow ->
+                    bounds?.let { flow.filter { player -> player.toEntityPos() in bounds } } ?: flow
+                }.map { it.asRegularEntity() }
+                .let { flow ->
+                    condition?.let { flow.filter { player -> condition(player) } } ?: flow
+                }.toList()
+                .minByOrNull { it.position.squaredDistance(position) }
+        }
+    }
+
+    override suspend fun findClosestEntity(
+        position: EntityPos,
+        bounds: BoundingBox?,
+        loadChunks: Boolean,
+        condition: (suspend (RegularEntity) -> Boolean)?
+    ): RegularEntity? {
+        TODO("Not yet implemented")
     }
 }

@@ -21,12 +21,14 @@ package games.joserobjr.intellimob.entity.factory
 
 import games.joserobjr.intellimob.brain.Brain
 import games.joserobjr.intellimob.brain.goal.GoalLookAround
+import games.joserobjr.intellimob.brain.goal.LookAtEntityGoal
 import games.joserobjr.intellimob.brain.goal.SwimUpGoal
 import games.joserobjr.intellimob.control.ModularControls
 import games.joserobjr.intellimob.control.api.EntityControls
 import games.joserobjr.intellimob.control.frozen.FrozenBodyController
 import games.joserobjr.intellimob.control.frozen.FrozenJumpController
 import games.joserobjr.intellimob.control.head.GenericHeadController
+import games.joserobjr.intellimob.entity.EntityType
 import games.joserobjr.intellimob.entity.RegularEntity
 import games.joserobjr.intellimob.entity.status.ImmutableEntityStatus
 import games.joserobjr.intellimob.math.DoubleVectorXZ
@@ -63,6 +65,7 @@ internal open class LivingEntityAIFactory: EntityAIFactory {
 
     override fun createBrain(regularEntity: RegularEntity): Brain = Brain(regularEntity).apply {
         normalGoals += SwimUpGoal
+        normalGoals += LookAtEntityGoal(setOf(EntityType.PLAYER), 6F)
         normalGoals += GoalLookAround
     }
 }

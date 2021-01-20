@@ -23,10 +23,7 @@ import games.joserobjr.intellimob.block.*
 import games.joserobjr.intellimob.entity.EntitySnapshot
 import games.joserobjr.intellimob.entity.RegularEntity
 import games.joserobjr.intellimob.entity.asRegularEntity
-import games.joserobjr.intellimob.math.BlockLocation
-import games.joserobjr.intellimob.math.BoundingBox
-import games.joserobjr.intellimob.math.ChunkPos
-import games.joserobjr.intellimob.math.IBlockPos
+import games.joserobjr.intellimob.math.*
 import games.joserobjr.intellimob.world.RegularWorld
 import games.joserobjr.intellimob.world.WorldView
 import games.joserobjr.intellimob.world.asIntelliMobWorld
@@ -119,6 +116,24 @@ internal inline class PowerNukkitChunk(override val powerNukkitChunk: PNChunk): 
         limit: Int,
         filter: (WorldView.(entity: RegularEntity) -> Boolean)?
     ): List<RegularEntity> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun findClosestPlayer(
+        position: EntityPos,
+        bounds: BoundingBox?,
+        loadChunks: Boolean,
+        condition: (suspend (RegularEntity) -> Boolean)?
+    ): RegularEntity? {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun findClosestEntity(
+        position: EntityPos,
+        bounds: BoundingBox?,
+        loadChunks: Boolean,
+        condition: (suspend (RegularEntity) -> Boolean)?
+    ): RegularEntity? {
         TODO("Not yet implemented")
     }
 }

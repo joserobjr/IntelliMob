@@ -30,6 +30,7 @@ import kotlinx.coroutines.Job
  */
 internal abstract class Goal(val physicalControl: Set<PhysicalControl>) {
     abstract val defaultPriority: Int
+    open val needsMemory: Boolean get() = false
     
     open fun canBeAddedTo(brain: Brain, selector: EntityGoalSelector): Boolean {
         return true
@@ -41,9 +42,9 @@ internal abstract class Goal(val physicalControl: Set<PhysicalControl>) {
     
     open fun addedTo(brain: Brain, selector: EntityGoalSelector) {} 
     
-    abstract suspend fun canStart(brain: Brain): Boolean
+    abstract suspend fun canStart(brain: Brain, memory: GoalMemory?): Boolean
     
-    abstract fun CoroutineScope.start(brain: Brain): Job?
+    abstract fun CoroutineScope.start(brain: Brain, memory: GoalMemory?): Job?
     
     open suspend fun canStop(brain: Brain): Boolean {
         return true
