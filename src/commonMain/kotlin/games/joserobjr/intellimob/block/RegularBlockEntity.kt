@@ -21,15 +21,13 @@ package games.joserobjr.intellimob.block
 
 import games.joserobjr.intellimob.trait.WithBlockLocation
 import games.joserobjr.intellimob.trait.WithTimeSource
-import kotlinx.coroutines.CoroutineDispatcher
+import games.joserobjr.intellimob.trait.WithUpdateDispatcher
 
 /**
  * @author joserobjr
  * @since 2021-01-17
  */
-internal interface RegularBlockEntity: PlatformBlockEntity, WithBlockLocation, WithTimeSource {
-    val updateDispatcher: CoroutineDispatcher
-    
+internal interface RegularBlockEntity: PlatformBlockEntity, WithBlockLocation, WithTimeSource, WithUpdateDispatcher {
     suspend fun createSnapshot(): BlockEntitySnapshot
 
     override val regularBlockEntity: RegularBlockEntity get() = this

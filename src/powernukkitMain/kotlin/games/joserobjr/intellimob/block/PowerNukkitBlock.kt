@@ -19,21 +19,19 @@
 
 package games.joserobjr.intellimob.block
 
-import games.joserobjr.intellimob.math.BlockLocation
-import games.joserobjr.intellimob.math.BoundingBox
-import games.joserobjr.intellimob.math.asBlockVector3
-import games.joserobjr.intellimob.math.toIntelliMobBoundingBox
+import cn.nukkit.block.BlockLiquid
+import games.joserobjr.intellimob.math.*
 import kotlinx.coroutines.withContext
 
 /**
  * @author joserobjr
  * @since 2021-01-17
  */
-internal data class PowerNukkitBlock(
+internal inline class PowerNukkitBlock(
     override val location: BlockLocation
 ): RegularBlock {
     override suspend fun currentState(layer: Int): BlockState {
-        return world.powerNukkitLevel.getBlockStateAt(location.x, location.y, location.z, layer).asIntelliMobBlockState()
+        return location.getPNState(layer).asIntelliMobBlockState()
     }
 
     override suspend fun currentBlockEntity(): RegularBlockEntity? { 
@@ -55,5 +53,19 @@ internal data class PowerNukkitBlock(
     override suspend fun currentBoundingBox(): BoundingBox = withContext(world.updateDispatcher) {
         world.powerNukkitLevel.getBlock(location.x, location.y, location.z).boundingBox?.toIntelliMobBoundingBox()
             ?: BoundingBox.EMPTY + location
+    }
+
+    override suspend fun currentLiquidState(): LiquidState? {
+        val liquid = location.getPNBlock() as? BlockLiquid 
+            ?: location.getPNBlock(layer = 1) as? BlockLiquid
+            ?: return null
+        
+        return LiquidState(
+            type = BlockType.fromPNBlock(liquid),
+            height = liquid.fluidHeightPercent.toDouble(),
+            pos = location,
+            layer = liquid.layer,
+            bounds = liquid.collisionBoundingBox.toIntelliMobBoundingBox()
+        )
     }
 }

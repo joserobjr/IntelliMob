@@ -23,22 +23,30 @@ import games.joserobjr.intellimob.math.BlockLocation
 import games.joserobjr.intellimob.math.BoundingBox
 import games.joserobjr.intellimob.math.toVector3i
 import kotlinx.coroutines.withContext
+import org.cloudburstmc.server.block.Block
+import org.cloudburstmc.server.block.behavior.BlockBehaviorLiquid
 
 /**
  * @author joserobjr
  * @since 2021-01-17
  */
 internal class CloudburstBlock(override val location: BlockLocation): RegularBlock {
-    override suspend fun currentState(layer: Int): BlockState {
+    private fun currentCBBlock(): Block {
         return with(location) {
-            world.cloudburstWorld.getBlock(x, y, z).getState(layer).asIntelliMobBlockState()
+            world.cloudburstWorld.getBlock(x, y, z)
         }
+    }
+    
+    private fun currentCBState(layer: Int = 0): CBBlockState {
+        return currentCBBlock().getState(layer)
+    }
+    
+    override suspend fun currentState(layer: Int): BlockState {
+        return currentCBState(layer).asIntelliMobBlockState()
     }
 
     override suspend fun currentStates(): LayeredBlockState = withContext(world.updateDispatcher) {
-        with(location) {
-            world.cloudburstWorld.getBlock(x, y, z).toLayeredBlockState()
-        }
+        currentCBBlock().toLayeredBlockState()
     }
 
     override suspend fun currentBlockEntity(): RegularBlockEntity? {
@@ -69,6 +77,22 @@ internal class CloudburstBlock(override val location: BlockLocation): RegularBlo
                 )
             }
         }
+    }
+
+    override suspend fun currentLiquidState(): LiquidState? {
+        val block = currentCBBlock()
+        var layer = 0
+        val liquid = block.state.takeIf { it.behavior.isLiquid }
+            ?: block.extra.takeIf { it.behavior.isLiquid }?.also { layer = 1 }
+            ?: return null
+        val height = BlockBehaviorLiquid.getFluidHeightPercent(liquid).toDouble()
+        return LiquidState(
+            type = BlockType.from(liquid),
+            height = height,
+            pos = location,
+            layer = layer,
+            bounds = with(location) { BoundingBox(x.toDouble(), y.toDouble(), z.toDouble(), x + 1.0, y + height, z + 1.0) }
+        )
     }
 
     override fun equals(other: Any?): Boolean {

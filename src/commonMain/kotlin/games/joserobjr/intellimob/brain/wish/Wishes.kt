@@ -23,79 +23,131 @@ import games.joserobjr.intellimob.brain.Brain
 import games.joserobjr.intellimob.control.EntityControls
 import games.joserobjr.intellimob.entity.RegularEntity
 import games.joserobjr.intellimob.math.EntityPos
+import games.joserobjr.intellimob.math.IDoubleVectorXYZ
 import kotlinx.atomicfu.atomic
 import kotlinx.atomicfu.update
+import kotlin.time.*
 
 /**
  * @author joserobjr
  * @since 2021-01-11
  */
-internal class Wishes (
-    look: LookWish? = null,
-    move: MoveWish? = null,
+@ExperimentalTime
+internal class WishesOld (
+    private val timeSource: TimeSource,
+    look: WishLook? = null,
+    move: WishMove? = null,
     jump: Wish? = null,
 ) {
+    private val wishCounter = atomic(0)
+    
     private val _look = atomic(look)
     private val _move = atomic(move)
     private val _jump = atomic(jump)
 
-    val look: LookWish? by _look 
-    val move: MoveWish? by _move 
+    val look: WishLook? by _look 
+    val move: WishMove? by _move 
     val jump: Wish? by _jump 
     
-    fun moveTo(pos: EntityPos, sprinting: Boolean = false) {
-        _move.update { move ->
-            move?.takeIf { it.isConstant && it.target == pos }?.let { return }
-            MoveToPosWish(pos, sprinting)
+    private var lookTimeOut: TimeMark? = null
+    private var moveTimeOut: TimeMark? = null
+    private var jumpTimeOut: TimeMark? = null
+    
+    fun isNotEmpty(): Boolean {
+        val currentWishPos = wishCounter.value
+        if (look != null || move != null || jump != null) {
+            return true
         }
+        val newPos = wishCounter.value
+        return currentWishPos == newPos
     }
     
-    fun moveTo(entity: RegularEntity, sprinting: Boolean = false) {
-        _move.update { move ->
-            move?.takeIf { it.targetEntity == entity }?.let { return }
-            MoveToEntityWish(entity, sprinting)
+    fun moveTo(pos: EntityPos, timeLimit: Duration? = null, sprinting: Boolean = false) {
+        _move.update {
+            moveTimeOut = timeLimit?.let { timeSource.markNow() + it }
+            WishMoveToPos(pos, sprinting)
         }
+        wishCounter.incrementAndGet()
     }
     
-    fun lookAt(pos: EntityPos, quickly: Boolean = false) {
-        _look.update { look ->
-            look?.takeIf { it.isConstant && it.target == pos }?.let { return }
-            LookAtPosWish(pos, quickly)
+    fun moveTo(entity: RegularEntity, timeLimit: Duration? = null, sprinting: Boolean = false) {
+        _move.update {
+            moveTimeOut = timeLimit?.let { timeSource.markNow() + it }
+            WishMoveToEntity(entity, sprinting)
         }
+        wishCounter.incrementAndGet()
     }
     
-    fun lookAt(entity: RegularEntity, quickly: Boolean = false) {
-        _look.update { look ->
-            look?.takeIf { it.targetEntity == entity }?.let { return }
-            LookAtEntityWish(entity, quickly)
+    fun stayStill(timeLimit: Duration) {
+        _move.update {
+            moveTimeOut = timeSource.markNow() + timeLimit
+            WishStayStill
+        }
+        wishCounter.incrementAndGet()
+    }
+    
+    fun lookAt(pos: EntityPos, timeLimit: Duration? = null, quickly: Boolean = false) {
+        _look.update {
+            lookTimeOut = timeLimit?.let { timeSource.markNow() + it }
+            WishLookAtPos(pos, quickly)
+        }
+        wishCounter.incrementAndGet()
+    }
+    
+    fun lookAt(entity: RegularEntity, timeLimit: Duration? = null, quickly: Boolean = false) {
+        _look.update {
+            lookTimeOut = timeLimit?.let { timeSource.markNow() + it }
+            WishLookAtEntity(entity, quickly)
+        }
+        wishCounter.incrementAndGet()
+    }
+    
+    fun lookAtDelta(delta: IDoubleVectorXYZ, timeLimit: Duration? = null, quickly: Boolean = false) {
+        _look.update {
+            lookTimeOut = timeLimit?.let { timeSource.markNow() + it }
+            WishLookAtDelta(delta, quickly)
+        }
+        wishCounter.incrementAndGet()
+    }
+    
+    fun jumpOnce(timeLimit: Duration = 3.seconds) {
+        _jump.update { 
+            jumpTimeOut = timeSource.markNow() + timeLimit
+            WishJumpOnce
         }
     }
     
     fun EntityControls.execute(brain: Brain): Boolean {
+        val currentWishPos = wishCounter.value
         var needsUpdate = false
         move?.apply {
-            if (execute(brain)) {
-                _move.compareAndSet(this, null)
-            } else {
-                needsUpdate = true
-            }
-        }
-        jump?.apply {
-            if (execute(brain)) {
-                _jump.compareAndSet(this, null)
-            } else {
-                needsUpdate = true
-            }
-        }
-        look?.apply {
-            if (execute(brain)) {
-                if (!_look.compareAndSet(this, null)) {
-                    needsUpdate = look != null
+            if (moveTimeOut?.hasNotPassedNow() != false && execute(brain)) {
+                if (!_move.compareAndSet(this, null)) {
+                    needsUpdate = true
                 }
             } else {
                 needsUpdate = true
             }
         }
-        return needsUpdate
+        jump?.apply {
+            if (jumpTimeOut?.hasNotPassedNow() != false && execute(brain)) {
+                if (!_jump.compareAndSet(this, null)) {
+                    needsUpdate = true
+                }
+            } else {
+                needsUpdate = true
+            }
+        }
+        look?.apply {
+            if (lookTimeOut?.hasNotPassedNow() != false && execute(brain)) {
+                if (!_look.compareAndSet(this, null)) {
+                    needsUpdate = true
+                }
+            } else {
+                needsUpdate = true
+            }
+        }
+        val pending = wishCounter.addAndGet(-currentWishPos)
+        return needsUpdate || pending != 0
     }
 }

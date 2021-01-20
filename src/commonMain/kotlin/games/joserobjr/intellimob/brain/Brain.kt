@@ -19,9 +19,14 @@
 
 package games.joserobjr.intellimob.brain
 
+import games.joserobjr.intellimob.brain.goal.EntityGoalSelector
+import games.joserobjr.intellimob.brain.goal.EntityGoalSelectorType
 import games.joserobjr.intellimob.brain.wish.Wishes
+import games.joserobjr.intellimob.coroutines.RestartableJob
 import games.joserobjr.intellimob.entity.RegularEntity
 import games.joserobjr.intellimob.trait.WithTimeSource
+import kotlinx.coroutines.cancel
+import kotlin.time.ExperimentalTime
 
 /**
  * @author joserobjr
@@ -30,5 +35,30 @@ import games.joserobjr.intellimob.trait.WithTimeSource
 internal class Brain(
     val owner: RegularEntity,
 ): WithTimeSource by owner {
-    val wishes: Wishes = Wishes()
+    private val _thinkingJob = RestartableJob()
+    val thinkingJob by _thinkingJob
+    
+    @ExperimentalTime
+    val wishes: Wishes = Wishes(this)
+    val normalGoals: EntityGoalSelector = EntityGoalSelector(this, EntityGoalSelectorType.NORMAL)
+    val attackGoals: EntityGoalSelector = EntityGoalSelector(this, EntityGoalSelectorType.ATTACK)
+    
+    @OptIn(ExperimentalTime::class)
+    fun startThinking() {
+        val job = _thinkingJob.startSupervisorJob(owner.job) ?: return
+        try {
+            with(wishes) {
+                checkNotNull(startExecuting()) { "Could not start the wish execution job" }
+            }
+            with(normalGoals) {
+                checkNotNull(startSelecting()) { "Could not start the normal goals selector" }
+            }
+            with(attackGoals) {
+                checkNotNull(startSelecting()) { "Could not start the attack goals selector" }
+            }
+        } catch (e: Throwable) {
+            job.cancel("Some thinking jobs has failed to start", e)
+            throw e
+        }
+    }
 }

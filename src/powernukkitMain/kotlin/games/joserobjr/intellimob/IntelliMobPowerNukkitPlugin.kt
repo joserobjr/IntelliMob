@@ -20,8 +20,21 @@
 package games.joserobjr.intellimob
 
 import cn.nukkit.entity.Entity
+import cn.nukkit.event.EventHandler
+import cn.nukkit.event.EventPriority
+import cn.nukkit.event.Listener
+import cn.nukkit.event.entity.EntityDespawnEvent
+import cn.nukkit.event.entity.EntitySpawnEvent
+import cn.nukkit.event.level.LevelLoadEvent
 import cn.nukkit.plugin.PluginBase
+import games.joserobjr.intellimob.coroutines.AI
 import games.joserobjr.intellimob.entity.EntityIronGolem
+import games.joserobjr.intellimob.entity.asRegularEntity
+import games.joserobjr.intellimob.world.asIntelliMobWorld
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlin.coroutines.cancellation.CancellationException
 
 /**
  * @author joserobjr
@@ -30,10 +43,58 @@ import games.joserobjr.intellimob.entity.EntityIronGolem
 internal class IntelliMobPowerNukkitPlugin: PluginBase() {
     override fun onEnable() {
         instance = this
-        Entity.registerEntity("IronGolem", EntityIronGolem::class.java)
+        registerTemporaryEntities()
+        server.pluginManager.let { manager ->
+            manager.registerEvents(WorldListener, this)
+            manager.registerEvents(EntityListener, this)
+        }
+    }
+    
+    private object WorldListener: Listener {
+        @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+        fun onWorldLoad(ev: LevelLoadEvent) {
+            check(!ev.level.asIntelliMobWorld().job.isCompleted) {
+                "The AI job for the level ${ev.level} is completed on load. This is an IntelliMob bug, pease report."
+            }
+        }
+
+        @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+        fun onWorldUnload(ev: LevelLoadEvent) {
+            ev.level.removeMetadata("job", intelliMob)
+        }
+    }
+    
+    private object EntityListener: Listener {
+        @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
+        fun onEntityPreSpawn(ev: EntitySpawnEvent) {
+            ev.entity.asRegularEntity() // Setup the AI on first call
+        }
+        
+        @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = false)
+        fun onEntityPostSpawn(ev: EntitySpawnEvent) {
+            val entity = ev.entity.asRegularEntity()
+            if (ev.isCancelled) {
+                entity.job.cancel(CancellationException("The spawn event was cancelled"))
+                ev.entity.removeMetadata("regularEntity", intelliMob)
+                return
+            }
+            CoroutineScope(Dispatchers.AI + entity.job).launch { 
+                entity.brain.startThinking()
+            }
+        }
+        
+        @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+        fun onEntityDespawnEvent(ev: EntityDespawnEvent) {
+            ev.entity.asRegularEntity().job.cancel(CancellationException("The entity despawned"))
+            ev.entity.removeMetadata("regularEntity", intelliMob)
+        }
     }
     
     companion object {
         internal lateinit var instance: IntelliMobPowerNukkitPlugin; private set
+    }
+    
+    private fun registerTemporaryEntities() {
+        Entity.registerEntity("IronGolem", EntityIronGolem::class.java)
     }
 }

@@ -19,93 +19,100 @@
 
 package games.joserobjr.intellimob.entity
 
+import games.joserobjr.intellimob.entity.factory.EntityAIFactory
 import games.joserobjr.intellimob.entity.status.ImmutableEntityStatus
 
 /**
  * @author joserobjr
  * @since 2021-01-12
  */
-internal expect class EntityType {
+internal expect sealed class EntityType {
     /**
      * The default status based on the entity type.
      */
     val defaultStatus: ImmutableEntityStatus
     
+    abstract var aiFactory: EntityAIFactory
+    
+    internal class Vanilla: EntityType {
+        override var aiFactory: EntityAIFactory
+    }
+    
     companion object {
         //-------- Passive Mobs --------// 
-        val BAT: EntityType
-        val CAT: EntityType
-        val CHICKEN: EntityType
-        val COD: EntityType
-        val COW: EntityType
-        val DONKEY: EntityType
-        val FOX: EntityType
-        val HORSE: EntityType
-        val MOOSHROOM: EntityType
-        val MULE: EntityType
-        val OCELOT: EntityType
-        val PARROT: EntityType
-        val PIG: EntityType
-        val RABBIT: EntityType
-        val SALMON: EntityType
-        val SHEEP: EntityType
-        val SKELETON_HORSE: EntityType
-        val SNOW_GOLEM: EntityType
-        val SQUID: EntityType
-        val STRIDER: EntityType
-        val TROPICAL_FISH: EntityType
-        val TURTLE: EntityType
-        val VILLAGER: EntityType
-        val VILLAGER_V1: EntityType
-        val WANDERING_TRADER: EntityType
+        val BAT: Vanilla
+        val CAT: Vanilla
+        val CHICKEN: Vanilla
+        val COD: Vanilla
+        val COW: Vanilla
+        val DONKEY: Vanilla
+        val FOX: Vanilla
+        val HORSE: Vanilla
+        val MOOSHROOM: Vanilla
+        val MULE: Vanilla
+        val OCELOT: Vanilla
+        val PARROT: Vanilla
+        val PIG: Vanilla
+        val RABBIT: Vanilla
+        val SALMON: Vanilla
+        val SHEEP: Vanilla
+        val SKELETON_HORSE: Vanilla
+        val SNOW_GOLEM: Vanilla
+        val SQUID: Vanilla
+        val STRIDER: Vanilla
+        val TROPICAL_FISH: Vanilla
+        val TURTLE: Vanilla
+        val VILLAGER: Vanilla
+        val VILLAGER_V1: Vanilla
+        val WANDERING_TRADER: Vanilla
 
         //-------- Neutral Mobs --------//
-        val BEE: EntityType
-        val CAVE_SPIDER: EntityType
-        val DOLPHIN: EntityType
-        val ENDERMAN: EntityType
-        val IRON_GOLEM: EntityType
-        val LLAMA: EntityType
-        val PIGLIN: EntityType
-        val PANDA: EntityType
-        val POLAR_BEAR: EntityType
-        val PUFFERFISH: EntityType
-        val SPIDER: EntityType
-        val WOLF: EntityType
-        val ZOMBIFED_PIGLIN: EntityType
+        val BEE: Vanilla
+        val CAVE_SPIDER: Vanilla
+        val DOLPHIN: Vanilla
+        val ENDERMAN: Vanilla
+        val IRON_GOLEM: Vanilla
+        val LLAMA: Vanilla
+        val PIGLIN: Vanilla
+        val PANDA: Vanilla
+        val POLAR_BEAR: Vanilla
+        val PUFFERFISH: Vanilla
+        val SPIDER: Vanilla
+        val WOLF: Vanilla
+        val ZOMBIFED_PIGLIN: Vanilla
 
         //-------- Hostile Mobs --------//
-        val BLAZE: EntityType
-        val CREEPER: EntityType
-        val DROWNED: EntityType
-        val ELDER_GUARDIAN: EntityType
-        val ENDERMITE: EntityType
-        val EVOKER: EntityType
-        val GHAST: EntityType
-        val GUARDIAN: EntityType
-        val HOGLIN: EntityType
-        val HUSK: EntityType
-        val MAGMA_CUBE: EntityType
-        val PHANTOM: EntityType
-        val PIGLIN_BRUTE: EntityType
-        val PILLAGER: EntityType
-        val RAVEGER: EntityType
-        val SHULKER: EntityType
-        val SILVERFISH: EntityType
-        val SKELETON: EntityType
-        val SLIME: EntityType
-        val STRAY: EntityType
-        val VEX: EntityType
-        val VINDICATOR: EntityType
-        val WITCH: EntityType
-        val WITHER_SKELETON: EntityType
-        val ZOGLIN: EntityType
-        val ZOMBIE: EntityType
-        val ZOMBIE_VILLAGER: EntityType
-        val ZOMBIE_VILLAGER_V1: EntityType
+        val BLAZE: Vanilla
+        val CREEPER: Vanilla
+        val DROWNED: Vanilla
+        val ELDER_GUARDIAN: Vanilla
+        val ENDERMITE: Vanilla
+        val EVOKER: Vanilla
+        val GHAST: Vanilla
+        val GUARDIAN: Vanilla
+        val HOGLIN: Vanilla
+        val HUSK: Vanilla
+        val MAGMA_CUBE: Vanilla
+        val PHANTOM: Vanilla
+        val PIGLIN_BRUTE: Vanilla
+        val PILLAGER: Vanilla
+        val RAVEGER: Vanilla
+        val SHULKER: Vanilla
+        val SILVERFISH: Vanilla
+        val SKELETON: Vanilla
+        val SLIME: Vanilla
+        val STRAY: Vanilla
+        val VEX: Vanilla
+        val VINDICATOR: Vanilla
+        val WITCH: Vanilla
+        val WITHER_SKELETON: Vanilla
+        val ZOGLIN: Vanilla
+        val ZOMBIE: Vanilla
+        val ZOMBIE_VILLAGER: Vanilla
+        val ZOMBIE_VILLAGER_V1: Vanilla
 
         //-------- Boss Mobs --------//
-        val ENDER_DRAGON: EntityType
-        val WITHER: EntityType
+        val ENDER_DRAGON: Vanilla
+        val WITHER: Vanilla
     }
 }

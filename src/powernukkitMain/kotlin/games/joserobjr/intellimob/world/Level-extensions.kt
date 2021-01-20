@@ -25,4 +25,4 @@ import cn.nukkit.level.Level
  * @author joserobjr
  * @since 2021-01-18
  */
-internal fun Level.asIntelliMobWorld(): RegularWorld = PowerNukkitRegularWorld(this)
+internal fun Level.asIntelliMobWorld(): RegularWorld = PowerNukkitWorld(this)

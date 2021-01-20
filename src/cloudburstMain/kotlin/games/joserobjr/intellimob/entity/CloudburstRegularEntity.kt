@@ -20,20 +20,16 @@
 package games.joserobjr.intellimob.entity
 
 import games.joserobjr.intellimob.brain.Brain
-import games.joserobjr.intellimob.brain.createBrain
 import games.joserobjr.intellimob.control.EntityControls
-import games.joserobjr.intellimob.control.createControls
 import games.joserobjr.intellimob.coroutines.Sync
 import games.joserobjr.intellimob.entity.EntityType.Companion.fromEntity
 import games.joserobjr.intellimob.entity.status.EntityStatus
-import games.joserobjr.intellimob.entity.status.createBaseStatus
+import games.joserobjr.intellimob.entity.status.MutableEntityStatus
 import games.joserobjr.intellimob.math.*
-import games.joserobjr.intellimob.pathfinder.createPathFinder
 import games.joserobjr.intellimob.pathfinding.PathFinder
 import games.joserobjr.intellimob.world.RegularWorld
 import games.joserobjr.intellimob.world.asIntelliMobWorld
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import org.cloudburstmc.server.entity.Entity
 import kotlin.time.ExperimentalTime
 import kotlin.time.TimeSource
@@ -43,24 +39,26 @@ import kotlin.time.TimeSource
  * @since 2021-01-17
  */
 internal class CloudburstRegularEntity(override val cloudburstEntity: Entity) : RegularEntity {
+    override val job: Job = SupervisorJob(world.job)
+    override val updateDispatcher: CoroutineDispatcher get() = world.updateDispatcher
     override val type: EntityType by lazy { fromEntity(this) }
-    override val controls: EntityControls by lazy { createControls() }
-    override val brain: Brain by lazy { createBrain() }
-    override val baseStatus: EntityStatus by lazy { createBaseStatus() }
-    override val pathFinder: PathFinder by lazy { createPathFinder() }
+
+    override val baseStatus: MutableEntityStatus = type.aiFactory.createBaseStatus()
+    override var controls: EntityControls = type.aiFactory.createControls(this)
+    override var pathFinder: PathFinder = type.aiFactory.createPathFinder(this)
+    override val brain: Brain = type.aiFactory.createBrain(this)
+
+    private val _currentStatus: MutableEntityStatus = baseStatus.copy()
+    override val currentStatus: EntityStatus = _currentStatus.asImmutableView()
+
+    @ExperimentalTime
+    override val timeSource: TimeSource get() = world.timeSource
+    
     override val position: EntityPos get() = cloudburstEntity.position.toEntityPos()
     override val eyePosition: EntityPos get() = with(cloudburstEntity) { with(position) { EntityPos(x, y + eyeHeight, z) } }
     override val world: RegularWorld get() = cloudburstEntity.level.asIntelliMobWorld()
     override val boundingBox: BoundingBox get() = cloudburstEntity.boundingBox.toIntelliMobBoundingBox()
-    
-    @ExperimentalTime
-    override val timeSource: TimeSource get() = world.timeSource
 
-    private var _currentStatus: EntityStatus? = null
-    override var currentStatus: EntityStatus
-        get() = _currentStatus ?: baseStatus
-        private set(value) { _currentStatus = value }
-    
     override suspend fun createSnapshot(): EntitySnapshot = withContext(Dispatchers.Sync) {
         with(cloudburstEntity) {
             EntitySnapshot(
@@ -70,9 +68,5 @@ internal class CloudburstRegularEntity(override val cloudburstEntity: Entity) : 
                 status = currentStatus
             )
         }
-    }
-
-    override suspend fun isEyeUnderWater(): Boolean {
-        TODO()
     }
 }

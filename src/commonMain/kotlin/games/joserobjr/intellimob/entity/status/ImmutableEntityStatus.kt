@@ -31,6 +31,7 @@ internal data class ImmutableEntityStatus (
     override val headFastSpeed: PitchYaw,
     override val walkSpeed: DoubleVectorXZ,
     override val sprintSpeed: DoubleVectorXZ,
+    override val flySpeed: DoubleVectorXZ,
     override val jumpSpeed: Double,
     override val stepHeight: Double,
     override val canJump: Boolean
@@ -40,6 +41,7 @@ internal data class ImmutableEntityStatus (
         headFastSpeed = headFastSpeed,
         walkSpeed = walkSpeed,
         jumpSpeed = jumpSpeed,
+        flySpeed = flySpeed,
         sprintSpeed = sprintSpeed,
         stepHeight = stepHeight,
         canJump = canJump,

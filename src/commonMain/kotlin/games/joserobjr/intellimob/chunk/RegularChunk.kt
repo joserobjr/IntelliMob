@@ -20,27 +20,17 @@
 package games.joserobjr.intellimob.chunk
 
 import games.joserobjr.intellimob.block.BlockSnapshot
-import games.joserobjr.intellimob.block.BlockState
-import games.joserobjr.intellimob.block.RegularBlockEntity
-import games.joserobjr.intellimob.entity.EntitySnapshot
-import games.joserobjr.intellimob.entity.RegularEntity
 import games.joserobjr.intellimob.math.ChunkPos
 import games.joserobjr.intellimob.math.IBlockPos
-import games.joserobjr.intellimob.trait.WithWorld
-import kotlinx.coroutines.CoroutineDispatcher
+import games.joserobjr.intellimob.trait.WithUpdateDispatcher
+import games.joserobjr.intellimob.world.WorldView
 
 /**
  * @author joserobjr
  * @since 2021-01-17
  */
-internal interface RegularChunk: PlatformChunk, WithWorld {
-    val updateDispatcher: CoroutineDispatcher
+internal interface RegularChunk: PlatformChunk, WorldView, WithUpdateDispatcher {
     val position: ChunkPos
-    suspend fun getEntitySnapshots(): List<EntitySnapshot>
-    suspend fun getRegularEntities(): List<RegularEntity>
-    suspend fun getBlockState(pos: IBlockPos, layer: Int = 0): BlockState
-    suspend fun getBlockEntity(pos: IBlockPos): RegularBlockEntity?
-    suspend fun setBlockState(pos: IBlockPos, blockState: BlockState, layer: Int = 0)
     suspend fun createBlockSnapshot(pos: IBlockPos, includeBlockEntity: Boolean = false): BlockSnapshot
     override val regularChunk: RegularChunk get() = this
 }

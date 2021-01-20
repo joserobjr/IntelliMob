@@ -19,15 +19,22 @@
 
 package games.joserobjr.intellimob.world
 
+import games.joserobjr.intellimob.block.BlockState
+import games.joserobjr.intellimob.block.RegularBlockEntity
+import games.joserobjr.intellimob.math.IBlockPos
 import games.joserobjr.intellimob.trait.WithTimeSource
-import games.joserobjr.intellimob.trait.WithWorld
-import kotlinx.coroutines.CoroutineDispatcher
+import games.joserobjr.intellimob.trait.WithUpdateDispatcher
+import kotlinx.coroutines.Job
 
 /**
  * @author joserobjr
  * @since 2021-01-17
  */
-internal interface RegularWorld: PlatformWorld, WithWorld, WithTimeSource {
+internal interface RegularWorld: PlatformWorld, WorldView, WithTimeSource, WithUpdateDispatcher {
+    val name: String
+    val job: Job
+    val cache: WorldView
     override val regularWorld: RegularWorld get() = this
-    val updateDispatcher: CoroutineDispatcher
+    override suspend fun getBlockState(pos: IBlockPos, layer: Int): BlockState = getBlock(pos).currentState(layer)
+    override suspend fun getBlockEntity(pos: IBlockPos): RegularBlockEntity? = getBlock(pos).currentBlockEntity()
 }

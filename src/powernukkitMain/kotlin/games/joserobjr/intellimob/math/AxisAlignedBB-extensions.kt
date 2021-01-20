@@ -25,6 +25,7 @@ import cn.nukkit.math.AxisAlignedBB
  * @author joserobjr
  * @since 2021-01-18
  */
+@Suppress("CAST_NEVER_SUCCEEDS")
 internal fun AxisAlignedBB.toIntelliMobBoundingBox(): BoundingBox {
-    return BoundingBox(minX, minY, minZ, maxX, maxY, maxZ)
+    return this as? BoundingBox ?: BoundingBox(minX, minY, minZ, maxX, maxY, maxZ)
 }

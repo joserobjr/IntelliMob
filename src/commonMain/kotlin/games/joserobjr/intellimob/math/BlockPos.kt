@@ -32,4 +32,6 @@ internal data class BlockPos (
 ): IBlockPos {
     constructor(pos: IBlockPos): this(pos.x, pos.y, pos.z)
     constructor(withPos: WithBlockPos): this(withPos.position)
+
+    override fun toImmutableBlockPos(): BlockPos = this
 }

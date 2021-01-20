@@ -20,12 +20,36 @@
 package games.joserobjr.intellimob.brain.goal
 
 import games.joserobjr.intellimob.brain.Brain
-import games.joserobjr.intellimob.brain.wish.Wishes
+import games.joserobjr.intellimob.control.PhysicalControl
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 
 /**
  * @author joserobjr
  * @since 2021-01-17
  */
-internal abstract class Goal {
-    abstract suspend fun Wishes.execute(brain: Brain)
+internal abstract class Goal(val physicalControl: Set<PhysicalControl>) {
+    abstract val defaultPriority: Int
+    
+    open fun canBeAddedTo(brain: Brain, selector: EntityGoalSelector): Boolean {
+        return true
+    }
+    
+    open fun adjustPriority(brain: Brain, selector: EntityGoalSelector, proposedPriority: Int): Int {
+        return proposedPriority
+    } 
+    
+    open fun addedTo(brain: Brain, selector: EntityGoalSelector) {} 
+    
+    abstract suspend fun canStart(brain: Brain): Boolean
+    
+    abstract fun CoroutineScope.start(brain: Brain): Job?
+    
+    open suspend fun canStop(brain: Brain): Boolean {
+        return true
+    }
+    
+    open suspend fun canBeReplacedBy(brain: Brain, other: Goal, thisPriority: Int, otherPriority: Int): Boolean {
+        return canStop(brain) && otherPriority < thisPriority
+    }
 }

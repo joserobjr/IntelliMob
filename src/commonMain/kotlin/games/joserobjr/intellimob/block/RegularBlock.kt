@@ -32,5 +32,6 @@ internal interface RegularBlock: PlatformBlock, WithBlockLocation {
     suspend fun currentBlockEntity(): RegularBlockEntity?
     suspend fun createSnapshot(includeBlockEntity: Boolean = false): BlockSnapshot
     suspend fun currentBoundingBox(): BoundingBox
+    suspend fun currentLiquidState(): LiquidState?
     override val regularBlock: RegularBlock get() = this
 }

@@ -20,46 +20,43 @@
 package games.joserobjr.intellimob.entity
 
 import games.joserobjr.intellimob.brain.Brain
-import games.joserobjr.intellimob.brain.createBrain
 import games.joserobjr.intellimob.control.EntityControls
-import games.joserobjr.intellimob.control.createControls
 import games.joserobjr.intellimob.coroutines.Sync
 import games.joserobjr.intellimob.entity.status.EntityStatus
-import games.joserobjr.intellimob.entity.status.createBaseStatus
+import games.joserobjr.intellimob.entity.status.MutableEntityStatus
 import games.joserobjr.intellimob.math.*
-import games.joserobjr.intellimob.pathfinder.createPathFinder
 import games.joserobjr.intellimob.pathfinding.PathFinder
 import games.joserobjr.intellimob.world.RegularWorld
 import games.joserobjr.intellimob.world.asIntelliMobWorld
 import io.gomint.entity.Entity
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import kotlin.time.ExperimentalTime
 import kotlin.time.TimeSource
 
+/**
+ * Wraps a GoMint entity object and tag it as a regular entity.
+ */
 internal class GoMintEntity<E>(override val goMintEntity: Entity<E>) : RegularEntity {
-    override val type: EntityType by lazy { EntityType.fromEntity(this) }
-    override val controls: EntityControls by lazy { createControls() }
-    override val brain: Brain by lazy { createBrain() }
-    override val baseStatus: EntityStatus by lazy { createBaseStatus() }
-    override val pathFinder: PathFinder by lazy { createPathFinder() }
+    override val job: Job = SupervisorJob(world.job)
+    override val updateDispatcher: CoroutineDispatcher get() = world.updateDispatcher
+    override val type: EntityType = EntityType.fromEntity(this)
+
+    override val baseStatus: MutableEntityStatus = type.aiFactory.createBaseStatus()
+    override var controls: EntityControls = type.aiFactory.createControls(this)
+    override var pathFinder: PathFinder = type.aiFactory.createPathFinder(this)
+    override val brain: Brain = type.aiFactory.createBrain(this)
+
+    private val _currentStatus: MutableEntityStatus = baseStatus.copy()
+    override val currentStatus: EntityStatus = _currentStatus.asImmutableView()
+
+    @ExperimentalTime
+    override val timeSource: TimeSource get() = world.timeSource
+    
     override val position: EntityPos get() = with(goMintEntity) { EntityPos(positionX(), positionY(), positionZ()) }
     override val eyePosition: EntityPos get() = with(goMintEntity) { EntityPos(positionX(), positionY() + eyeHeight(), positionZ()) }
     override val world: RegularWorld get() = goMintEntity.world().asIntelliMobWorld()
     override val boundingBox: BoundingBox get() = goMintEntity.boundingBox().toIntelliMobBoundingBox()
-    
-    @ExperimentalTime
-    override val timeSource: TimeSource get() = world.timeSource
-    
-    private var _currentStatus: EntityStatus? = null
-    public override var currentStatus: EntityStatus
-        get() {
-            return _currentStatus ?: baseStatus
-        }
-        private set(value) {
-            _currentStatus = value
-        }
-    
+
     override suspend fun createSnapshot(): EntitySnapshot = withContext(Dispatchers.Sync) {
         with(goMintEntity) {
             EntitySnapshot(
@@ -69,9 +66,5 @@ internal class GoMintEntity<E>(override val goMintEntity: Entity<E>) : RegularEn
                 status = currentStatus
             )
         }
-    }
-
-    override suspend fun isEyeUnderWater(): Boolean {
-        TODO("Not yet implemented")
     }
 }

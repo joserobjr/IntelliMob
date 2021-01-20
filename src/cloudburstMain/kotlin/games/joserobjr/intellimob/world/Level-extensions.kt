@@ -25,4 +25,4 @@ import org.cloudburstmc.server.level.Level
  * @author joserobjr
  * @since 2021-01-18
  */
-internal fun Level.asIntelliMobWorld(): RegularWorld = ClourburstRegularWorld(this)
+internal fun Level.asIntelliMobWorld(): RegularWorld = ClourburstWorld(this)

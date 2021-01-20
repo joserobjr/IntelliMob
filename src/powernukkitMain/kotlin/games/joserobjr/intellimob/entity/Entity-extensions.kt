@@ -17,9 +17,12 @@
  *
  */
 
+@file:Suppress("NOTHING_TO_INLINE")
+
 package games.joserobjr.intellimob.entity
 
 import cn.nukkit.entity.Entity
+import games.joserobjr.intellimob.metadata.lazyMetadata
 
 /**
  * Gets an IntelliMob representation of this entity
@@ -27,4 +30,5 @@ import cn.nukkit.entity.Entity
  * @author joserobjr
  * @since 2021-01-17
  */
-internal fun Entity.asRegularEntity(): RegularEntity = PowerEntityRegularEntity(this)
+internal inline fun Entity.asRegularEntity(): RegularEntity = regularEntity
+private val Entity.regularEntity by lazyMetadata<Entity, RegularEntity> { PowerNukkitEntity(this) }

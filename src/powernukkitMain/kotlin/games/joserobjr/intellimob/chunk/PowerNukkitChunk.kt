@@ -24,9 +24,11 @@ import games.joserobjr.intellimob.entity.EntitySnapshot
 import games.joserobjr.intellimob.entity.RegularEntity
 import games.joserobjr.intellimob.entity.asRegularEntity
 import games.joserobjr.intellimob.math.BlockLocation
+import games.joserobjr.intellimob.math.BoundingBox
 import games.joserobjr.intellimob.math.ChunkPos
 import games.joserobjr.intellimob.math.IBlockPos
 import games.joserobjr.intellimob.world.RegularWorld
+import games.joserobjr.intellimob.world.WorldView
 import games.joserobjr.intellimob.world.asIntelliMobWorld
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
@@ -72,14 +74,6 @@ internal inline class PowerNukkitChunk(override val powerNukkitChunk: PNChunk): 
         return powerNukkitChunk.getTile(pos.x and 0xF, pos.y, pos.z and 0xF)?.asIntelliMobBlockEntity()
     }
 
-    override suspend fun setBlockState(pos: IBlockPos, blockState: BlockState, layer: Int): Unit = withContext(updateDispatcher) {
-        validatePos(pos)
-        require(pos.y in 0..255) {
-            "The position $pos is not inside the chunk $position. The Y coordinate is outside the valid range."
-        }
-        powerNukkitChunk.setBlockStateAtLayer(pos.x and 0xF, pos.y, pos.z and 0xF, layer, blockState.powerNukkitBlockState)
-    }
-
     override suspend fun createBlockSnapshot(pos: IBlockPos, includeBlockEntity: Boolean): BlockSnapshot {
         validatePos(pos)
         val location = BlockLocation(world, pos)
@@ -104,5 +98,27 @@ internal inline class PowerNukkitChunk(override val powerNukkitChunk: PNChunk): 
     
     private fun getBlockStateList(pos: IBlockPos): LayeredBlockState {
         return LayeredBlockState(getBlockStateUnchecked(pos, 0), getBlockStateUnchecked(pos, 1))
+    }
+
+    override suspend fun getBlock(pos: IBlockPos): RegularBlock {
+        return PowerNukkitBlock(pos.toBlockLocation(this))
+    }
+
+    override suspend fun getCollidingBlocks(
+        bounds: BoundingBox,
+        subject: RegularEntity?,
+        limit: Int,
+        filter: (WorldView.(pos: IBlockPos, state: BlockState) -> Boolean)?
+    ): Map<IBlockPos, BlockState> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getCollidingEntities(
+        bounds: BoundingBox,
+        subject: RegularEntity?,
+        limit: Int,
+        filter: (WorldView.(entity: RegularEntity) -> Boolean)?
+    ): List<RegularEntity> {
+        TODO("Not yet implemented")
     }
 }

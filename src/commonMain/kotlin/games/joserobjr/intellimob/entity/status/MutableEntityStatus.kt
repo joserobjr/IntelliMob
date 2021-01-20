@@ -31,6 +31,7 @@ internal data class MutableEntityStatus(
     override val headFastSpeed: PitchYaw,
     override var walkSpeed: DoubleVectorXZ,
     override val sprintSpeed: DoubleVectorXZ,
+    override val flySpeed: DoubleVectorXZ,
     override var jumpSpeed: Double,
     override var stepHeight: Double,
     override var canJump: Boolean
@@ -40,6 +41,7 @@ internal data class MutableEntityStatus(
         headFastSpeed = headFastSpeed,
         walkSpeed = walkSpeed,
         sprintSpeed = sprintSpeed,
+        flySpeed = flySpeed,
         jumpSpeed = jumpSpeed,
         stepHeight = stepHeight,
         canJump = canJump

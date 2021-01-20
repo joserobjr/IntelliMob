@@ -25,10 +25,10 @@ import games.joserobjr.intellimob.trait.WithBoundingBox
  * @author joserobjr
  * @since 2021-01-18
  */
-internal data class BoundingBox(
-    val minPosInclusive: IEntityPos,
-    val maxPosExclusive: IEntityPos
-): WithBoundingBox {
+internal class BoundingBox(
+    minPosInclusive: IEntityPos,
+    maxPosExclusive: IEntityPos
+): WithBoundingBox, PlatformBoundingBox(minPosInclusive, maxPosExclusive) {
     constructor(pos: IEntityPos, width: Double, height: Double): this(
         minPosInclusive = (width / 2.0).let { EntityPos(pos.x - it, pos.y, pos.z - it) },
         maxPosExclusive = (width / 2.0).let { EntityPos(pos.x + it, pos.y + height, pos.z + it) },

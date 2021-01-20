@@ -19,6 +19,7 @@
 
 package games.joserobjr.intellimob.control
 
+import games.joserobjr.intellimob.entity.RegularEntity
 import games.joserobjr.intellimob.entity.status.EntityStatus
 import games.joserobjr.intellimob.math.DoubleVectorXZ
 import games.joserobjr.intellimob.math.EntityPos
@@ -31,11 +32,13 @@ import games.joserobjr.intellimob.math.PitchYaw
  * @since 2021-01-11
  */
 internal interface EntityControls {
+    val owner: RegularEntity
+    
     /**
      * The current status affecting the entity. The returned values must consider if the entity is on floor, in water,
      * etc.
      */
-    val currentStatus: EntityStatus
+    val currentStatus: EntityStatus get() = owner.currentStatus
 
     /**
      * Moves the entity head toward a position at given speed. 

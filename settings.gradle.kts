@@ -20,3 +20,4 @@
 
 rootProject.name = "IntelliMob"
 
+include(":jvm-expectations")

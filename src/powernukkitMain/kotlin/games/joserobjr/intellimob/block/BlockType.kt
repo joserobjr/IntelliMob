@@ -19,6 +19,7 @@
 
 package games.joserobjr.intellimob.block
 
+import cn.nukkit.block.Block
 import cn.nukkit.block.BlockID
 import java.util.concurrent.ConcurrentHashMap
 
@@ -32,6 +33,10 @@ internal actual class BlockType private constructor(state: PNBlockState) {
     actual companion object {
         private val types = ConcurrentHashMap<PNBlockState, BlockType>()
         actual val AIR: BlockType = fromBlockId(BlockID.AIR)
+
+        fun fromPNBlock(block: Block): BlockType {
+            return fromBlockId(block.id)
+        }
         
         fun fromBlockId(blockId: Int): BlockType {
             val state = PNBlockState.of(blockId)

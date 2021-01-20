@@ -34,6 +34,7 @@ internal interface EntityStatus {
     val headFastSpeed: PitchYaw
     val walkSpeed: DoubleVectorXZ
     val sprintSpeed: DoubleVectorXZ
+    val flySpeed: DoubleVectorXZ
     val jumpSpeed: Double
     val stepHeight: Double
     val canJump: Boolean

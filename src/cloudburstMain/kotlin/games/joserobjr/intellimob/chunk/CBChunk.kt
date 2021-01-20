@@ -30,5 +30,5 @@ import org.cloudburstmc.server.level.chunk.Chunk
 internal typealias CBChunk = Chunk
 
 internal inline fun CBChunk.asRegularChunk(): RegularChunk {
-    return CloudburstRegularChunk(this)
+    return CloudburstChunk(this)
 }

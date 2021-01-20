@@ -21,15 +21,16 @@ package games.joserobjr.intellimob.math
 
 import games.joserobjr.intellimob.trait.WithBlockPos
 import games.joserobjr.intellimob.trait.WithBoundingBox
+import games.joserobjr.intellimob.trait.WithWorld
 
 /**
  * @author joserobjr
  * @since 2021-01-17
  */
-internal interface IBlockPos: WithBlockPos, WithBoundingBox {
-    val x: Int
-    val y: Int
-    val z: Int
+internal interface IBlockPos: WithBlockPos, WithBoundingBox, IIntVectorXYZ {
+    val chunkX: Int get() = x shr 4
+    val chunkSection: Int? get() = y.takeIf { it in 0..255 }?.shr(4) 
+    val chunkZ: Int get() = z shr 4
     
     override val boundingBox: BoundingBox get() = toEntityPos().let { min ->
         BoundingBox(
@@ -48,14 +49,21 @@ internal interface IBlockPos: WithBlockPos, WithBoundingBox {
                 z <= pos.z && pos.z < z + 1
     }
     
-    operator fun plus(pos: IBlockPos): BlockPos = BlockPos(x + pos.x, y + pos.y, z + pos.z)
-    operator fun minus(pos: IBlockPos): BlockPos = BlockPos(x - pos.x, y - pos.y, z - pos.z)
+    operator fun plus(pos: IIntVectorXYZ): BlockPos = BlockPos(x + pos.x, y + pos.y, z + pos.z)
+    operator fun minus(pos: IIntVectorXYZ): BlockPos = BlockPos(x - pos.x, y - pos.y, z - pos.z)
 
     fun plus(x: Int, y: Int, z: Int): BlockPos = BlockPos(this.x + x, this.y + y, this.z + z)
     fun minus(x: Int, y: Int, z: Int): BlockPos = BlockPos(this.x + x, this.y + y, this.z + z)
     
     operator fun unaryMinus(): BlockPos = BlockPos(-x, -y, -z)
     
+    fun toBlockLocation(world: WithWorld): BlockLocation {
+        return BlockLocation(world, this)
+    }
+    
+    fun toMutableBlockPos(): MutableBlockPos = MutableBlockPos(x, y, z)
+    fun toImmutableBlockPos(): BlockPos = BlockPos(x, y, z)
+
     companion object {
         val ZERO: BlockPos = BlockPos(0, 0, 0)
         val ONE: BlockPos = BlockPos(1, 1, 1)

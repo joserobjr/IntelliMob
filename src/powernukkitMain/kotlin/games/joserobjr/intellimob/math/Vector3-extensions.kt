@@ -17,6 +17,8 @@
  *
  */
 
+@file:Suppress("NOTHING_TO_INLINE")
+
 package games.joserobjr.intellimob.math
 
 import cn.nukkit.math.Vector3
@@ -25,4 +27,7 @@ import cn.nukkit.math.Vector3
  * @author joserobjr
  * @since 2021-01-17
  */
-internal fun Vector3.asEntityPos(): EntityPos = EntityPos(x, y, z)
+internal inline fun Vector3.toEntityPos(): EntityPos = EntityPos(x, y, z)
+
+internal inline fun Vector3.toBlockPos(): BlockPos = BlockPos(x.toInt(), y.toInt(), z.toInt())
+

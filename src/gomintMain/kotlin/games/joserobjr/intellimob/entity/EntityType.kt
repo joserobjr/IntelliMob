@@ -19,6 +19,8 @@
 
 package games.joserobjr.intellimob.entity
 
+import games.joserobjr.intellimob.entity.factory.EntityAIFactory
+import games.joserobjr.intellimob.entity.factory.GenericEntityAIFactory
 import games.joserobjr.intellimob.entity.status.ImmutableEntityStatus
 import games.joserobjr.intellimob.entity.status.createDefaultStatus
 import io.gomint.entity.Entity
@@ -33,15 +35,30 @@ import kotlin.reflect.full.isSuperclassOf
  * @author joserobjr
  * @since 2021-01-12
  */
-internal actual class EntityType private constructor(internal val platformType: KClass<out Entity<*>>?) {
+internal actual sealed class EntityType {
+    internal abstract val platformType: KClass<out Entity<*>>?
+    actual abstract var aiFactory: EntityAIFactory
+    
     /**
      * The default status based on the entity type.
      */
     actual val defaultStatus: ImmutableEntityStatus by lazy { createDefaultStatus() }
     
+    internal actual class Vanilla(override val platformType: KClass<out Entity<*>>?): EntityType() {
+        actual override var aiFactory = EntityAIFactory.fromVanillaType(this)
+        init {
+            if (platformType != null) {
+                registry[platformType] = this
+            }
+        }
+    }
+    
+    private class Custom(override val platformType: KClass<out Entity<*>>): EntityType() {
+        override var aiFactory: EntityAIFactory = GenericEntityAIFactory
+    }
+    
     actual companion object {
         private val registry: MutableMap<KClass<out Entity<*>>, EntityType> = ConcurrentHashMap()
-        private val missingType = EntityType(null)
         
         internal fun fromEntity(entity: RegularEntity) = fromClass(entity.goMintEntity::class)
         internal fun fromClass(entityClass: KClass<out Entity<*>>): EntityType {
@@ -49,83 +66,83 @@ internal actual class EntityType private constructor(internal val platformType: 
             registry.entries.firstOrNull { it.key.isSuperclassOf(entityClass) }?.let { (_, type) ->
                 return registry.putIfAbsent(entityClass, type) ?: type
             }
-            return registry.computeIfAbsent(entityClass, ::EntityType)
+            return registry.computeIfAbsent(entityClass, ::Custom)
         }
         
         //-------- Passive Mobs --------// 
-        actual val BAT: EntityType = fromClass(EntityBat::class)
-        actual val CAT: EntityType = fromClass(EntityCat::class)
-        actual val CHICKEN: EntityType = fromClass(EntityChicken::class)
-        actual val COD: EntityType = fromClass(EntityCod::class)
-        actual val COW: EntityType = fromClass(EntityCow::class)
-        actual val DONKEY: EntityType = fromClass(EntityDonkey::class)
-        actual val FOX: EntityType = fromClass(EntityFox::class)
-        actual val HORSE: EntityType = fromClass(EntityHorse::class)
-        actual val MOOSHROOM: EntityType = fromClass(EntityMooshroom::class)
-        actual val MULE: EntityType = fromClass(EntityMule::class)
-        actual val OCELOT: EntityType = fromClass(EntityOcelot::class)
-        actual val PARROT: EntityType = fromClass(EntityParrot::class)
-        actual val PIG: EntityType = fromClass(EntityPig::class)
-        actual val RABBIT: EntityType = fromClass(EntityRabbit::class)
-        actual val SALMON: EntityType = fromClass(EntitySalmon::class)
-        actual val SHEEP: EntityType = fromClass(EntitySheep::class)
-        actual val SKELETON_HORSE: EntityType = fromClass(EntitySkeletonHorse::class)
-        actual val SNOW_GOLEM: EntityType = fromClass(EntitySnowGolem::class)
-        actual val SQUID: EntityType = fromClass(EntitySquid::class)
-        actual val STRIDER: EntityType = fromClass(EntityStrider::class)
-        actual val TROPICAL_FISH: EntityType = fromClass(EntityTropicalFish::class)
-        actual val TURTLE: EntityType = fromClass(EntityTurtle::class)
-        actual val VILLAGER: EntityType = fromClass(EntityVillager::class)
-        actual val VILLAGER_V1: EntityType = missingType
-        actual val WANDERING_TRADER: EntityType = fromClass(Entity::class)
+        actual val BAT = Vanilla(EntityBat::class)
+        actual val CAT = Vanilla(EntityCat::class)
+        actual val CHICKEN = Vanilla(EntityChicken::class)
+        actual val COD = Vanilla(EntityCod::class)
+        actual val COW = Vanilla(EntityCow::class)
+        actual val DONKEY = Vanilla(EntityDonkey::class)
+        actual val FOX = Vanilla(EntityFox::class)
+        actual val HORSE = Vanilla(EntityHorse::class)
+        actual val MOOSHROOM = Vanilla(EntityMooshroom::class)
+        actual val MULE = Vanilla(EntityMule::class)
+        actual val OCELOT = Vanilla(EntityOcelot::class)
+        actual val PARROT = Vanilla(EntityParrot::class)
+        actual val PIG = Vanilla(EntityPig::class)
+        actual val RABBIT = Vanilla(EntityRabbit::class)
+        actual val SALMON = Vanilla(EntitySalmon::class)
+        actual val SHEEP = Vanilla(EntitySheep::class)
+        actual val SKELETON_HORSE = Vanilla(EntitySkeletonHorse::class)
+        actual val SNOW_GOLEM = Vanilla(EntitySnowGolem::class)
+        actual val SQUID = Vanilla(EntitySquid::class)
+        actual val STRIDER = Vanilla(EntityStrider::class)
+        actual val TROPICAL_FISH = Vanilla(EntityTropicalFish::class)
+        actual val TURTLE = Vanilla(EntityTurtle::class)
+        actual val VILLAGER = Vanilla(EntityVillager::class)
+        actual val VILLAGER_V1 = Vanilla(null)
+        actual val WANDERING_TRADER = Vanilla(Entity::class)
 
         //-------- Neutral Mobs --------//
-        actual val BEE: EntityType = fromClass(EntityBee::class)
-        actual val CAVE_SPIDER: EntityType = fromClass(EntityCaveSpider::class)
-        actual val DOLPHIN: EntityType = fromClass(EntityDolphin::class)
-        actual val ENDERMAN: EntityType = fromClass(EntityEnderman::class)
-        actual val IRON_GOLEM: EntityType = fromClass(EntityIronGolem::class)
-        actual val LLAMA: EntityType = fromClass(EntityLama::class) 
-        actual val PIGLIN: EntityType = fromClass(EntityPiglin::class)
-        actual val PANDA: EntityType = fromClass(EntityPanda::class)
-        actual val POLAR_BEAR: EntityType = fromClass(EntityPolarBear::class)
-        actual val PUFFERFISH: EntityType = fromClass(EntityPufferfish::class)
-        actual val SPIDER: EntityType = fromClass(EntitySpider::class)
-        actual val WOLF: EntityType = fromClass(EntityWolf::class)
-        actual val ZOMBIFED_PIGLIN: EntityType = fromClass(EntityZombiePiglin::class)
+        actual val BEE = Vanilla(EntityBee::class)
+        actual val CAVE_SPIDER = Vanilla(EntityCaveSpider::class)
+        actual val DOLPHIN = Vanilla(EntityDolphin::class)
+        actual val ENDERMAN = Vanilla(EntityEnderman::class)
+        actual val IRON_GOLEM = Vanilla(EntityIronGolem::class)
+        actual val LLAMA = Vanilla(EntityLama::class) 
+        actual val PIGLIN = Vanilla(EntityPiglin::class)
+        actual val PANDA = Vanilla(EntityPanda::class)
+        actual val POLAR_BEAR = Vanilla(EntityPolarBear::class)
+        actual val PUFFERFISH = Vanilla(EntityPufferfish::class)
+        actual val SPIDER = Vanilla(EntitySpider::class)
+        actual val WOLF = Vanilla(EntityWolf::class)
+        actual val ZOMBIFED_PIGLIN = Vanilla(EntityZombiePiglin::class)
 
         //-------- Hostile Mobs --------//
-        actual val BLAZE: EntityType = fromClass(EntityBlaze::class)
-        actual val CREEPER: EntityType = fromClass(EntityCreeper::class)
-        actual val DROWNED: EntityType = fromClass(EntityDrowned::class)
-        actual val ELDER_GUARDIAN: EntityType = fromClass(EntityElderGuardian::class)
-        actual val ENDERMITE: EntityType = fromClass(EntityEndermite::class)
-        actual val EVOKER: EntityType = fromClass(EntityEvoker::class)
-        actual val GHAST: EntityType = fromClass(EntityGhast::class)
-        actual val GUARDIAN: EntityType = fromClass(EntityGuardian::class)
-        actual val HOGLIN: EntityType = fromClass(EntityHoglin::class)
-        actual val HUSK: EntityType = fromClass(EntityHusk::class)
-        actual val MAGMA_CUBE: EntityType = fromClass(EntityMagmaCube::class)
-        actual val PHANTOM: EntityType = fromClass(EntityPhantom::class)
-        actual val PIGLIN_BRUTE: EntityType = fromClass(EntityPiglinBrute::class)
-        actual val PILLAGER: EntityType = fromClass(EntityPillager::class)
-        actual val RAVEGER: EntityType = fromClass(EntityRavager::class)
-        actual val SHULKER: EntityType = fromClass(EntityShulker::class)
-        actual val SILVERFISH: EntityType = fromClass(EntitySilverfish::class)
-        actual val SKELETON: EntityType = fromClass(EntitySkeleton::class)
-        actual val SLIME: EntityType = fromClass(EntitySlime::class)
-        actual val STRAY: EntityType = fromClass(EntityStray::class)
-        actual val VEX: EntityType = fromClass(EntityVex::class)
-        actual val VINDICATOR: EntityType = fromClass(EntityVindicator::class)
-        actual val WITCH: EntityType = fromClass(EntityWitch::class)
-        actual val WITHER_SKELETON: EntityType = fromClass(EntityWitherSkeleton::class)
-        actual val ZOGLIN: EntityType = fromClass(EntityZoglin::class)
-        actual val ZOMBIE: EntityType = fromClass(EntityZombie::class)
-        actual val ZOMBIE_VILLAGER: EntityType = fromClass(EntityZombieVillager::class)
-        actual val ZOMBIE_VILLAGER_V1: EntityType = missingType
+        actual val BLAZE = Vanilla(EntityBlaze::class)
+        actual val CREEPER = Vanilla(EntityCreeper::class)
+        actual val DROWNED = Vanilla(EntityDrowned::class)
+        actual val ELDER_GUARDIAN = Vanilla(EntityElderGuardian::class)
+        actual val ENDERMITE = Vanilla(EntityEndermite::class)
+        actual val EVOKER = Vanilla(EntityEvoker::class)
+        actual val GHAST = Vanilla(EntityGhast::class)
+        actual val GUARDIAN = Vanilla(EntityGuardian::class)
+        actual val HOGLIN = Vanilla(EntityHoglin::class)
+        actual val HUSK = Vanilla(EntityHusk::class)
+        actual val MAGMA_CUBE = Vanilla(EntityMagmaCube::class)
+        actual val PHANTOM = Vanilla(EntityPhantom::class)
+        actual val PIGLIN_BRUTE = Vanilla(EntityPiglinBrute::class)
+        actual val PILLAGER = Vanilla(EntityPillager::class)
+        actual val RAVEGER = Vanilla(EntityRavager::class)
+        actual val SHULKER = Vanilla(EntityShulker::class)
+        actual val SILVERFISH = Vanilla(EntitySilverfish::class)
+        actual val SKELETON = Vanilla(EntitySkeleton::class)
+        actual val SLIME = Vanilla(EntitySlime::class)
+        actual val STRAY = Vanilla(EntityStray::class)
+        actual val VEX = Vanilla(EntityVex::class)
+        actual val VINDICATOR = Vanilla(EntityVindicator::class)
+        actual val WITCH = Vanilla(EntityWitch::class)
+        actual val WITHER_SKELETON = Vanilla(EntityWitherSkeleton::class)
+        actual val ZOGLIN = Vanilla(EntityZoglin::class)
+        actual val ZOMBIE = Vanilla(EntityZombie::class)
+        actual val ZOMBIE_VILLAGER = Vanilla(EntityZombieVillager::class)
+        actual val ZOMBIE_VILLAGER_V1 = Vanilla(null)
 
         //-------- Boss Mobs --------//
-        actual val ENDER_DRAGON: EntityType = fromClass(EntityEnderDragon::class)
-        actual val WITHER: EntityType = fromClass(EntityWither::class)
+        actual val ENDER_DRAGON = Vanilla(EntityEnderDragon::class)
+        actual val WITHER = Vanilla(EntityWither::class)
     }
 }

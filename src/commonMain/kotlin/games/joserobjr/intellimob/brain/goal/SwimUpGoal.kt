@@ -20,14 +20,27 @@
 package games.joserobjr.intellimob.brain.goal
 
 import games.joserobjr.intellimob.brain.Brain
-import games.joserobjr.intellimob.brain.wish.Wishes
+import games.joserobjr.intellimob.control.PhysicalControl
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlin.time.ExperimentalTime
 
 /**
  * @author joserobjr
  * @since 2021-01-17
  */
-internal class SwimUpGoal: Goal() {
-    override suspend fun Wishes.execute(brain: Brain) {
-        //brain.owner.isInWater()
+internal object SwimUpGoal: Goal(setOf(PhysicalControl.JUMP)) {
+    override val defaultPriority: Int
+        get() = -1_000_000
+
+    override suspend fun canStart(brain: Brain): Boolean {
+        return brain.owner.isEyeUnderWater()
+    }
+
+    @OptIn(ExperimentalTime::class)
+    override fun CoroutineScope.start(brain: Brain): Job {
+        return with(brain.wishes) {
+            jumpUntil { !brain.owner.isEyeUnderWater() }
+        }
     }
 }

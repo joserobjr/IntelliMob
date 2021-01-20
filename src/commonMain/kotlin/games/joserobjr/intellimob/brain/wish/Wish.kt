@@ -19,16 +19,42 @@
 
 package games.joserobjr.intellimob.brain.wish
 
-import games.joserobjr.intellimob.brain.Brain
 import games.joserobjr.intellimob.control.EntityControls
+import games.joserobjr.intellimob.entity.RegularEntity
+import kotlinx.coroutines.*
+import kotlin.time.ExperimentalTime
+import kotlin.time.measureTime
 
 /**
  * @author joserobjr
  * @since 2021-01-11
  */
-internal fun interface Wish {
+internal abstract class Wish {
     /**
      * @return `true` if the wish has been fulfilled and no more executions are needed
      */
-    fun EntityControls.execute(brain: Brain): Boolean
+    abstract suspend fun EntityControls.start(): Job?
+    
+    @OptIn(ExperimentalTime::class)
+    protected fun CoroutineScope.runOnEveryTick(entity: RegularEntity, action: suspend EntityControls.()->Boolean): Job {
+        return launch(entity.updateDispatcher) {
+            while (true) {
+                val elapsedTime = measureTime {
+                    if(action(entity.controls)) {
+                        return@launch
+                    }
+                }
+                delay(50 - elapsedTime.toLongMilliseconds())
+            }
+        }
+    }
+    
+    protected suspend fun EntityControls.keepTryingTo(action: suspend EntityControls.()->Boolean): Job? {
+        if (action()) {
+            return null
+        }
+        return coroutineScope {
+            runOnEveryTick(owner, action)
+        }
+    }
 }

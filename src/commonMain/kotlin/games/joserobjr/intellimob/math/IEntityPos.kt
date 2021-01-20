@@ -25,20 +25,16 @@ import games.joserobjr.intellimob.trait.WithEntityPos
  * @author joserobjr
  * @since 2021-01-17
  */
-internal interface IEntityPos: WithEntityPos {
-    val x: Double
-    val y: Double
-    val z: Double
-
-    fun asBlockPos(): BlockPos = BlockPos(x.toInt(), y.toInt(), z.toInt())
+internal interface IEntityPos: WithEntityPos, IDoubleVectorXYZ {
+    fun toBlockPos(): BlockPos = BlockPos(x.toInt(), y.toInt(), z.toInt())
     
     override val position: IEntityPos get() = this
 
-    operator fun plus(pos: IBlockPos): EntityPos = EntityPos(x + pos.x, y + pos.y, z + pos.z)
-    operator fun minus(pos: IBlockPos): EntityPos = EntityPos(x - pos.x, y - pos.y, z - pos.z)
+    operator fun plus(pos: IIntVectorXYZ): EntityPos = EntityPos(x + pos.x, y + pos.y, z + pos.z)
+    operator fun minus(pos: IIntVectorXYZ): EntityPos = EntityPos(x - pos.x, y - pos.y, z - pos.z)
 
-    operator fun plus(pos: IEntityPos): EntityPos = EntityPos(x + pos.x, y + pos.y, z + pos.z)
-    operator fun minus(pos: IEntityPos): EntityPos = EntityPos(x - pos.x, y - pos.y, z - pos.z)
+    operator fun plus(pos: IDoubleVectorXYZ): EntityPos = EntityPos(x + pos.x, y + pos.y, z + pos.z)
+    operator fun minus(pos: IDoubleVectorXYZ): EntityPos = EntityPos(x - pos.x, y - pos.y, z - pos.z)
     
     fun plus(x: Double, y: Double, z: Double): EntityPos = EntityPos(this.x + x, this.y + y, this.z + z)
     fun minus(x: Double, y: Double, z: Double): EntityPos = EntityPos(this.x + x, this.y + y, this.z + z)

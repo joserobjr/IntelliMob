@@ -80,6 +80,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxCoroutinesVersion")
+                implementation(project(":jvm-expectations"))
             }
         }
         val commonTest by getting {

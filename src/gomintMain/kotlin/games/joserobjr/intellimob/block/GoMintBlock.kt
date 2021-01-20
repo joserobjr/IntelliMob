@@ -23,6 +23,7 @@ import games.joserobjr.intellimob.math.BlockLocation
 import games.joserobjr.intellimob.math.BoundingBox
 import io.gomint.world.WorldLayer
 import io.gomint.world.block.Block
+import io.gomint.world.block.BlockLiquid
 import kotlinx.coroutines.withContext
 
 /**
@@ -30,14 +31,18 @@ import kotlinx.coroutines.withContext
  * @since 2021-01-17
  */
 internal class GoMintBlock(override val location: BlockLocation): RegularBlock {
+    private fun currentGMBlock(layer: Int = 0): Block {
+        return with(location) {
+            world.goMintWorld.blockAt(x, y, z, layer.asWorldLayer())
+        }
+    }
+    
     override suspend fun currentState(layer: Int): BlockState {
         if (layer !in VALID_LAYERS) {
             return BlockState.AIR
         }
         
-        return with(location) {
-            world.goMintWorld.blockAt<Block>(x, y, z, layer.asWorldLayer()).asIntelliMobBlockState()
-        }
+        return currentGMBlock(layer).asIntelliMobBlockState()
     }
 
     override suspend fun currentStates(): LayeredBlockState = withContext(world.updateDispatcher) {
@@ -57,6 +62,22 @@ internal class GoMintBlock(override val location: BlockLocation): RegularBlock {
         return BlockSnapshot(
             location = location,
             states = currentStates()
+        )
+    }
+
+    override suspend fun currentLiquidState(): LiquidState? {
+        var layer = 0
+        val liquid = currentGMBlock() as? BlockLiquid<*>
+            ?: (currentGMBlock(1) as? BlockLiquid<*>)?.also { layer = 1 }
+            ?: return null
+        
+        val height = liquid.fillHeight().toDouble()
+        return LiquidState(
+            type = BlockType.fromBlock(liquid),
+            height = height,
+            bounds = with(location) { BoundingBox(x.toDouble(), y.toDouble(), z.toDouble(), x + 1.0, y + height, z + 1.0) },
+            pos = location,
+            layer = layer,
         )
     }
 }

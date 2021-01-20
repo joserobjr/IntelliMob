@@ -26,4 +26,6 @@ package games.joserobjr.intellimob.math
 internal data class DoubleVectorXZ (
     val x: Double,
     val z: Double
-)
+) {
+    constructor(both: Double): this(both, both)
+}

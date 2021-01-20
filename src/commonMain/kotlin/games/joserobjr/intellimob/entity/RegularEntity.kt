@@ -19,15 +19,19 @@
 
 package games.joserobjr.intellimob.entity
 
+import games.joserobjr.intellimob.block.LiquidState
 import games.joserobjr.intellimob.brain.Brain
 import games.joserobjr.intellimob.brain.wish.Wishes
 import games.joserobjr.intellimob.control.EntityControls
 import games.joserobjr.intellimob.entity.status.EntityStatus
+import games.joserobjr.intellimob.entity.status.MutableEntityStatus
 import games.joserobjr.intellimob.math.EntityPos
 import games.joserobjr.intellimob.pathfinding.PathFinder
 import games.joserobjr.intellimob.trait.WithBoundingBox
 import games.joserobjr.intellimob.trait.WithEntityLocation
 import games.joserobjr.intellimob.trait.WithTimeSource
+import games.joserobjr.intellimob.trait.WithUpdateDispatcher
+import kotlinx.coroutines.Job
 
 /**
  * The root interface which compose the entities, with or without IntelliMob AI. 
@@ -35,13 +39,15 @@ import games.joserobjr.intellimob.trait.WithTimeSource
  * @author joserobjr
  * @since 2021-01-11
  */
-internal interface RegularEntity: PlatformEntity, WithEntityLocation, WithTimeSource, WithBoundingBox {
+internal interface RegularEntity: PlatformEntity, WithEntityLocation, WithTimeSource, WithBoundingBox, WithUpdateDispatcher {
+    val job: Job
+    
     val type: EntityType
 
     /**
      * Allows to apply physical movements to the entity.
      */
-    val controls: EntityControls
+    var controls: EntityControls
 
     /**
      * Hold and process all intelligence stuff which doesn't require physical interactions.
@@ -51,7 +57,7 @@ internal interface RegularEntity: PlatformEntity, WithEntityLocation, WithTimeSo
     /**
      * The current base status, not modified by environmental conditions.
      */
-    val baseStatus: EntityStatus
+    val baseStatus: MutableEntityStatus
 
     /**
      * The current status, affected environmental conditions.
@@ -61,7 +67,7 @@ internal interface RegularEntity: PlatformEntity, WithEntityLocation, WithTimeSo
     /**
      * The intelligence which visualizes the world to realize movement [Wishes] from the [Brain] using the [EntityControls].
      */
-    val pathFinder: PathFinder
+    var pathFinder: PathFinder
 
     override val position: EntityPos
     
@@ -69,7 +75,14 @@ internal interface RegularEntity: PlatformEntity, WithEntityLocation, WithTimeSo
     
     suspend fun createSnapshot(): EntitySnapshot
     
-    suspend fun isEyeUnderWater(): Boolean
+    suspend fun currentLiquidOnEyes(): LiquidState? {
+        return world.cache.getBlock(eyePosition).currentLiquidState()
+    }
+
+    suspend fun isEyeUnderWater(): Boolean {
+        val liquid = currentLiquidOnEyes() ?: return false
+        return eyePosition.y < liquid.bounds.maxPosExclusive.y
+    }
 
     override val regularEntity: RegularEntity get() = this
 }

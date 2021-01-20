@@ -25,10 +25,7 @@ import games.joserobjr.intellimob.trait.WithBoundingBox
  * @author joserobjr
  * @since 2021-01-17
  */
-internal interface IChunkPos: WithBoundingBox {
-    val x: Int
-    val z: Int
-    
+internal interface IChunkPos: WithBoundingBox, IIntVectorXZ {
     val minBlockPos: BlockPos get() = BlockPos(x shl 4, 0, z shl 4)
     val maxBlockPos: BlockPos get() = BlockPos((x shl 4) + 15, 255, (z shl 4) + 15)
     

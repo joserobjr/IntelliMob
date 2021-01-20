@@ -30,7 +30,8 @@ internal data class EntityPos (
     override val y: Double,
     override val z: Double
 ): IEntityPos {
-    constructor(pos: IEntityPos): this(pos.x, pos. y, pos.z)
+    constructor(pos: IDoubleVectorXYZ): this(pos.x, pos. y, pos.z)
+    constructor(pos: IEntityPos): this(pos as IDoubleVectorXYZ)
     constructor(withPos: WithEntityPos): this(withPos.position)
     constructor(x: Float, y: Float, z: Float): this(x.toDouble(), y.toDouble(), z.toDouble())
 }
