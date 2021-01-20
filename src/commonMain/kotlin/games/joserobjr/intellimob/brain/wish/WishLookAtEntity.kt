@@ -30,6 +30,6 @@ internal data class WishLookAtEntity(
     override val targetEntity: RegularEntity,
     override val quickly: Boolean = false,
 ): WishLook() {
-    override val target: EntityPos get() = targetEntity.position
+    override val target: EntityPos get() = targetEntity.eyePosition
     override val isConstant: Boolean get() = false
 }
