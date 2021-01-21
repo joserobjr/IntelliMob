@@ -19,28 +19,41 @@
 
 package games.joserobjr.intellimob.brain.goal
 
-import games.joserobjr.intellimob.brain.Brain
 import games.joserobjr.intellimob.control.api.PhysicalControl
+import games.joserobjr.intellimob.entity.RegularEntity
+import games.joserobjr.intellimob.math.BlockPos
+import games.joserobjr.intellimob.math.DoubleVectorXZ
+import games.joserobjr.intellimob.pathfinding.findTarget
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlin.random.Random
 import kotlin.time.ExperimentalTime
 
 /**
  * @author joserobjr
- * @since 2021-01-17
+ * @since 2021-01-20
  */
-internal object SwimUpGoal: Goal(setOf(PhysicalControl.JUMP)) {
-    override val defaultPriority: Int
-        get() = -1_000_000
+internal class GoalWanderAround(val speed: DoubleVectorXZ, val chance: Int): Goal(setOf(PhysicalControl.MOVE)) {
+    override val defaultPriority: Int get() = 90_980_000
+    override val needsMemory: Boolean get() = true
 
-    override suspend fun canStart(brain: Brain, memory: GoalMemory?): Boolean {
-        return brain.owner.isEyeUnderWater()
+    override suspend fun canStart(entity: RegularEntity, memory: GoalMemory?): Boolean {
+        requireNotNull(memory)
+        if (entity.hasPassengers() || Random.nextInt(chance) != 0) {
+            return false
+        }
+        val target = entity.pathFinder.findTarget(entity, 10, 7) ?: return false
+        memory["target"] = target
+        return true
     }
 
     @OptIn(ExperimentalTime::class)
-    override fun CoroutineScope.start(brain: Brain, memory: GoalMemory?): Job {
-        return with(brain.wishes) {
-            jumpUntil { !brain.owner.isEyeUnderWater() }
+    override fun CoroutineScope.start(entity: RegularEntity, memory: GoalMemory?): Job? {
+        requireNotNull(memory)
+        val target: BlockPos = memory["target"] ?: return null
+        return with(entity.brain.wishes) {
+            moveTo(target.asCenteredEntityPos())
         }
     }
+
 }

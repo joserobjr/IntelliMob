@@ -19,8 +19,8 @@
 
 package games.joserobjr.intellimob.brain.goal
 
-import games.joserobjr.intellimob.brain.Brain
 import games.joserobjr.intellimob.control.api.PhysicalControl
+import games.joserobjr.intellimob.entity.RegularEntity
 import games.joserobjr.intellimob.math.DoubleVectorXYZ
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -38,19 +38,18 @@ import kotlin.time.milliseconds
  */
 internal object GoalLookAround: Goal(setOf(PhysicalControl.MOVE, PhysicalControl.LOOK)) {
     override val defaultPriority: Int
-        get() = 1_000_000
+        get() = 100_000_000
     
-    override suspend fun canStart(brain: Brain, memory: GoalMemory?): Boolean {
+    override suspend fun canStart(entity: RegularEntity, memory: GoalMemory?): Boolean {
         return Random.nextFloat() < .02F
     }
 
     @OptIn(ExperimentalTime::class)
-    override fun CoroutineScope.start(brain: Brain, memory: GoalMemory?): Job {
-        return with(brain.wishes) {
-            val delta = PI * 2 * Random.nextDouble()
-            val duration = Random.nextInt(1_000, 2_000).milliseconds
-            
-            launch {
+    override fun CoroutineScope.start(entity: RegularEntity, memory: GoalMemory?): Job {
+        val delta = PI * 2 * Random.nextDouble()
+        val duration = Random.nextInt(1_000, 2_000).milliseconds
+        return launch {
+            with(entity.brain.wishes) {
                 lookAtDelta(
                     delta = DoubleVectorXYZ(cos(delta), 0.0, sin(delta)),
                     timeLimit = duration

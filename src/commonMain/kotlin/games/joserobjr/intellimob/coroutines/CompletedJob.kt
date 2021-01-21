@@ -17,17 +17,12 @@
  *
  */
 
-package games.joserobjr.intellimob.pathfinding
+package games.joserobjr.intellimob.coroutines
 
-import games.joserobjr.intellimob.math.BlockPos
-import games.joserobjr.intellimob.math.IBlockPos
-import games.joserobjr.intellimob.world.WorldView
+import kotlinx.coroutines.Job
 
 /**
  * @author joserobjr
- * @since 2021-01-11
+ * @since 2021-01-21
  */
-internal interface PathFinder {
-    suspend fun findPath(world: WorldView, from: IBlockPos, to: IBlockPos): Path
-    suspend fun findTargetWith(settings: TargetSearchSettings): BlockPos?
-}
+internal val CompletedJob: Job = Job().apply { complete() }

@@ -26,6 +26,7 @@ import games.joserobjr.intellimob.coroutines.Sync
 import games.joserobjr.intellimob.entity.status.EntityStatus
 import games.joserobjr.intellimob.entity.status.MutableEntityStatus
 import games.joserobjr.intellimob.math.*
+import games.joserobjr.intellimob.pathfinding.BlockFavorProvider
 import games.joserobjr.intellimob.pathfinding.PathFinder
 import games.joserobjr.intellimob.timesource.ServerTickTimeSource
 import games.joserobjr.intellimob.world.RegularWorld
@@ -45,6 +46,7 @@ internal class PowerNukkitEntity(override val powerNukkitEntity: Entity) : Regul
     
     override val baseStatus: MutableEntityStatus = type.aiFactory.createBaseStatus(this)
     override var controls: EntityControls = type.aiFactory.createControls(this)
+    override var blockFavor: BlockFavorProvider = type.aiFactory.createBlockFavor(this)
     override var pathFinder: PathFinder = type.aiFactory.createPathFinder(this)
     override val brain: Brain = type.aiFactory.createBrain(this)
 
@@ -83,6 +85,14 @@ internal class PowerNukkitEntity(override val powerNukkitEntity: Entity) : Regul
             bodyPitch = value.pitch
             powerNukkitEntity.yaw = value.yaw
         }
+
+    override fun hasPassengers(): Boolean = powerNukkitEntity.passengers.isNotEmpty()
+
+    override suspend fun moveTo(nextPos: EntityPos): Boolean {
+        return with(powerNukkitEntity) {
+            move(nextPos.x - x, nextPos.y - y, nextPos.z - z)
+        }
+    }
     
     override suspend fun createSnapshot(): EntitySnapshot = withContext(Dispatchers.Sync) {
         with(powerNukkitEntity) {

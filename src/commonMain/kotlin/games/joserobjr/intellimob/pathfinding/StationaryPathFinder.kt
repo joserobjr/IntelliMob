@@ -19,6 +19,7 @@
 
 package games.joserobjr.intellimob.pathfinding
 
+import games.joserobjr.intellimob.math.BlockPos
 import games.joserobjr.intellimob.math.IBlockPos
 import games.joserobjr.intellimob.world.WorldView
 
@@ -31,5 +32,9 @@ import games.joserobjr.intellimob.world.WorldView
 internal object StationaryPathFinder: PathFinder {
     override suspend fun findPath(world: WorldView, from: IBlockPos, to: IBlockPos): Path {
         return Path()
+    }
+
+    override suspend fun findTargetWith(settings: TargetSearchSettings): BlockPos? {
+        return null
     }
 }

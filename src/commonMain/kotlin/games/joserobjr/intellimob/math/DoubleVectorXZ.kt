@@ -28,4 +28,6 @@ internal data class DoubleVectorXZ (
     val z: Double
 ) {
     constructor(both: Double): this(both, both)
+
+    fun isSimilarTo(other: DoubleVectorXZ) = x.isSimilarTo(other.x) && z.isSimilarTo(other.z)
 }

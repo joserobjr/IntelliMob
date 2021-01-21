@@ -21,13 +21,14 @@ package games.joserobjr.intellimob.entity.factory
 
 import games.joserobjr.intellimob.brain.Brain
 import games.joserobjr.intellimob.brain.goal.GoalLookAround
-import games.joserobjr.intellimob.brain.goal.LookAtEntityGoal
-import games.joserobjr.intellimob.brain.goal.SwimUpGoal
+import games.joserobjr.intellimob.brain.goal.GoalLookAtEntity
+import games.joserobjr.intellimob.brain.goal.GoalSwimUp
+import games.joserobjr.intellimob.brain.goal.GoalWanderAround
 import games.joserobjr.intellimob.control.ModularControls
 import games.joserobjr.intellimob.control.api.EntityControls
-import games.joserobjr.intellimob.control.frozen.FrozenBodyController
 import games.joserobjr.intellimob.control.frozen.FrozenJumpController
-import games.joserobjr.intellimob.control.head.GenericHeadController
+import games.joserobjr.intellimob.control.generic.GenericHeadController
+import games.joserobjr.intellimob.control.generic.LandBodyController
 import games.joserobjr.intellimob.entity.EntityType
 import games.joserobjr.intellimob.entity.RegularEntity
 import games.joserobjr.intellimob.entity.status.ImmutableEntityStatus
@@ -44,7 +45,7 @@ internal open class LivingEntityAIFactory: EntityAIFactory {
     override fun createControls(regularEntity: RegularEntity): EntityControls {
         return ModularControls(
             regularEntity, 
-            FrozenBodyController(regularEntity),
+            LandBodyController(regularEntity),
             FrozenJumpController(regularEntity),
             GenericHeadController(regularEntity)
         )
@@ -64,8 +65,9 @@ internal open class LivingEntityAIFactory: EntityAIFactory {
     )
 
     override fun createBrain(regularEntity: RegularEntity): Brain = Brain(regularEntity).apply {
-        normalGoals += SwimUpGoal
-        normalGoals += LookAtEntityGoal(setOf(EntityType.PLAYER), 6F)
+        normalGoals += GoalSwimUp
+        normalGoals += GoalWanderAround(DoubleVectorXZ(1.0), 120)
+        normalGoals += GoalLookAtEntity(setOf(EntityType.PLAYER), 6F)
         normalGoals += GoalLookAround
     }
 }

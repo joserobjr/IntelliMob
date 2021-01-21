@@ -34,4 +34,6 @@ internal data class EntityPos (
     constructor(pos: IEntityPos): this(pos as IDoubleVectorXYZ)
     constructor(withPos: WithEntityPos): this(withPos.position)
     constructor(x: Float, y: Float, z: Float): this(x.toDouble(), y.toDouble(), z.toDouble())
+
+    override fun toImmutable() = this
 }

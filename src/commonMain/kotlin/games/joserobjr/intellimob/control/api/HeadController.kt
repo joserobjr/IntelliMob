@@ -38,4 +38,5 @@ internal interface HeadController: Controller {
      * @return `true` if the head has reached the objective and no more calls are needed to look at the position.
      */
     fun CoroutineScope.lookAt(pos: WithEntityPos, speed: PitchYaw = owner.currentStatus.headSpeed): Job
+    suspend fun updateHeadAngle(target: PitchYaw, speed: PitchYaw)
 }

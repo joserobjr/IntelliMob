@@ -27,6 +27,7 @@ import games.joserobjr.intellimob.entity.status.EntityStatus
 import games.joserobjr.intellimob.entity.status.MutableEntityStatus
 import games.joserobjr.intellimob.math.EntityPos
 import games.joserobjr.intellimob.math.PitchYaw
+import games.joserobjr.intellimob.pathfinding.BlockFavorProvider
 import games.joserobjr.intellimob.pathfinding.PathFinder
 import games.joserobjr.intellimob.trait.WithBoundingBox
 import games.joserobjr.intellimob.trait.WithEntityLocation
@@ -78,6 +79,8 @@ internal interface RegularEntity: PlatformEntity, WithEntityLocation, WithTimeSo
 
     var bodyPitchYaw: PitchYaw
     
+    fun hasPassengers(): Boolean
+    
     suspend fun createSnapshot(): EntitySnapshot
     
     suspend fun currentLiquidOnEyes(): LiquidState? {
@@ -89,5 +92,9 @@ internal interface RegularEntity: PlatformEntity, WithEntityLocation, WithTimeSo
         return eyePosition.y < liquid.bounds.maxPosExclusive.y
     }
 
+    suspend fun moveTo(nextPos: EntityPos): Boolean
+
     override val regularEntity: RegularEntity get() = this
+
+    var blockFavor: BlockFavorProvider
 }

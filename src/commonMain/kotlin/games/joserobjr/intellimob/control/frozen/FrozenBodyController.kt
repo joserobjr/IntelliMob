@@ -20,16 +20,19 @@
 package games.joserobjr.intellimob.control.frozen
 
 import games.joserobjr.intellimob.control.api.BodyController
+import games.joserobjr.intellimob.coroutines.CompletedJob
 import games.joserobjr.intellimob.entity.RegularEntity
 import games.joserobjr.intellimob.math.DoubleVectorXZ
-import games.joserobjr.intellimob.math.EntityPos
+import games.joserobjr.intellimob.trait.WithEntityPos
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 
 /**
  * @author joserobjr
  * @since 2021-01-20
  */
 internal class FrozenBodyController(override val owner: RegularEntity) : BodyController {
-    override fun walkTo(pos: EntityPos, acceptableDistance: Double, speed: DoubleVectorXZ): Boolean {
-        return false
+    override fun CoroutineScope.walkTo(pos: WithEntityPos, acceptableDistance: Double, speed: DoubleVectorXZ): Job {
+        return CompletedJob
     }
 }

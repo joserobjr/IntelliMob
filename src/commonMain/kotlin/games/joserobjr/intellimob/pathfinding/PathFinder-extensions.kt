@@ -19,6 +19,8 @@
 
 package games.joserobjr.intellimob.pathfinding
 
+import games.joserobjr.intellimob.entity.RegularEntity
+import games.joserobjr.intellimob.math.BlockPos
 import games.joserobjr.intellimob.math.IBlockPos
 import games.joserobjr.intellimob.math.IEntityPos
 import games.joserobjr.intellimob.world.WorldView
@@ -27,6 +29,17 @@ import games.joserobjr.intellimob.world.WorldView
  * @author joserobjr
  * @since 2021-01-20
  */
-internal suspend fun PathFinder.findPath(world: WorldView, from: IEntityPos, to: IEntityPos): Path? = findPath(world, from.toBlockPos(), to.toBlockPos())
-internal suspend fun PathFinder.findPath(world: WorldView, from: IEntityPos, to: IBlockPos): Path? = findPath(world, from.toBlockPos(), to)
-internal suspend fun PathFinder.findPath(world: WorldView, from: IBlockPos, to: IEntityPos): Path? = findPath(world, from, to.toBlockPos())
+internal suspend fun PathFinder.findPath(world: WorldView, from: IEntityPos, to: IEntityPos): Path = findPath(world, from.toBlockPos(), to.toBlockPos())
+internal suspend fun PathFinder.findPath(world: WorldView, from: IEntityPos, to: IBlockPos): Path = findPath(world, from.toBlockPos(), to)
+internal suspend fun PathFinder.findPath(world: WorldView, from: IBlockPos, to: IEntityPos): Path = findPath(world, from, to.toBlockPos())
+
+internal suspend inline fun PathFinder.findTarget(
+    owner: RegularEntity,
+    maxHorizontalDistance: Int,
+    maxVerticalDistance: Int,
+    configurer: TargetSearchSettings.() -> Unit = {}
+): BlockPos? {
+    val settings = TargetSearchSettings(owner, maxHorizontalDistance, maxVerticalDistance)
+    settings.configurer()
+    return findTargetWith(settings)
+}

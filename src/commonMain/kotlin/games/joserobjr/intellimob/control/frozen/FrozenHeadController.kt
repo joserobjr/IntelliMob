@@ -35,4 +35,7 @@ internal class FrozenHeadController(override val owner: RegularEntity): HeadCont
     override fun CoroutineScope.lookAt(pos: WithEntityPos, speed: PitchYaw): Job {
         return Job().also { cancel("The head control is frozen") }
     }
+
+    override suspend fun updateHeadAngle(target: PitchYaw, speed: PitchYaw) {
+    }
 }

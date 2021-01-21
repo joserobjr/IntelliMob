@@ -17,17 +17,30 @@
  *
  */
 
-package games.joserobjr.intellimob.pathfinding
+package games.joserobjr.intellimob.brain.goal
 
-import games.joserobjr.intellimob.math.BlockPos
-import games.joserobjr.intellimob.math.IBlockPos
-import games.joserobjr.intellimob.world.WorldView
+import games.joserobjr.intellimob.control.api.PhysicalControl
+import games.joserobjr.intellimob.entity.RegularEntity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlin.time.ExperimentalTime
 
 /**
  * @author joserobjr
- * @since 2021-01-11
+ * @since 2021-01-17
  */
-internal interface PathFinder {
-    suspend fun findPath(world: WorldView, from: IBlockPos, to: IBlockPos): Path
-    suspend fun findTargetWith(settings: TargetSearchSettings): BlockPos?
+internal object GoalSwimUp: Goal(setOf(PhysicalControl.JUMP)) {
+    override val defaultPriority: Int
+        get() = -100_000_000
+
+    override suspend fun canStart(entity: RegularEntity, memory: GoalMemory?): Boolean {
+        return entity.isEyeUnderWater()
+    }
+
+    @OptIn(ExperimentalTime::class)
+    override fun CoroutineScope.start(entity: RegularEntity, memory: GoalMemory?): Job {
+        return with(entity.brain.wishes) {
+            jumpUntil { !brain.owner.isEyeUnderWater() }
+        }
+    }
 }

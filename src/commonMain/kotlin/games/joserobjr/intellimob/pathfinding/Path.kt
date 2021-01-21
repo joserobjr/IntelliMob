@@ -19,10 +19,18 @@
 
 package games.joserobjr.intellimob.pathfinding
 
+import games.joserobjr.intellimob.math.EntityPos
+
 /**
  * @author joserobjr
  * @since 2021-01-20
  */
 internal inline class Path(val nodes: List<PathNode>) {
     constructor(vararg nodes: PathNode): this(nodes.toList())
+    
+    fun isEmpty() = nodes.isEmpty()
+    fun isNotEmpty() = nodes.isNotEmpty()
+    fun next(current: EntityPos): EntityPos? {
+        return nodes.lastOrNull()?.asCenteredEntityPos()
+    }
 }

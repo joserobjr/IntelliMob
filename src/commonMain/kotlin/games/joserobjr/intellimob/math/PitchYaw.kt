@@ -19,6 +19,9 @@
 
 package games.joserobjr.intellimob.math
 
+import kotlin.math.max
+import kotlin.math.min
+
 /**
  * [https://www.touringmachine.com/Articles/aircraft/6/]
  * ![](https://www.touringmachine.com/images/PitchRollYaw.png)
@@ -33,12 +36,16 @@ internal data class PitchYaw(
         val pitch = subtractAngles(pitch, target.pitch)
         val yaw = subtractAngles(yaw, target.yaw)
         
-        val deltaPith = pitch.coerceIn(-speed.pitch, speed.pitch)
-        val deltaYaw = yaw.coerceIn(-speed.yaw, speed.yaw) 
+        val deltaPith = pitch.smartCoerceIn(-speed.pitch, speed.pitch)
+        val deltaYaw = yaw.smartCoerceIn(-speed.yaw, speed.yaw) 
         return PitchYaw(
             this.pitch + deltaPith,
             this.yaw + deltaYaw
         )
+    }
+    
+    private fun Double.smartCoerceIn(min: Double, max: Double): Double {
+        return coerceIn(min(min, max), max(min, max))
     }
     
     fun isSimilarTo(other: PitchYaw, epsilon: PitchYaw = EPSILON) = pitch.isSimilarTo(other.pitch, epsilon.pitch) && yaw.isSimilarTo(other.yaw, epsilon.yaw)
@@ -46,6 +53,10 @@ internal data class PitchYaw(
     
     operator fun minus(other: PitchYaw): PitchYaw {
         return PitchYaw(subtractAngles(pitch, other.pitch), subtractAngles(yaw, other.yaw))
+    }
+    
+    operator fun times(value: Double): PitchYaw {
+        return PitchYaw(wrapDegrees(pitch * value), wrapDegrees(yaw * value))
     }
 
     private fun subtractAngles(start: Double, end: Double): Double {

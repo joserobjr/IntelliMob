@@ -19,6 +19,7 @@
 
 package games.joserobjr.intellimob.entity.factory
 
+import games.joserobjr.intellimob.block.RegularBlock
 import games.joserobjr.intellimob.brain.Brain
 import games.joserobjr.intellimob.control.api.EntityControls
 import games.joserobjr.intellimob.control.frozen.FrozenControls
@@ -27,6 +28,7 @@ import games.joserobjr.intellimob.entity.RegularEntity
 import games.joserobjr.intellimob.entity.factory.passive.PigAI
 import games.joserobjr.intellimob.entity.status.ImmutableEntityStatus
 import games.joserobjr.intellimob.entity.status.MutableEntityStatus
+import games.joserobjr.intellimob.pathfinding.BlockFavorProvider
 import games.joserobjr.intellimob.pathfinding.PathFinder
 import games.joserobjr.intellimob.pathfinding.StationaryPathFinder
 
@@ -40,6 +42,11 @@ internal interface EntityAIFactory {
     fun createBrain(regularEntity: RegularEntity): Brain
     fun createBaseStatus(regularEntity: RegularEntity): MutableEntityStatus = regularEntity.type.defaultStatus.toMutable()
     fun createDefaultStatus(): ImmutableEntityStatus
+    fun createBlockFavor(entity: RegularEntity): BlockFavorProvider = object : BlockFavorProvider {
+        override suspend fun computeFavorBlockFavor(block: RegularBlock): Double {
+            return 1.0
+        }
+    }
 
     companion object {
         fun fromVanillaType(vanillaType: EntityType.Vanilla): EntityAIFactory {

@@ -35,19 +35,19 @@ import kotlin.time.milliseconds
  * @author joserobjr
  * @since 2021-01-20
  */
-internal class LookAtEntityGoal(val types: Set<EntityType>, val range: Float, val chance: Float = .2F, val condition: (suspend (Brain, RegularEntity)->Boolean)? = null): Goal(setOf(PhysicalControl.LOOK)) {
-    override val defaultPriority: Int get() = 900_000
+internal class GoalLookAtEntity(val types: Set<EntityType>, val range: Float, val chance: Float = .2F, val condition: (suspend (Brain, RegularEntity)->Boolean)? = null): Goal(setOf(PhysicalControl.LOOK)) {
+    override val defaultPriority: Int get() = 90_000_000
     override val needsMemory: Boolean get() = true
     
     var target = atomic<RegularEntity?>(null)
 
-    override suspend fun canStart(brain: Brain, memory: GoalMemory?): Boolean {
+    override suspend fun canStart(entity: RegularEntity, memory: GoalMemory?): Boolean {
         requireNotNull(memory)
         if (types.isEmpty() || Random.nextFloat() >= chance) {
             return false
         }
         
-        val target = with(brain.owner) {
+        val target = with(entity) {
             val area = boundingBox.expandBy(range, 3F, range)
             val condition = condition
             if (types.size == 1 && types.first() == EntityType.PLAYER) {
@@ -71,12 +71,12 @@ internal class LookAtEntityGoal(val types: Set<EntityType>, val range: Float, va
     }
 
     @OptIn(ExperimentalTime::class)
-    override fun CoroutineScope.start(brain: Brain, memory: GoalMemory?): Job? {
+    override fun CoroutineScope.start(entity: RegularEntity, memory: GoalMemory?): Job? {
         memory ?: return null
         val target: RegularEntity = memory["target"] ?: return null
-        return with(brain.wishes) {
-            val duration = Random.nextInt(2_000, 4_000).milliseconds
-            launch {
+        val duration = Random.nextInt(2_000, 4_000).milliseconds
+        return launch {
+            with(entity.brain.wishes) {
                 lookAt(
                     entity = target,
                     timeLimit = duration

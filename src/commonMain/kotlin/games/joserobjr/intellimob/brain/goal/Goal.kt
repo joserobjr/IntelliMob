@@ -21,6 +21,7 @@ package games.joserobjr.intellimob.brain.goal
 
 import games.joserobjr.intellimob.brain.Brain
 import games.joserobjr.intellimob.control.api.PhysicalControl
+import games.joserobjr.intellimob.entity.RegularEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 
@@ -29,6 +30,17 @@ import kotlinx.coroutines.Job
  * @since 2021-01-17
  */
 internal abstract class Goal(val physicalControl: Set<PhysicalControl>) {
+    /**
+     * Default priorities:
+     * * -100.000.000 SwimUp
+     * 
+     * * 090.980.000 WanderAround 
+     * * 090.990.000 WanderAroundFar 
+     * 
+     * * 100.700.000 LookAround
+     * * 100.800.000 LookAtEntity
+     * * 100.900.000 LookAround
+     */
     abstract val defaultPriority: Int
     open val needsMemory: Boolean get() = false
     
@@ -42,15 +54,15 @@ internal abstract class Goal(val physicalControl: Set<PhysicalControl>) {
     
     open fun addedTo(brain: Brain, selector: EntityGoalSelector) {} 
     
-    abstract suspend fun canStart(brain: Brain, memory: GoalMemory?): Boolean
+    abstract suspend fun canStart(entity: RegularEntity, memory: GoalMemory?): Boolean
     
-    abstract fun CoroutineScope.start(brain: Brain, memory: GoalMemory?): Job?
+    abstract fun CoroutineScope.start(entity: RegularEntity, memory: GoalMemory?): Job?
     
-    open suspend fun canStop(brain: Brain): Boolean {
+    open suspend fun canStop(entity: RegularEntity): Boolean {
         return true
     }
     
-    open suspend fun canBeReplacedBy(brain: Brain, other: Goal, thisPriority: Int, otherPriority: Int): Boolean {
-        return canStop(brain) && otherPriority < thisPriority
+    open suspend fun canBeReplacedBy(entity: RegularEntity, other: Goal, thisPriority: Int, otherPriority: Int): Boolean {
+        return canStop(entity) && otherPriority < thisPriority
     }
 }

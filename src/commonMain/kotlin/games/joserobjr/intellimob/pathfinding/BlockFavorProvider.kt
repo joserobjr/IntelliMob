@@ -19,15 +19,12 @@
 
 package games.joserobjr.intellimob.pathfinding
 
-import games.joserobjr.intellimob.math.BlockPos
-import games.joserobjr.intellimob.math.IBlockPos
-import games.joserobjr.intellimob.world.WorldView
+import games.joserobjr.intellimob.block.RegularBlock
 
 /**
  * @author joserobjr
- * @since 2021-01-11
+ * @since 2021-01-20
  */
-internal interface PathFinder {
-    suspend fun findPath(world: WorldView, from: IBlockPos, to: IBlockPos): Path
-    suspend fun findTargetWith(settings: TargetSearchSettings): BlockPos?
+internal interface BlockFavorProvider {
+    suspend fun computeFavorBlockFavor(block: RegularBlock): Double
 }

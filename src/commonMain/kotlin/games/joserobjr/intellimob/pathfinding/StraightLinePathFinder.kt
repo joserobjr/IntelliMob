@@ -19,8 +19,10 @@
 
 package games.joserobjr.intellimob.pathfinding
 
+import games.joserobjr.intellimob.math.BlockPos
 import games.joserobjr.intellimob.math.IBlockPos
 import games.joserobjr.intellimob.world.WorldView
+import kotlin.random.Random
 
 /**
  * @author joserobjr
@@ -29,5 +31,11 @@ import games.joserobjr.intellimob.world.WorldView
 internal class StraightLinePathFinder: PathFinder {
     override suspend fun findPath(world: WorldView, from: IBlockPos, to: IBlockPos): Path {
         return Path(PathNode(to))
+    }
+
+    override suspend fun findTargetWith(settings: TargetSearchSettings): BlockPos? {
+        val dx = Random.nextInt(-settings.maxHorizontalDistance, settings.maxHorizontalDistance)
+        val dz = Random.nextInt(-settings.maxHorizontalDistance, settings.maxHorizontalDistance)
+        return settings.from.position.run { copy(x = x + dx, z = z + dz) }.toBlockPos()
     }
 }

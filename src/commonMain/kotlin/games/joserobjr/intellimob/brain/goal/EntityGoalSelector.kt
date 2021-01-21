@@ -130,7 +130,7 @@ internal class EntityGoalSelector(
                         val time = TimeSource.Monotonic.markNow()
                         try {
                             log.info { "+ Starting $name" }
-                            val job = start(brain, memory)
+                            val job = start(brain.owner, memory)
                             if (job == null) {
                                 log.info { "@ Goal $name didn't create a job!" }
                             } else {
@@ -152,7 +152,7 @@ internal class EntityGoalSelector(
             if (activeJob?.isActive == true) {
                 return false
             }
-            return goal.canStart(brain, memory)
+            return goal.canStart(brain.owner, memory)
         }
 
         override fun compareTo(other: AddedGoal): Int {

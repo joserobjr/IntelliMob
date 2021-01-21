@@ -25,13 +25,13 @@ import kotlinx.coroutines.withContext
  * @author joserobjr
  * @since 2021-01-20
  */
-internal suspend inline fun <T: WithUpdateDispatcher> T.update(crossinline updater: T.() -> Unit) {
+internal suspend inline fun <T: WithUpdateDispatcher> T.update(crossinline updater: suspend T.() -> Unit) {
     return withContext(updateDispatcher) {
         updater()
     }
 }
 
-internal suspend inline fun <T: WithUpdateDispatcher, R> T.updateAndGet(crossinline updater: T.() -> R): R {
+internal suspend inline fun <T: WithUpdateDispatcher, R> T.updateAndGet(crossinline updater: suspend T.() -> R): R {
     return withContext(updateDispatcher) {
         updater()
     }

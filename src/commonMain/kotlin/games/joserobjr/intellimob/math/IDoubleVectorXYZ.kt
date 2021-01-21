@@ -27,4 +27,7 @@ internal interface IDoubleVectorXYZ {
     val x: Double
     val y: Double
     val z: Double
+    
+    fun isSimilarTo(other: IDoubleVectorXYZ) = 
+        x.isSimilarTo(other.x) && y.isSimilarTo(other.y) && z.isSimilarTo(other.z)
 }

@@ -64,6 +64,7 @@ internal interface IEntityPos: WithEntityPos, IDoubleVectorXYZ {
     fun minus(x: Float, y: Float, z: Float): EntityPos = EntityPos(this.x + x, this.y + y, this.z + z)
     
     operator fun unaryMinus(): EntityPos = EntityPos(-x, -y, -z)
+    fun toImmutable(): EntityPos = EntityPos(x, y, z)
 
     companion object {
         val ZERO: EntityPos = EntityPos(0.0, 0.0, 0.0)
