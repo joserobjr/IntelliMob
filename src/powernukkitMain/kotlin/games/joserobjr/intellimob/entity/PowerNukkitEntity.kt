@@ -56,6 +56,10 @@ internal class PowerNukkitEntity(override val powerNukkitEntity: Entity) : Regul
 
     private val _currentStatus: MutableEntityStatus = baseStatus.copy()
     override val currentStatus: EntityStatus = _currentStatus.asImmutableView()
+        get() {
+            updateStatus()
+            return field
+        }
 
     @ExperimentalTime
     override val timeSource: TimeSource get() = ServerTickTimeSource
@@ -99,31 +103,19 @@ internal class PowerNukkitEntity(override val powerNukkitEntity: Entity) : Regul
 
     override suspend fun applySpeed(vector: IDoubleVectorXYZ, force: IDoubleVectorXYZ): Boolean = updateAndGet {
         with(powerNukkitEntity) {
-            motionX = vector.x
-            motionY = vector.y
-            motionZ = vector.z
-//            // Create vector
-//            var x = motionX - vector.x
-//            var y = motionY - vector.y
-//            var z = motionZ - vector.z
-//
-//            // Normalize
-//            val squaredLen = x.squared() + y.squared() + z.squared()
-//            if (squaredLen > 0) {
-//                val len = sqrt(squaredLen)
-//                x /= len
-//                y /= len
-//                z /= len
-//
-//                // Apply speed
-//                x *= force.x
-//                y *= force.y
-//                z *= force.z
-//
-//                powerNukkitEntity.motion = Vector3(motionX + x, motionY + y, motionZ + z)
-//            }
+            motionX = adjustMotion(motionX, vector.x, force.x)
+            motionY = adjustMotion(motionY, vector.y, force.y)
+            motionZ = adjustMotion(motionZ, vector.z, force.z)
         }
         true
+    }
+    
+    private fun adjustMotion(before: Double, desired: Double, force: Double): Double {
+        if (0.0.isSimilarTo(force) || before.isSimilarTo(desired)) {
+            return before
+        }
+        val delta = desired - before
+        return before + delta.coerceAtMost(if (delta > 0) force else -force)
     }
 
     override suspend fun calculateInertiaMotion(): IDoubleVectorXYZ {
@@ -131,6 +123,13 @@ internal class PowerNukkitEntity(override val powerNukkitEntity: Entity) : Regul
     }
 
     override suspend fun calculateDrag(): IDoubleVectorXYZ {
+        with(powerNukkitEntity) {
+            if (!isOnGround) {
+                return DEFAULT_DRAG
+            }
+            val friction = .91 * level.getBlock(x.toInt(), (y - 0.5).toInt(), z.toInt()).frictionFactor
+            return DoubleVectorXYZ(friction, .98, friction)
+        }
         return DEFAULT_DRAG
     }
     
@@ -143,9 +142,9 @@ internal class PowerNukkitEntity(override val powerNukkitEntity: Entity) : Regul
             move(motionX, motionY, motionZ)
             
             val drag = calculateDrag()
-            motionX *= 1 - drag.x
-            motionY *= 1 - drag.y
-            motionZ *= 1 - drag.z
+            motionX *= drag.x
+            motionY *= drag.y
+            motionZ *= drag.z
             updateMovement()
         }
     }
@@ -161,8 +160,16 @@ internal class PowerNukkitEntity(override val powerNukkitEntity: Entity) : Regul
         }
     }
     
+    private fun updateStatus() {
+        with(powerNukkitEntity) {
+            with(_currentStatus) {
+                canJump = onGround && isAlive
+            }
+        }
+    }
+    
     companion object {
-        private val DEFAULT_GRAVITY = DoubleVectorXYZ(0.0, -0.04, 0.0) 
-        private val DEFAULT_DRAG = DoubleVectorXYZ(0.02) 
+        private val DEFAULT_GRAVITY = DoubleVectorXYZ(0.0, -0.055, 0.0) 
+        private val DEFAULT_DRAG = DoubleVectorXYZ(.91, .98, .91) 
     }
 }

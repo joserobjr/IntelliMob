@@ -28,11 +28,16 @@ import kotlin.math.min
  * @author joserobjr
  * @since 2021-01-11
  */
-internal data class PitchYaw(
-    val pitch: Double, 
-    val yaw: Double
+internal class PitchYaw(
+    pitch: Double, 
+    yaw: Double
 ) {
-    fun changeAngle(target: PitchYaw, speed: PitchYaw): PitchYaw {
+    val pitch = wrapDegrees(pitch)
+    val yaw = wrapDegrees(yaw)
+
+    constructor(pitch: Float, yaw: Float): this(pitch.toDouble(), yaw = yaw.toDouble())
+    
+    fun changeAngle(target: PitchYaw, speed: PitchYawSpeed): PitchYaw {
         val pitch = subtractAngles(pitch, target.pitch)
         val yaw = subtractAngles(yaw, target.yaw)
         
@@ -73,8 +78,33 @@ internal data class PitchYaw(
         }
         return to
     }
+    
+    operator fun component1() = pitch
+    operator fun component2() = yaw
+    fun copy(pitch: Double = this.pitch, yaw: Double = this.yaw) = PitchYaw(pitch, yaw)
+    override fun toString(): String {
+        return "PitchYaw(pitch=$pitch, yaw=$yaw)"
+    }
 
-    constructor(pitch: Float, yaw: Float): this(pitch.toDouble(), yaw = yaw.toDouble())
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || this::class != other::class) return false
+
+        other as PitchYaw
+
+        if (pitch != other.pitch) return false
+        if (yaw != other.yaw) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = pitch.hashCode()
+        result = 31 * result + yaw.hashCode()
+        return result
+    }
+
+
     companion object {
         val ZERO = PitchYaw(0.0, 0.0)
         val EPSILON = PitchYaw(0.0001, 0.0001)

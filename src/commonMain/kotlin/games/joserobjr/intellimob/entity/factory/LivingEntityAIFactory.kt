@@ -26,14 +26,14 @@ import games.joserobjr.intellimob.brain.goal.GoalSwimUp
 import games.joserobjr.intellimob.brain.goal.GoalWanderAround
 import games.joserobjr.intellimob.control.ModularControls
 import games.joserobjr.intellimob.control.api.EntityControls
-import games.joserobjr.intellimob.control.frozen.FrozenJumpController
 import games.joserobjr.intellimob.control.generic.GenericHeadController
 import games.joserobjr.intellimob.control.generic.LandBodyController
+import games.joserobjr.intellimob.control.generic.LandJumpController
 import games.joserobjr.intellimob.entity.EntityType
 import games.joserobjr.intellimob.entity.RegularEntity
 import games.joserobjr.intellimob.entity.status.ImmutableEntityStatus
 import games.joserobjr.intellimob.math.DoubleVectorXZ
-import games.joserobjr.intellimob.math.PitchYaw
+import games.joserobjr.intellimob.math.PitchYawSpeed
 import games.joserobjr.intellimob.pathfinding.PathFinder
 import games.joserobjr.intellimob.pathfinding.StraightLinePathFinder
 
@@ -46,7 +46,7 @@ internal open class LivingEntityAIFactory: EntityAIFactory {
         return ModularControls(
             regularEntity, 
             LandBodyController(regularEntity),
-            FrozenJumpController(regularEntity),
+            LandJumpController(regularEntity),
             GenericHeadController(regularEntity)
         )
     }
@@ -54,8 +54,8 @@ internal open class LivingEntityAIFactory: EntityAIFactory {
     override fun createPathFinder(regularEntity: RegularEntity): PathFinder = StraightLinePathFinder()
 
     override fun createDefaultStatus(): ImmutableEntityStatus = ImmutableEntityStatus(
-        headSpeed = PitchYaw(40.0, 10.0),
-        headFastSpeed = PitchYaw(80.0, 20.0),
+        headSpeed = PitchYawSpeed(40.0, 10.0),
+        headFastSpeed = PitchYawSpeed(80.0, 20.0),
         walkSpeed = DoubleVectorXZ(.7),
         sprintSpeed = DoubleVectorXZ(1.0),
         flySpeed = DoubleVectorXZ(.4),

@@ -96,7 +96,7 @@ internal interface RegularEntity: PlatformEntity, WithEntityLocation, WithTimeSo
     suspend fun moveTo(nextPos: EntityPos): Boolean
     
     suspend fun applyMotion(motion: IDoubleVectorXYZ): Boolean
-    suspend fun applySpeed(vector: IDoubleVectorXYZ, force: IDoubleVectorXYZ): Boolean
+    suspend fun applySpeed(vector: IDoubleVectorXYZ, force: IDoubleVectorXYZ = vector): Boolean
     
     suspend fun calculateInertiaMotion(): IDoubleVectorXYZ
     

@@ -38,5 +38,7 @@ internal interface RegularBlock: PlatformBlock, WithBlockLocation {
         return changeBlock(snapshot.states.main, *snapshot.states.extra.toTypedArray(), entitySnapshot = snapshot.blockEntity)
     }
 
+    suspend fun up(): RegularBlock = world.getBlock(position.up())
+
     override val regularBlock: RegularBlock get() = this
 }

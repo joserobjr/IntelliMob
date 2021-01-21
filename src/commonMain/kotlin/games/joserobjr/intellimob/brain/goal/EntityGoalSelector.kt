@@ -129,7 +129,7 @@ internal class EntityGoalSelector(
                         val name = "${goal::class.simpleName}"
                         val time = TimeSource.Monotonic.markNow()
                         try {
-                            log.info { "+ Starting $name" }
+                            log.info { "\n+ Starting $name" }
                             val job = start(brain.owner, memory)
                             if (job == null) {
                                 log.info { "@ Goal $name didn't create a job!" }

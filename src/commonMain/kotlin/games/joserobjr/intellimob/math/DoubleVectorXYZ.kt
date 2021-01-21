@@ -30,4 +30,5 @@ internal data class DoubleVectorXYZ(
 ) : IDoubleVectorXYZ {
     constructor(values: Double): this(values, values, values)
     constructor(values: DoubleVectorXZ, y: Double = 0.0): this(values.x, y, values.z)
+    constructor(values: IDoubleVectorXYZ): this(values.x, values.y, values.z)
 }

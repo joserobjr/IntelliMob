@@ -19,6 +19,8 @@
 
 package games.joserobjr.intellimob.control.api
 
+import games.joserobjr.intellimob.math.IEntityPos
+
 /**
  * @author joserobjr
  * @since 2021-01-20
@@ -27,5 +29,7 @@ internal interface JumpController: Controller {
     /**
      * The entity receives an upward motion at the given speed.
      */
-    fun jump(speed: Double = owner.currentStatus.jumpSpeed): Boolean
+    suspend fun jump(speed: Double = owner.currentStatus.jumpSpeed): Boolean
+    
+    suspend fun shouldJumpToReach(nextPos: IEntityPos): Boolean
 }

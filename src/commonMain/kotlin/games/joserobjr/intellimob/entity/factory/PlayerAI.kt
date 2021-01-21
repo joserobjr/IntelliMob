@@ -21,7 +21,7 @@ package games.joserobjr.intellimob.entity.factory
 
 import games.joserobjr.intellimob.entity.status.ImmutableEntityStatus
 import games.joserobjr.intellimob.math.DoubleVectorXZ
-import games.joserobjr.intellimob.math.PitchYaw
+import games.joserobjr.intellimob.math.PitchYawSpeed
 
 /**
  * @author joserobjr
@@ -30,8 +30,8 @@ import games.joserobjr.intellimob.math.PitchYaw
 internal object PlayerAI: NoDefaultAI() {
     override fun createDefaultStatus(): ImmutableEntityStatus {
         return ImmutableEntityStatus(
-            headSpeed = PitchYaw.ZERO,
-            headFastSpeed = PitchYaw.ZERO,
+            headSpeed = PitchYawSpeed.ZERO,
+            headFastSpeed = PitchYawSpeed.ZERO,
             walkSpeed = DoubleVectorXZ(.1),
             sprintSpeed = DoubleVectorXZ(.103),
             flySpeed = DoubleVectorXZ(.05),

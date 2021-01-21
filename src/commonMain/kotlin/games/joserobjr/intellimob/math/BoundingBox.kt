@@ -76,22 +76,28 @@ internal class BoundingBox(
         )
     }
 
-    operator fun plus(pos: IBlockPos): BoundingBox {
+    operator fun plus(pos: IIntVectorXYZ): BoundingBox {
         return BoundingBox(minPosInclusive + pos, maxPosExclusive + pos)
     }
 
-    operator fun plus(pos: IEntityPos): BoundingBox {
+    operator fun plus(pos: IDoubleVectorXYZ): BoundingBox {
         return BoundingBox(minPosInclusive + pos, maxPosExclusive + pos)
     }
 
-    operator fun minus(pos: IEntityPos): BoundingBox {
+    operator fun minus(pos: IDoubleVectorXYZ): BoundingBox {
         return BoundingBox(minPosInclusive - pos, maxPosExclusive - pos)
     }
 
-    operator fun minus(pos: IBlockPos): BoundingBox {
+    operator fun minus(pos: IIntVectorXYZ): BoundingBox {
         return BoundingBox(minPosInclusive - pos, maxPosExclusive - pos)
     }
 
+    fun isNotEmpty(): Boolean = maxPosExclusive.x > minPosInclusive.x
+                && maxPosExclusive.y > minPosInclusive.y
+                && maxPosExclusive.z > minPosInclusive.z 
+
+    fun isEmpty() = !isNotEmpty()
+    
     companion object {
         val EMPTY: BoundingBox = BoundingBox(IEntityPos.ZERO, IEntityPos.ZERO)
     }

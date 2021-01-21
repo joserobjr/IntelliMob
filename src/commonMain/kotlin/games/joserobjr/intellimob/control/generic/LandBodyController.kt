@@ -22,6 +22,7 @@ package games.joserobjr.intellimob.control.generic
 import com.github.michaelbull.logging.InlineLogger
 import games.joserobjr.intellimob.block.BlockSnapshot
 import games.joserobjr.intellimob.block.BlockState
+import games.joserobjr.intellimob.block.RegularBlock
 import games.joserobjr.intellimob.control.api.BodyController
 import games.joserobjr.intellimob.coroutines.AI
 import games.joserobjr.intellimob.coroutines.CompletedJob
@@ -31,6 +32,9 @@ import games.joserobjr.intellimob.trait.WithEntityPos
 import games.joserobjr.intellimob.trait.update
 import games.joserobjr.intellimobjvm.atomic.atomic
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.toSet
 import kotlin.math.sqrt
 import kotlin.time.ExperimentalTime
 
@@ -41,7 +45,7 @@ import kotlin.time.ExperimentalTime
 internal open class LandBodyController(final override val owner: RegularEntity): BodyController {
     private val currentJob = atomic(ActiveWalk(IEntityPos.ZERO, .0, DoubleVectorXZ(.0)) to CompletedJob)
 
-    override fun isMoving(): Boolean = currentJob.get().second.isActive
+    override fun isMoving(): Boolean = !currentJob.get().second.isCompleted
     
     override fun CoroutineScope.walkTo(pos: WithEntityPos, acceptableDistance: Double, speed: DoubleVectorXZ): Job {
         val (_, job) = currentJob.updateAndGet { oldPair ->
@@ -101,18 +105,59 @@ internal open class LandBodyController(final override val owner: RegularEntity):
                 return@s
             }
             val nextNode = path.next(current) ?: return@s
-            if (nextNode.down().toBlockPos() isNotSimilarTo lastNode?.position) {
-                log.warn { "%%%%%%%%%%" }
+            if (nextNode == path.nodes.last() && current.squaredHorizontalDistance(activity.target) <= activity.acceptableDistance.squared()) {
+                return@s
+            }
+            val nextNodePos = nextNode.asCenteredEntityPos()
+            if (nextNodePos.down().toBlockPos() isNotSimilarTo lastNode?.position) {
                 lastNode?.restoreSnapshot()
-                val nextBlock = owner.world.getBlock(nextNode.down())
+                val nextBlock = owner.world.getBlock(nextNodePos.down())
                 lastNode = nextBlock.createSnapshot(includeBlockEntity = true)
                 nextBlock.changeBlock(BlockState.RED_WOOL)
             }
-            val angle = current.target(nextNode)
-            owner.controls.updateHeadAngle(angle, owner.currentStatus.headFastSpeed.apply { PitchYaw(pitch * 3, yaw * 3) })
+            val status = owner.currentStatus
+            val angle = current.target(nextNodePos).copy(pitch = 0.0)
+            while (true) {
+                owner.controls.updateHeadAngle(angle, status.headFastSpeed * 2.5)
+                if (owner.headPitchYaw.isSimilarTo(angle, PitchYaw(.01, .01))) {
+                    break
+                }
+                delay(1.ticks)
+            }
             
-            val motion = current.motionToward(nextNode, activity.speed)
+            
+            var motion = current.motionToward(nextNodePos, activity.speed)
+            val bounds = owner.boundingBox + motion
+            val collision = owner.world.getCollidingBlocks(bounds, owner).asSequence()
+//            val needsToStep = collision
+//                .filter { (pos) -> pos.y == bounds.minPosInclusive.y.toInt() }
+//                .filter { (_, state) -> state.boundingBox.maxPosExclusive.y < status.stepHeight + 0.001 }
+//                .maxOfOrNull { (pos, state) -> (state.boundingBox.maxPosExclusive + pos).y }
+            
+            val highestY = collision
+                //.filterNot { (pos, state) -> pos.y == bounds.minPosInclusive.y.toInt() && state.boundingBox.maxPosExclusive.y < status.stepHeight + 0.001 }
+                .asFlow()
+                .map { (pos) -> owner.world.getBlock(pos) }
+                .map { block ->
+                    var last: RegularBlock
+                    var above = block
+                    do {
+                        last = above
+                        above = above.up()
+                    } while (above.currentBoundingBox().isNotEmpty())
+                    last.currentBoundingBox().maxPosExclusive.y
+                }.toSet().minOrNull()
+            
+            val needsToStep = false//highestY != null && highestY in (current.y)..(current.y + status.stepHeight - 0.001)
+            val needsToJump = highestY != null && highestY in (current.y + status.stepHeight)..(current.y + status.stepHeight + status.jumpSpeed)
+            
             owner.update {
+                if (needsToStep && highestY != null) {
+                    val pos = position
+                    moveTo(pos.copy(y = pos.y + highestY))
+                } else if (needsToJump) {
+                    owner.controls.jump()
+                }
                 applySpeed(motion, DoubleVectorXYZ(activity.speed))
             }
             delay(1.ticks)
@@ -122,7 +167,7 @@ internal open class LandBodyController(final override val owner: RegularEntity):
         }
     }
     
-    private fun EntityPos.motionToward(toward: EntityPos, speed: DoubleVectorXZ): IDoubleVectorXYZ {
+    private fun EntityPos.motionToward(toward: EntityPos, speed: DoubleVectorXZ): DoubleVectorXYZ {
         // Create vector
         var x = toward.x - x
         var z = toward.z - z
@@ -130,7 +175,7 @@ internal open class LandBodyController(final override val owner: RegularEntity):
         // Normalize
         val squaredLen = x.squared() + z.squared()
         if (squaredLen <= 0) {
-            return this
+            return DoubleVectorXYZ(this)
         }
         val len = sqrt(squaredLen)
         x /= len

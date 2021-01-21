@@ -17,26 +17,21 @@
  *
  */
 
-package games.joserobjr.intellimob.control.frozen
-
-import games.joserobjr.intellimob.control.api.HeadController
-import games.joserobjr.intellimob.entity.RegularEntity
-import games.joserobjr.intellimob.math.PitchYaw
-import games.joserobjr.intellimob.math.PitchYawSpeed
-import games.joserobjr.intellimob.trait.WithEntityPos
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
+package games.joserobjr.intellimob.math
 
 /**
  * @author joserobjr
- * @since 2021-01-20
+ * @since 2021-01-21
  */
-internal class FrozenHeadController(override val owner: RegularEntity): HeadController {
-    override fun CoroutineScope.lookAt(pos: WithEntityPos, speed: PitchYawSpeed): Job {
-        return Job().also { cancel("The head control is frozen") }
-    }
-
-    override suspend fun updateHeadAngle(target: PitchYaw, speed: PitchYawSpeed) {
+internal data class PitchYawSpeed (
+    val pitch: Double,
+    val yaw: Double
+) {
+    operator fun times(value: Double) = PitchYawSpeed(pitch * value, yaw * value)
+    operator fun times(value: Int) = this * value.toDouble()
+    operator fun times(value: Number) = this * value.toDouble()
+    
+    companion object {
+        val ZERO = PitchYawSpeed(.0, .0)
     }
 }

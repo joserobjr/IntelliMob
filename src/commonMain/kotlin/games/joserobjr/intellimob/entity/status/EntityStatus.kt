@@ -20,7 +20,7 @@
 package games.joserobjr.intellimob.entity.status
 
 import games.joserobjr.intellimob.math.DoubleVectorXZ
-import games.joserobjr.intellimob.math.PitchYaw
+import games.joserobjr.intellimob.math.PitchYawSpeed
 
 /**
  * @author joserobjr
@@ -30,8 +30,8 @@ internal interface EntityStatus {
     /**
      * How fast the head can rotate the head in the pitch and yaw axis.
      */
-    val headSpeed: PitchYaw
-    val headFastSpeed: PitchYaw
+    val headSpeed: PitchYawSpeed
+    val headFastSpeed: PitchYawSpeed
     val walkSpeed: DoubleVectorXZ
     val sprintSpeed: DoubleVectorXZ
     val flySpeed: DoubleVectorXZ

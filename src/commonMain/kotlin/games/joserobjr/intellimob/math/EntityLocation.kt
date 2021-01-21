@@ -37,4 +37,7 @@ internal data class EntityLocation(
     constructor(withWorld: WithWorld, pos: IEntityPos): this(withWorld.world, pos.x, pos.y, pos.z)
     constructor(withWorld: WithWorld, x: Double, y: Double, z: Double): this(withWorld.world, x, y, z)
     constructor(withWorld: WithWorld, x: Float, y: Float, z: Float): this(withWorld.world, x.toDouble(), y.toDouble(), z.toDouble())
+    
+    suspend fun getBlock() = world.getBlock(this)
+    suspend fun getCachedBlock() = world.cache.getBlock(this)
 }

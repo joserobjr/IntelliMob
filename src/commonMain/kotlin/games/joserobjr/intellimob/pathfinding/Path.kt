@@ -30,7 +30,7 @@ internal inline class Path(val nodes: List<PathNode>) {
     
     fun isEmpty() = nodes.isEmpty()
     fun isNotEmpty() = nodes.isNotEmpty()
-    fun next(current: EntityPos): EntityPos? {
-        return nodes.lastOrNull()?.asCenteredEntityPos()
+    fun next(current: EntityPos): PathNode? {
+        return nodes.lastOrNull()
     }
 }

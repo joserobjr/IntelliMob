@@ -24,6 +24,7 @@ import games.joserobjr.intellimob.coroutines.AI
 import games.joserobjr.intellimob.coroutines.CompletedJob
 import games.joserobjr.intellimob.entity.RegularEntity
 import games.joserobjr.intellimob.math.PitchYaw
+import games.joserobjr.intellimob.math.PitchYawSpeed
 import games.joserobjr.intellimob.math.ticks
 import games.joserobjr.intellimob.trait.WithEntityPos
 import games.joserobjr.intellimob.trait.update
@@ -35,13 +36,13 @@ import kotlin.time.ExperimentalTime
  * @author joserobjr
  * @since 2021-01-20
  */
-internal open class GenericHeadController(final override val owner: RegularEntity, val returnSpeed: PitchYaw = DEFAULT_RETURN_SPEED) : HeadController {
+internal open class GenericHeadController(final override val owner: RegularEntity, val returnSpeed: PitchYawSpeed = DEFAULT_RETURN_SPEED) : HeadController {
     var keepAlignedToHorizon = false
     private val activeTask = atomic(CompletedJob)
     private val delayHeadReturn = atomic(CompletedJob)
     
     @OptIn(ExperimentalTime::class)
-    override fun CoroutineScope.lookAt(pos: WithEntityPos, speed: PitchYaw): Job {
+    override fun CoroutineScope.lookAt(pos: WithEntityPos, speed: PitchYawSpeed): Job {
         return activeTask.updateAndGet { old ->
             old.cancel(CancellationException("A new task has started"))
             launch(Dispatchers.AI) {
@@ -62,7 +63,7 @@ internal open class GenericHeadController(final override val owner: RegularEntit
         }
     }
     
-    override suspend fun updateHeadAngle(target: PitchYaw, speed: PitchYaw) {
+    override suspend fun updateHeadAngle(target: PitchYaw, speed: PitchYawSpeed) {
         val previous = owner.headPitchYaw
 
         var force = false
@@ -80,6 +81,6 @@ internal open class GenericHeadController(final override val owner: RegularEntit
     }
     
     companion object {
-        private val DEFAULT_RETURN_SPEED = PitchYaw(10.0, 10.0)
+        private val DEFAULT_RETURN_SPEED = PitchYawSpeed(10.0, 10.0)
     }
 }

@@ -63,6 +63,9 @@ internal interface IBlockPos: WithBlockPos, WithBoundingBox, IIntVectorXYZ {
     
     fun toMutableBlockPos(): MutableBlockPos = MutableBlockPos(x, y, z)
     fun toImmutableBlockPos(): BlockPos = BlockPos(x, y, z)
+    fun up(): IBlockPos {
+        return BlockPos(x, y + 1, z)
+    }
 
     companion object {
         val ZERO: BlockPos = BlockPos(0, 0, 0)
