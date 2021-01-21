@@ -22,6 +22,9 @@ package games.joserobjr.intellimob.control.api
 import games.joserobjr.intellimob.entity.status.EntityStatus
 import games.joserobjr.intellimob.math.DoubleVectorXZ
 import games.joserobjr.intellimob.math.EntityPos
+import games.joserobjr.intellimob.trait.WithEntityPos
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 
 /**
  * @author joserobjr
@@ -38,9 +41,9 @@ internal interface BodyController: Controller {
      * @param speed How fast the entity will move in the axis
      * @return `true` if the entity has reached an acceptable distance to the position and no more calls are needed.
      */
-    fun walkTo(
-        pos: EntityPos,
+    fun CoroutineScope.walkTo(
+        pos: WithEntityPos,
         acceptableDistance: Double = owner.currentStatus.stepHeight,
         speed: DoubleVectorXZ = owner.currentStatus.walkSpeed
-    ): Boolean
+    ): Job
 }

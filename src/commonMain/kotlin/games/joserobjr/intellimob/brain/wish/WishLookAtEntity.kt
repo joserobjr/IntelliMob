@@ -20,16 +20,18 @@
 package games.joserobjr.intellimob.brain.wish
 
 import games.joserobjr.intellimob.entity.RegularEntity
-import games.joserobjr.intellimob.math.EntityPos
+import games.joserobjr.intellimob.math.IEntityPos
+import games.joserobjr.intellimob.trait.WithEntityPos
 
 /**
  * @author joserobjr
  * @since 2021-01-17
  */
 internal data class WishLookAtEntity(
-    override val targetEntity: RegularEntity,
+    val targetEntity: RegularEntity,
     override val quickly: Boolean = false,
 ): WishLook() {
-    override val target: EntityPos get() = targetEntity.eyePosition
-    override val isConstant: Boolean get() = false
+    override suspend fun targetFor(owner: RegularEntity) = object : WithEntityPos {
+        override val position: IEntityPos get() = targetEntity.eyePosition 
+    }
 }

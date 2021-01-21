@@ -22,9 +22,9 @@ package games.joserobjr.intellimob.control.head
 import games.joserobjr.intellimob.control.api.HeadController
 import games.joserobjr.intellimob.coroutines.AI
 import games.joserobjr.intellimob.entity.RegularEntity
-import games.joserobjr.intellimob.math.EntityPos
 import games.joserobjr.intellimob.math.PitchYaw
 import games.joserobjr.intellimob.math.ticks
+import games.joserobjr.intellimob.trait.WithEntityPos
 import games.joserobjr.intellimob.trait.update
 import games.joserobjr.intellimobjvm.atomic.atomic
 import kotlinx.coroutines.*
@@ -40,12 +40,12 @@ internal open class GenericHeadController(final override val owner: RegularEntit
     private val delayHeadReturn = atomic<Job>(Job().apply { complete() })
     
     @OptIn(ExperimentalTime::class)
-    override fun CoroutineScope.lookAt(pos: EntityPos, speed: PitchYaw): Job {
+    override fun CoroutineScope.lookAt(pos: WithEntityPos, speed: PitchYaw): Job {
         return activeTask.updateAndGet { old ->
             old.cancel(CancellationException("A new task has started"))
             launch(Dispatchers.AI) {
                 while (true) {
-                    updateAngle(owner.eyePosition.target(pos), speed)
+                    updateAngle(owner.eyePosition.target(pos.position), speed)
                     delay(1.ticks)
                 }
             }

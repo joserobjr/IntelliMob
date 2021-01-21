@@ -20,16 +20,15 @@
 package games.joserobjr.intellimob.brain.wish
 
 import games.joserobjr.intellimob.entity.RegularEntity
-import games.joserobjr.intellimob.math.EntityPos
+import games.joserobjr.intellimob.math.IEntityPos
 
 /**
  * @author joserobjr
  * @since 2021-01-17
  */
 internal data class WishMoveToPos(
-    override val target: EntityPos,
+    val target: IEntityPos,
     override val sprinting: Boolean = false,
 ): WishMove() {
-    override val targetEntity: RegularEntity? get() = null
-    override val isConstant: Boolean get() = true
+    override suspend fun targetFor(owner: RegularEntity) = target
 }

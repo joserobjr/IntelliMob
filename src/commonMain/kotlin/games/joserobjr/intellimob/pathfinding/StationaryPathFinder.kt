@@ -19,10 +19,17 @@
 
 package games.joserobjr.intellimob.pathfinding
 
+import games.joserobjr.intellimob.math.IBlockPos
+import games.joserobjr.intellimob.world.WorldView
+
 /**
  * A path finder that will not find any path. Entities using it will not go anywhere but they can still jump and be pushed.
  * 
  * @author joserobjr
  * @since 2021-01-19
  */
-internal object StationaryPathFinder: PathFinder
+internal object StationaryPathFinder: PathFinder {
+    override suspend fun findPath(world: WorldView, from: IBlockPos, to: IBlockPos): Path {
+        return Path()
+    }
+}

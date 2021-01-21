@@ -34,7 +34,7 @@ import games.joserobjr.intellimob.entity.status.ImmutableEntityStatus
 import games.joserobjr.intellimob.math.DoubleVectorXZ
 import games.joserobjr.intellimob.math.PitchYaw
 import games.joserobjr.intellimob.pathfinding.PathFinder
-import games.joserobjr.intellimob.pathfinding.StationaryPathFinder
+import games.joserobjr.intellimob.pathfinding.StraightLinePathFinder
 
 /**
  * @author joserobjr
@@ -50,7 +50,7 @@ internal open class LivingEntityAIFactory: EntityAIFactory {
         )
     }
     
-    override fun createPathFinder(regularEntity: RegularEntity): PathFinder = StationaryPathFinder
+    override fun createPathFinder(regularEntity: RegularEntity): PathFinder = StraightLinePathFinder()
 
     override fun createDefaultStatus(): ImmutableEntityStatus = ImmutableEntityStatus(
         headSpeed = PitchYaw(40.0, 10.0),

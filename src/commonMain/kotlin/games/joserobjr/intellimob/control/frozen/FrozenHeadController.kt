@@ -21,8 +21,8 @@ package games.joserobjr.intellimob.control.frozen
 
 import games.joserobjr.intellimob.control.api.HeadController
 import games.joserobjr.intellimob.entity.RegularEntity
-import games.joserobjr.intellimob.math.EntityPos
 import games.joserobjr.intellimob.math.PitchYaw
+import games.joserobjr.intellimob.trait.WithEntityPos
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
@@ -32,7 +32,7 @@ import kotlinx.coroutines.cancel
  * @since 2021-01-20
  */
 internal class FrozenHeadController(override val owner: RegularEntity): HeadController {
-    override fun CoroutineScope.lookAt(pos: EntityPos, speed: PitchYaw): Job {
+    override fun CoroutineScope.lookAt(pos: WithEntityPos, speed: PitchYaw): Job {
         return Job().also { cancel("The head control is frozen") }
     }
 }

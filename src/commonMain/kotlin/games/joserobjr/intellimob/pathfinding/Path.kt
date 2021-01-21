@@ -17,22 +17,12 @@
  *
  */
 
-package games.joserobjr.intellimob.brain.wish
-
-import games.joserobjr.intellimob.entity.RegularEntity
-import games.joserobjr.intellimob.math.IDoubleVectorXYZ
-import games.joserobjr.intellimob.math.IEntityPos
-import games.joserobjr.intellimob.trait.WithEntityPos
+package games.joserobjr.intellimob.pathfinding
 
 /**
  * @author joserobjr
- * @since 2021-01-17
+ * @since 2021-01-20
  */
-internal data class WishLookAtDelta(
-    val delta: IDoubleVectorXYZ,
-    override val quickly: Boolean = false,
-): WishLook() {
-    override suspend fun targetFor(owner: RegularEntity) = object : WithEntityPos {
-        override val position: IEntityPos get() = owner.eyePosition + delta 
-    }
+internal inline class Path(val nodes: List<PathNode>) {
+    constructor(vararg nodes: PathNode): this(nodes.toList())
 }

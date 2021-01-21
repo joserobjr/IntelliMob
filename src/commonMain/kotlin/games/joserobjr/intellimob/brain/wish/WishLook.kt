@@ -21,7 +21,7 @@ package games.joserobjr.intellimob.brain.wish
 
 import games.joserobjr.intellimob.control.api.EntityControls
 import games.joserobjr.intellimob.entity.RegularEntity
-import games.joserobjr.intellimob.math.EntityPos
+import games.joserobjr.intellimob.trait.WithEntityPos
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 
@@ -30,17 +30,15 @@ import kotlinx.coroutines.coroutineScope
  * @since 2021-01-17
  */
 internal abstract class WishLook: Wish() {
-    abstract val target: EntityPos
-    abstract val targetEntity: RegularEntity?
-    abstract val isConstant: Boolean
     abstract val quickly: Boolean
-
+    
     override suspend fun EntityControls.start(): Job? {
+        val target = targetFor(owner) ?: return null
+        val status = owner.currentStatus
         return coroutineScope {
-            val status = owner.currentStatus
-            lookAt(targetFor(owner), speed = if (quickly) status.headFastSpeed else status.headSpeed)
+            lookAt(target, speed = if (quickly) status.headFastSpeed else status.headSpeed)
         }
     }
-    
-    protected open fun targetFor(owner: RegularEntity): EntityPos = target
+
+    protected abstract suspend fun targetFor(owner: RegularEntity): WithEntityPos?
 }

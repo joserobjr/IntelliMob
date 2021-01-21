@@ -116,7 +116,7 @@ internal class Wishes(val brain: Brain) {
                     }
                 }
             } catch (e: DespawnCancellationException) {
-                log.info { "The entity despawned" }
+                log.warn { "The entity despawned" }
                 throw e
             } catch (e: CancellationException) {
                 log.warn(e) { "An unexpected cancellation happened while executing the wishes" }

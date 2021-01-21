@@ -19,8 +19,13 @@
 
 package games.joserobjr.intellimob.pathfinding
 
+import games.joserobjr.intellimob.math.IBlockPos
+import games.joserobjr.intellimob.world.WorldView
+
 /**
  * @author joserobjr
  * @since 2021-01-11
  */
-internal interface PathFinder
+internal interface PathFinder {
+    suspend fun findPath(world: WorldView, from: IBlockPos, to: IBlockPos): Path
+}

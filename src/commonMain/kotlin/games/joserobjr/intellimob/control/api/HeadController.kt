@@ -20,8 +20,8 @@
 package games.joserobjr.intellimob.control.api
 
 import games.joserobjr.intellimob.entity.status.EntityStatus
-import games.joserobjr.intellimob.math.EntityPos
 import games.joserobjr.intellimob.math.PitchYaw
+import games.joserobjr.intellimob.trait.WithEntityPos
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 
@@ -37,5 +37,5 @@ internal interface HeadController: Controller {
      *
      * @return `true` if the head has reached the objective and no more calls are needed to look at the position.
      */
-    fun CoroutineScope.lookAt(pos: EntityPos, speed: PitchYaw = owner.currentStatus.headSpeed): Job
+    fun CoroutineScope.lookAt(pos: WithEntityPos, speed: PitchYaw = owner.currentStatus.headSpeed): Job
 }
