@@ -27,4 +27,7 @@ internal interface IIntVectorXYZ {
     val x: Int
     val y: Int
     val z: Int
+    
+    infix fun isSimilarTo(other: IIntVectorXYZ?): Boolean = other != null && x == other.x && y == other.y && z == other.z
+    infix fun isNotSimilarTo(other: IIntVectorXYZ?) = !isSimilarTo(other)
 }

@@ -65,6 +65,10 @@ internal interface IEntityPos: WithEntityPos, IDoubleVectorXYZ {
     
     operator fun unaryMinus(): EntityPos = EntityPos(-x, -y, -z)
     fun toImmutable(): EntityPos = EntityPos(x, y, z)
+    
+    fun down(distance: Double = 1.0): EntityPos {
+        return EntityPos(x, y - distance, z) 
+    }
 
     companion object {
         val ZERO: EntityPos = EntityPos(0.0, 0.0, 0.0)

@@ -28,6 +28,8 @@ import games.joserobjr.intellimob.math.BoundingBox
 import games.joserobjr.intellimob.math.EntityPos
 import games.joserobjr.intellimob.math.IBlockPos
 import games.joserobjr.intellimob.math.IEntityPos
+import games.joserobjr.intellimob.trait.WithBlockPos
+import games.joserobjr.intellimob.trait.WithEntityPos
 import games.joserobjr.intellimob.trait.WithWorld
 
 /**
@@ -37,10 +39,16 @@ import games.joserobjr.intellimob.trait.WithWorld
 internal interface WorldView: WithWorld {
     suspend fun getBlock(pos: IEntityPos): RegularBlock = getBlock(pos.toBlockPos())
     suspend fun getBlock(pos: IBlockPos): RegularBlock
+    suspend fun getBlock(pos: WithBlockPos): RegularBlock = getBlock(pos.position)
+    suspend fun getBlock(pos: WithEntityPos): RegularBlock = getBlock(pos.position)
     suspend fun getBlockState(pos: IEntityPos, layer: Int = 0): BlockState = getBlockState(pos.toBlockPos())
     suspend fun getBlockState(pos: IBlockPos, layer: Int = 0): BlockState
+    suspend fun getBlockState(pos: WithBlockPos, layer: Int = 0): BlockState = getBlockState(pos.position)
+    suspend fun getBlockState(pos: WithEntityPos, layer: Int = 0): BlockState = getBlockState(pos.position)
     suspend fun getBlockEntity(pos: IEntityPos): RegularBlockEntity? = getBlockEntity(pos.toBlockPos())
     suspend fun getBlockEntity(pos: IBlockPos): RegularBlockEntity?
+    suspend fun getBlockEntity(pos: WithBlockPos): RegularBlockEntity? = getBlockEntity(pos.position)
+    suspend fun getBlockEntity(pos: WithEntityPos): RegularBlockEntity? = getBlockEntity(pos.position)
     
     suspend fun getEntitySnapshots(): List<EntitySnapshot>
     suspend fun getRegularEntities(): List<RegularEntity>

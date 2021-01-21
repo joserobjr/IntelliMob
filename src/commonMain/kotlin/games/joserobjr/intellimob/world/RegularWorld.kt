@@ -19,6 +19,7 @@
 
 package games.joserobjr.intellimob.world
 
+import games.joserobjr.intellimob.block.BlockSnapshot
 import games.joserobjr.intellimob.block.BlockState
 import games.joserobjr.intellimob.block.RegularBlockEntity
 import games.joserobjr.intellimob.math.IBlockPos
@@ -37,4 +38,5 @@ internal interface RegularWorld: PlatformWorld, WorldView, WithTimeSource, WithU
     override val regularWorld: RegularWorld get() = this
     override suspend fun getBlockState(pos: IBlockPos, layer: Int): BlockState = getBlock(pos).currentState(layer)
     override suspend fun getBlockEntity(pos: IBlockPos): RegularBlockEntity? = getBlock(pos).currentBlockEntity()
+    suspend fun restoreSnapshot(snapshot: BlockSnapshot): Boolean
 }

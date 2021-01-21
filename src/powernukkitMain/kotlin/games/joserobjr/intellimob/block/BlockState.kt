@@ -19,7 +19,9 @@
 
 package games.joserobjr.intellimob.block
 
+import cn.nukkit.block.BlockID
 import cn.nukkit.level.Position
+import cn.nukkit.utils.DyeColor
 import games.joserobjr.intellimob.math.BoundingBox
 import games.joserobjr.intellimob.math.toIntelliMobBoundingBox
 import games.joserobjr.intellimob.trait.WithBoundingBox
@@ -30,7 +32,7 @@ import java.util.concurrent.ConcurrentHashMap
  * @since 2021-01-17
  */
 internal actual class BlockState private constructor(val powerNukkitBlockState: PNBlockState): WithBoundingBox {
-    actual val type: BlockType = BlockType.fromBlockState(powerNukkitBlockState)
+    actual val type: BlockType by lazy { BlockType.fromBlockState(powerNukkitBlockState) }
 
     override val boundingBox: BoundingBox by lazy { 
         powerNukkitBlockState.getBlock(POS_ZERO).boundingBox?.toIntelliMobBoundingBox()
@@ -38,10 +40,12 @@ internal actual class BlockState private constructor(val powerNukkitBlockState: 
     }
 
     actual companion object {
-        actual val AIR: BlockState = from(PNBlockState.AIR)
-        private val POS_ZERO = Position()
-
         private val states = ConcurrentHashMap<PNBlockState, BlockState>()
+        
+        actual val AIR: BlockState = from(PNBlockState.AIR)
+        actual val RED_WOOL: BlockState = from(PNBlockState.of(BlockID.WOOL, DyeColor.RED.woolData))
+
+        private val POS_ZERO = Position()
         fun from(state: PNBlockState) = states.computeIfAbsent(state, ::BlockState)
     }
 }

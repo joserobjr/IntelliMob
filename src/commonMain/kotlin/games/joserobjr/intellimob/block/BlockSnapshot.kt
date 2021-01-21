@@ -38,4 +38,8 @@ internal data class BlockSnapshot (
     override val position: IBlockPos get() = location
     override val world: RegularWorld get() = location.world
     override val boundingBox: BoundingBox get() = states.main.boundingBox + position
+
+    suspend fun restoreSnapshot(): Boolean {
+        return location.world.restoreSnapshot(this)
+    }
 }

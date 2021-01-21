@@ -22,6 +22,7 @@
 package games.joserobjr.intellimob.math
 
 import cn.nukkit.block.Block
+import cn.nukkit.level.Position
 import games.joserobjr.intellimob.block.PNBlockState
 import games.joserobjr.intellimob.block.PowerNukkitBlock
 import games.joserobjr.intellimob.block.RegularBlock
@@ -41,3 +42,5 @@ internal inline fun BlockLocation.getPNState(layer: Int = 0, load: Boolean = fal
         }
     }
 }
+
+internal fun BlockLocation.toPosition() = Position(x.toDouble(), y.toDouble(), z.toDouble(), world.powerNukkitLevel)

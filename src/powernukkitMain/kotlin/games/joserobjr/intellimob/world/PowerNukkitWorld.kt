@@ -20,11 +20,9 @@
 package games.joserobjr.intellimob.world
 
 import cn.nukkit.block.Block
+import cn.nukkit.blockentity.BlockEntity
 import cn.nukkit.level.Level
-import games.joserobjr.intellimob.block.BlockState
-import games.joserobjr.intellimob.block.PowerNukkitBlock
-import games.joserobjr.intellimob.block.RegularBlock
-import games.joserobjr.intellimob.block.asIntelliMobBlockState
+import games.joserobjr.intellimob.block.*
 import games.joserobjr.intellimob.coroutines.AI
 import games.joserobjr.intellimob.coroutines.Sync
 import games.joserobjr.intellimob.entity.EntitySnapshot
@@ -135,5 +133,24 @@ internal inline class PowerNukkitWorld(override val powerNukkitLevel: Level): Re
         condition: (suspend (RegularEntity) -> Boolean)?
     ): RegularEntity? {
         TODO("Not yet implemented")
+    }
+
+    override suspend fun restoreSnapshot(snapshot: BlockSnapshot): Boolean {
+        return with(powerNukkitLevel) {
+            val success = snapshot.states.asSequence()
+                .map { it.powerNukkitBlockState }
+                .mapIndexed { layer, state ->
+                    state.getBlock(this, snapshot.location.x, snapshot.location.y, snapshot.location.z, layer) 
+                }.all { block ->
+                    with(snapshot.location) {
+                        setBlock(x, y, z, block.layer, block, false, true)
+                    }
+                }
+            val entity = snapshot.blockEntity
+            if (success && entity != null) {
+                BlockEntity.createBlockEntity(entity.name, snapshot.location.toPosition(), entity.content)
+            }
+            success
+        }
     }
 }

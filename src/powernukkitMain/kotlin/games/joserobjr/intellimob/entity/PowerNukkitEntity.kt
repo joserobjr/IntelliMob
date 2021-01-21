@@ -20,18 +20,22 @@
 package games.joserobjr.intellimob.entity
 
 import cn.nukkit.entity.Entity
+import cn.nukkit.math.Vector3
 import games.joserobjr.intellimob.brain.Brain
 import games.joserobjr.intellimob.control.api.EntityControls
-import games.joserobjr.intellimob.coroutines.Sync
 import games.joserobjr.intellimob.entity.status.EntityStatus
 import games.joserobjr.intellimob.entity.status.MutableEntityStatus
 import games.joserobjr.intellimob.math.*
 import games.joserobjr.intellimob.pathfinding.BlockFavorProvider
 import games.joserobjr.intellimob.pathfinding.PathFinder
 import games.joserobjr.intellimob.timesource.ServerTickTimeSource
+import games.joserobjr.intellimob.trait.update
+import games.joserobjr.intellimob.trait.updateAndGet
 import games.joserobjr.intellimob.world.RegularWorld
 import games.joserobjr.intellimob.world.asIntelliMobWorld
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlin.time.ExperimentalTime
 import kotlin.time.TimeSource
 
@@ -67,15 +71,8 @@ internal class PowerNukkitEntity(override val powerNukkitEntity: Entity) : Regul
         get() = with(powerNukkitEntity) { PitchYaw(pitch, yaw) }
         set(value) {
             with(powerNukkitEntity) {
-                //var changed = false
-                //if (pitch.notSimilar(value.pitch)) {
-                    //changed = true
-                    pitch = value.pitch
-                //}
-                //if (yaw.notSimilar(value.yaw)) {
-                    //changed = true
-                    yaw = value.yaw
-                //}
+                pitch = value.pitch
+                yaw = value.yaw
             }
         }
 
@@ -88,13 +85,72 @@ internal class PowerNukkitEntity(override val powerNukkitEntity: Entity) : Regul
 
     override fun hasPassengers(): Boolean = powerNukkitEntity.passengers.isNotEmpty()
 
-    override suspend fun moveTo(nextPos: EntityPos): Boolean {
-        return with(powerNukkitEntity) {
+    override suspend fun moveTo(nextPos: EntityPos): Boolean = updateAndGet {
+        with(powerNukkitEntity) {
             move(nextPos.x - x, nextPos.y - y, nextPos.z - z)
         }
     }
+
+    override suspend fun applyMotion(motion: IDoubleVectorXYZ): Boolean = updateAndGet {
+        with(powerNukkitEntity) {
+            powerNukkitEntity.setMotion(Vector3(motionX + motion.x, motionY + motion.y, motionZ + motion.z))
+        }
+    }
+
+    override suspend fun applySpeed(vector: IDoubleVectorXYZ, force: IDoubleVectorXYZ): Boolean = updateAndGet {
+        with(powerNukkitEntity) {
+            motionX = vector.x
+            motionY = vector.y
+            motionZ = vector.z
+//            // Create vector
+//            var x = motionX - vector.x
+//            var y = motionY - vector.y
+//            var z = motionZ - vector.z
+//
+//            // Normalize
+//            val squaredLen = x.squared() + y.squared() + z.squared()
+//            if (squaredLen > 0) {
+//                val len = sqrt(squaredLen)
+//                x /= len
+//                y /= len
+//                z /= len
+//
+//                // Apply speed
+//                x *= force.x
+//                y *= force.y
+//                z *= force.z
+//
+//                powerNukkitEntity.motion = Vector3(motionX + x, motionY + y, motionZ + z)
+//            }
+        }
+        true
+    }
+
+    override suspend fun calculateInertiaMotion(): IDoubleVectorXYZ {
+        return DEFAULT_GRAVITY
+    }
+
+    override suspend fun calculateDrag(): IDoubleVectorXYZ {
+        return DEFAULT_DRAG
+    }
     
-    override suspend fun createSnapshot(): EntitySnapshot = withContext(Dispatchers.Sync) {
+    override suspend fun applyPhysics() = update {
+        with(powerNukkitEntity) {
+            val inertia = calculateInertiaMotion()
+            motionX += inertia.x
+            motionY += inertia.y
+            motionZ += inertia.z
+            move(motionX, motionY, motionZ)
+            
+            val drag = calculateDrag()
+            motionX *= 1 - drag.x
+            motionY *= 1 - drag.y
+            motionZ *= 1 - drag.z
+            updateMovement()
+        }
+    }
+    
+    override suspend fun createSnapshot(): EntitySnapshot = updateAndGet {
         with(powerNukkitEntity) {
             EntitySnapshot(
                 type = type,
@@ -103,5 +159,10 @@ internal class PowerNukkitEntity(override val powerNukkitEntity: Entity) : Regul
                 status = currentStatus
             )
         }
+    }
+    
+    companion object {
+        private val DEFAULT_GRAVITY = DoubleVectorXYZ(0.0, -0.04, 0.0) 
+        private val DEFAULT_DRAG = DoubleVectorXYZ(0.02) 
     }
 }

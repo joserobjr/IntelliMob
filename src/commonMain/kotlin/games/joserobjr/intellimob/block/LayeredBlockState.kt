@@ -26,7 +26,7 @@ package games.joserobjr.intellimob.block
 internal class LayeredBlockState private constructor(layers: MutableList<BlockState>) {
     constructor(layers: Iterable<BlockState>): this(layers.toMutableList())
     constructor(vararg layers: BlockState): this(layers.toMutableList())
-    
+
     private val layers: List<BlockState> = layers.run {
         asReversed().listIterator().let { iterator ->
             while (iterator.hasNext() && iterator.next() == BlockState.AIR) {
@@ -35,12 +35,14 @@ internal class LayeredBlockState private constructor(layers: MutableList<BlockSt
         }
         toList()
     }
-    
-    val main: BlockState get() = this[0]
+    val main: BlockState get() = layers.getOrElse(0) { BlockState.AIR }
+    val extra: List<BlockState> get() = if (layers.size <= 1) emptyList() else layers.subList(1, layers.size) 
     
     operator fun get(layer: Int): BlockState {
         return layers.getOrElse(layer) { BlockState.AIR }
     }
+    
+    fun asSequence() = if(layers.isEmpty()) sequenceOf(BlockState.AIR) else layers.asSequence()
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

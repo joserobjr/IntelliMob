@@ -25,4 +25,4 @@ import cn.nukkit.math.BlockVector3
  * @author joserobjr
  * @since 2021-01-18
  */
-internal fun IBlockPos.asBlockVector3() = BlockVector3(x, y, z)
+internal fun IBlockPos.toBlockVector3() = BlockVector3(x, y, z)

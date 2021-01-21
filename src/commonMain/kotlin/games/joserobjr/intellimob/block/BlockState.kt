@@ -28,6 +28,7 @@ import games.joserobjr.intellimob.trait.WithBoundingBox
 internal expect class BlockState: WithBoundingBox {
     val type: BlockType
     companion object {
+        val RED_WOOL: BlockState
         val AIR: BlockState
     }
 }

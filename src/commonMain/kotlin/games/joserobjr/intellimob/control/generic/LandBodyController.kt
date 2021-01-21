@@ -19,6 +19,9 @@
 
 package games.joserobjr.intellimob.control.generic
 
+import com.github.michaelbull.logging.InlineLogger
+import games.joserobjr.intellimob.block.BlockSnapshot
+import games.joserobjr.intellimob.block.BlockState
 import games.joserobjr.intellimob.control.api.BodyController
 import games.joserobjr.intellimob.coroutines.AI
 import games.joserobjr.intellimob.coroutines.CompletedJob
@@ -71,26 +74,58 @@ internal open class LandBodyController(final override val owner: RegularEntity):
         if (path.isEmpty()) {
             return@s
         }
+        var lastNode: BlockSnapshot? = null
+        val job = Job(coroutineContext.job)
+        job.start()
+        CoroutineScope(SupervisorJob(owner.world.job) + owner.world.updateDispatcher).launch { 
+            try {
+                log.warn { "+++++++++++++" }
+                job.join()
+                log.warn { "------------" }
+            } catch (e: Throwable) {
+                log.warn(e) { "$$$$$$$$$$$$" }
+            } finally {
+                try {
+                    log.warn { "IIIIIIIIIIIIIIII" }
+                    lastNode?.restoreSnapshot()
+                    log.warn { "OOOOOOOOOOOOOOOO" }
+                } catch (e: Throwable) {
+                    log.error(e) { "!!!!!!!!!!!!!" }
+                }
+            }
+        }
+        try {
         while (true) {
             val current = owner.position
             if (current.squaredDistance(activity.target) <= activity.acceptableDistance.squared()) {
                 return@s
             }
             val nextNode = path.next(current) ?: return@s
-            val nextPos = current.stepTo(nextNode, activity.speed)
-            val angle = current.target(nextPos)
+            if (nextNode.down().toBlockPos() isNotSimilarTo lastNode?.position) {
+                log.warn { "%%%%%%%%%%" }
+                lastNode?.restoreSnapshot()
+                val nextBlock = owner.world.getBlock(nextNode.down())
+                lastNode = nextBlock.createSnapshot(includeBlockEntity = true)
+                nextBlock.changeBlock(BlockState.RED_WOOL)
+            }
+            val angle = current.target(nextNode)
             owner.controls.updateHeadAngle(angle, owner.currentStatus.headFastSpeed.apply { PitchYaw(pitch * 3, yaw * 3) })
+            
+            val motion = current.motionToward(nextNode, activity.speed)
             owner.update {
-                moveTo(nextPos)
+                applySpeed(motion, DoubleVectorXYZ(activity.speed))
             }
             delay(1.ticks)
         }
+        } finally {
+            job.complete()
+        }
     }
     
-    private fun EntityPos.stepTo(toward: EntityPos, speed: DoubleVectorXZ): EntityPos {
+    private fun EntityPos.motionToward(toward: EntityPos, speed: DoubleVectorXZ): IDoubleVectorXYZ {
         // Create vector
-        var x = x - toward.x
-        var z = z - toward.z
+        var x = toward.x - x
+        var z = toward.z - z
         
         // Normalize
         val squaredLen = x.squared() + z.squared()
@@ -105,11 +140,15 @@ internal open class LandBodyController(final override val owner: RegularEntity):
         x *= speed.x
         z *= speed.z
         
-        // Add to the current position
-        return EntityPos(
-            this.x + x,
-            this.y,
-            this.z + z
-        )
+        // Done
+        return DoubleVectorXYZ(x, 0.0, z) 
+    }
+
+    override suspend fun idleTask() {
+        owner.applyPhysics()
+    }
+    
+    companion object {
+        private val log = InlineLogger()
     }
 }

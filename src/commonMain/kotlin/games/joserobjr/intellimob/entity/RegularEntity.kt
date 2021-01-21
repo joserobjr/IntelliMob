@@ -26,6 +26,7 @@ import games.joserobjr.intellimob.control.api.EntityControls
 import games.joserobjr.intellimob.entity.status.EntityStatus
 import games.joserobjr.intellimob.entity.status.MutableEntityStatus
 import games.joserobjr.intellimob.math.EntityPos
+import games.joserobjr.intellimob.math.IDoubleVectorXYZ
 import games.joserobjr.intellimob.math.PitchYaw
 import games.joserobjr.intellimob.pathfinding.BlockFavorProvider
 import games.joserobjr.intellimob.pathfinding.PathFinder
@@ -93,6 +94,15 @@ internal interface RegularEntity: PlatformEntity, WithEntityLocation, WithTimeSo
     }
 
     suspend fun moveTo(nextPos: EntityPos): Boolean
+    
+    suspend fun applyMotion(motion: IDoubleVectorXYZ): Boolean
+    suspend fun applySpeed(vector: IDoubleVectorXYZ, force: IDoubleVectorXYZ): Boolean
+    
+    suspend fun calculateInertiaMotion(): IDoubleVectorXYZ
+    
+    suspend fun calculateDrag(): IDoubleVectorXYZ
+    
+    suspend fun applyPhysics()
 
     override val regularEntity: RegularEntity get() = this
 

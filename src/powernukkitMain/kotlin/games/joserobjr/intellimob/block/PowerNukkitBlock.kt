@@ -35,7 +35,7 @@ internal inline class PowerNukkitBlock(
     }
 
     override suspend fun currentBlockEntity(): RegularBlockEntity? { 
-        return world.powerNukkitLevel.getBlockEntity(position.asBlockVector3())?.asIntelliMobBlockEntity() 
+        return world.powerNukkitLevel.getBlockEntity(position.toBlockVector3())?.asIntelliMobBlockEntity() 
     }
 
     override suspend fun createSnapshot(includeBlockEntity: Boolean): BlockSnapshot = withContext(world.updateDispatcher) {
@@ -67,5 +67,13 @@ internal inline class PowerNukkitBlock(
             layer = liquid.layer,
             bounds = liquid.collisionBoundingBox.toIntelliMobBoundingBox()
         )
+    }
+
+    override suspend fun changeBlock(main: BlockState, vararg extra: BlockState, entitySnapshot: BlockEntitySnapshot?): Boolean {
+        return changeBlock(BlockSnapshot(location, LayeredBlockState(main, *extra), entitySnapshot))
+    }
+
+    override suspend fun changeBlock(snapshot: BlockSnapshot): Boolean {
+        return world.restoreSnapshot(snapshot)
     }
 }

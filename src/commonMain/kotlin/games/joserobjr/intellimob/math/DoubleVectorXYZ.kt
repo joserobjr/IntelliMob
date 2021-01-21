@@ -27,4 +27,7 @@ internal data class DoubleVectorXYZ(
     override val x: Double,
     override val y: Double,
     override val z: Double
-) : IDoubleVectorXYZ
+) : IDoubleVectorXYZ {
+    constructor(values: Double): this(values, values, values)
+    constructor(values: DoubleVectorXZ, y: Double = 0.0): this(values.x, y, values.z)
+}
