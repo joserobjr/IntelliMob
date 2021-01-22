@@ -76,4 +76,8 @@ internal inline class PowerNukkitBlock(
     override suspend fun changeBlock(snapshot: BlockSnapshot): Boolean {
         return world.restoreSnapshot(snapshot)
     }
+
+    override suspend fun isSolid(): Boolean {
+        return location.getPNBlock().isSolid
+    }
 }

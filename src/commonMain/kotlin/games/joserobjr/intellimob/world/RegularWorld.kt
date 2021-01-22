@@ -22,7 +22,9 @@ package games.joserobjr.intellimob.world
 import games.joserobjr.intellimob.block.BlockSnapshot
 import games.joserobjr.intellimob.block.BlockState
 import games.joserobjr.intellimob.block.RegularBlockEntity
+import games.joserobjr.intellimob.entity.Sound
 import games.joserobjr.intellimob.math.IBlockPos
+import games.joserobjr.intellimob.math.IEntityPos
 import games.joserobjr.intellimob.trait.WithTimeSource
 import games.joserobjr.intellimob.trait.WithUpdateDispatcher
 import kotlinx.coroutines.Job
@@ -39,4 +41,5 @@ internal interface RegularWorld: PlatformWorld, WorldView, WithTimeSource, WithU
     override suspend fun getBlockState(pos: IBlockPos, layer: Int): BlockState = getBlock(pos).currentState(layer)
     override suspend fun getBlockEntity(pos: IBlockPos): RegularBlockEntity? = getBlock(pos).currentBlockEntity()
     suspend fun restoreSnapshot(snapshot: BlockSnapshot): Boolean
+    suspend fun playSound(pos: IEntityPos, sound: Sound)
 }

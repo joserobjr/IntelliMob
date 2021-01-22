@@ -17,18 +17,25 @@
  *
  */
 
-package games.joserobjr.intellimob.control.api
+package games.joserobjr.intellimob.entity.factory
 
-import games.joserobjr.intellimob.entity.RegularEntity
+import games.joserobjr.intellimob.entity.EntityFlag
+import games.joserobjr.intellimob.entity.IEntityFlagManager
+import games.joserobjr.intellimob.entity.status.MutableEntityStatus
+import games.joserobjr.intellimob.math.Velocity
 
 /**
  * @author joserobjr
- * @since 2021-01-20
+ * @since 2021-01-22
  */
-internal interface Controller {
-    val owner: RegularEntity
-    
-    suspend fun idleTask() {
-        
+internal interface FlyingAIFactory: LivingEntityAIFactory {
+    override fun adjustDefaultStatus(status: MutableEntityStatus) = with(status) {
+        gravity = Velocity(0.0, .0, 0.0)
+        drag = Velocity(.8, .9, .8)
+    }
+
+    override fun setDefaultFlags(manager: IEntityFlagManager) {
+        super.setDefaultFlags(manager)
+        manager.enableFlags(EntityFlag.CAN_FLY)
     }
 }

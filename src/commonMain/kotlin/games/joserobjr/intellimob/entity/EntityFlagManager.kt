@@ -17,18 +17,32 @@
  *
  */
 
-package games.joserobjr.intellimob.control.api
-
-import games.joserobjr.intellimob.entity.RegularEntity
+package games.joserobjr.intellimob.entity
 
 /**
  * @author joserobjr
- * @since 2021-01-20
+ * @since 2021-01-22
  */
-internal interface Controller {
-    val owner: RegularEntity
+internal interface IEntityFlagManager {
+    operator fun set(flag: EntityFlag, value: Boolean)
+    operator fun get(flag: EntityFlag): Boolean
+    fun enableFlags(vararg flags: EntityFlag)
+    fun disableFlags(vararg flags: EntityFlag)
+    fun swapFlags(deactivate: EntityFlag, activate: EntityFlag) {
+        disableFlags(deactivate)
+        enableFlags(activate)
+    }
     
-    suspend fun idleTask() {
-        
+    fun toggleFlags(value: Boolean, trueFlag: EntityFlag, falseFlag: EntityFlag) {
+        if (value) {
+            swapFlags(falseFlag, trueFlag)
+        } else {
+            swapFlags(trueFlag, falseFlag)
+        }
+    }
+
+    fun enableOnly(vararg flags: EntityFlag) {
+        disableFlags(*EntityFlag.values())
+        enableFlags(*flags)
     }
 }

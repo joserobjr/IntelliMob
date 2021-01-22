@@ -28,6 +28,7 @@ import games.joserobjr.intellimob.entity.status.MutableEntityStatus
 import games.joserobjr.intellimob.math.EntityPos
 import games.joserobjr.intellimob.math.IDoubleVectorXYZ
 import games.joserobjr.intellimob.math.PitchYaw
+import games.joserobjr.intellimob.math.Velocity
 import games.joserobjr.intellimob.pathfinding.BlockFavorProvider
 import games.joserobjr.intellimob.pathfinding.PathFinder
 import games.joserobjr.intellimob.trait.WithBoundingBox
@@ -79,7 +80,11 @@ internal interface RegularEntity: PlatformEntity, WithEntityLocation, WithTimeSo
     var headPitchYaw: PitchYaw
 
     var bodyPitchYaw: PitchYaw
+
+    var motion: Velocity
     
+    val flagManager: IEntityFlagManager
+
     fun hasPassengers(): Boolean
     
     suspend fun createSnapshot(): EntitySnapshot
@@ -103,6 +108,8 @@ internal interface RegularEntity: PlatformEntity, WithEntityLocation, WithTimeSo
     suspend fun calculateDrag(): IDoubleVectorXYZ
     
     suspend fun applyPhysics()
+
+    suspend fun playSound(sound: Sound)
 
     override val regularEntity: RegularEntity get() = this
 

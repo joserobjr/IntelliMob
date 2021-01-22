@@ -25,7 +25,6 @@ import games.joserobjr.intellimob.block.RegularBlockEntity
 import games.joserobjr.intellimob.entity.EntitySnapshot
 import games.joserobjr.intellimob.entity.RegularEntity
 import games.joserobjr.intellimob.math.BoundingBox
-import games.joserobjr.intellimob.math.EntityPos
 import games.joserobjr.intellimob.math.IBlockPos
 import games.joserobjr.intellimob.math.IEntityPos
 import games.joserobjr.intellimob.trait.WithBlockPos
@@ -67,15 +66,20 @@ internal interface WorldView: WithWorld {
         filter: (WorldView.(entity: RegularEntity)->Boolean)? = null
     ): List<RegularEntity>
 
+    suspend fun hasPlayerIn(
+        bounds: BoundingBox? = null,
+        condition: (suspend (RegularEntity) -> Boolean)? = null
+    ): RegularEntity? = throw NotImplementedError()
+    
     suspend fun findClosestPlayer(
-        position: EntityPos,
+        position: IEntityPos,
         bounds: BoundingBox? = null,
         loadChunks: Boolean = false,
         condition: (suspend (RegularEntity) -> Boolean)? = null
     ): RegularEntity?
     
     suspend fun findClosestEntity(
-        position: EntityPos,
+        position: IEntityPos,
         bounds: BoundingBox? = null,
         loadChunks: Boolean = false,
         condition: (suspend (RegularEntity) -> Boolean)? = null

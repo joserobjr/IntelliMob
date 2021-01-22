@@ -88,4 +88,8 @@ internal class GoMintBlock(override val location: BlockLocation): RegularBlock {
     ): Boolean {
         TODO("Not yet implemented")
     }
+
+    override suspend fun isSolid(): Boolean {
+        TODO("Not yet implemented")
+    }
 }

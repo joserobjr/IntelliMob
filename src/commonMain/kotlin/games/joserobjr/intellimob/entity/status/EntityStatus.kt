@@ -21,6 +21,7 @@ package games.joserobjr.intellimob.entity.status
 
 import games.joserobjr.intellimob.math.DoubleVectorXZ
 import games.joserobjr.intellimob.math.PitchYawSpeed
+import games.joserobjr.intellimob.math.Velocity
 
 /**
  * @author joserobjr
@@ -38,6 +39,10 @@ internal interface EntityStatus {
     val jumpSpeed: Double
     val stepHeight: Double
     val canJump: Boolean
+    val followRange: Double
+    val attackKnockBack: Double
+    val gravity: Velocity
+    val drag: Velocity
 
     /**
      * Creates a new mutable copy of this status.

@@ -31,6 +31,7 @@ internal interface IBlockPos: WithBlockPos, WithBoundingBox, IIntVectorXYZ {
     val chunkX: Int get() = x shr 4
     val chunkSection: Int? get() = y.takeIf { it in 0..255 }?.shr(4) 
     val chunkZ: Int get() = z shr 4
+    override val position: IBlockPos get() = this
     
     override val boundingBox: BoundingBox get() = toEntityPos().let { min ->
         BoundingBox(
@@ -39,10 +40,24 @@ internal interface IBlockPos: WithBlockPos, WithBoundingBox, IIntVectorXYZ {
         )
     }
     
-    fun asCenteredEntityPos(): EntityPos = EntityPos(x.toDouble() + 0.5, y.toDouble(), z.toDouble() + 0.5)
+    fun asCenteredEntityPos(xInc: Double = 0.5, yInc: Double = 0.0, zInc: Double = 0.5): EntityPos {
+        return EntityPos(x.toDouble() + xInc, y.toDouble() + yInc, z.toDouble() + zInc)
+    }
     fun toEntityPos(): EntityPos = EntityPos(x.toDouble(), y.toDouble(), z.toDouble())
     
-    override val position: IBlockPos get() = this
+    fun squaredDistance(position: IBlockPos): Int {
+        val x = x - position.x
+        val y = y - position.y
+        val z = z - position.z
+        return x.squared() + y.squared() + z.squared()
+    }
+
+    fun squaredDistance(position: IEntityPos): Double {
+        val x = x + 0.5 - position.x
+        val y = y - position.y.toInt()
+        val z = z + 0.5 - position.z
+        return x.squared() + y.squared() + z.squared()
+    }
 
     operator fun contains(pos: IEntityPos): Boolean {
         return x <= pos.x && pos.x < x + 1 &&

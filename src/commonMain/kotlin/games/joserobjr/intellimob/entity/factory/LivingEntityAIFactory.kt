@@ -29,11 +29,11 @@ import games.joserobjr.intellimob.control.api.EntityControls
 import games.joserobjr.intellimob.control.generic.GenericHeadController
 import games.joserobjr.intellimob.control.generic.LandBodyController
 import games.joserobjr.intellimob.control.generic.LandJumpController
+import games.joserobjr.intellimob.entity.EntityFlag.*
 import games.joserobjr.intellimob.entity.EntityType
+import games.joserobjr.intellimob.entity.IEntityFlagManager
 import games.joserobjr.intellimob.entity.RegularEntity
-import games.joserobjr.intellimob.entity.status.ImmutableEntityStatus
 import games.joserobjr.intellimob.math.DoubleVectorXZ
-import games.joserobjr.intellimob.math.PitchYawSpeed
 import games.joserobjr.intellimob.pathfinding.PathFinder
 import games.joserobjr.intellimob.pathfinding.StraightLinePathFinder
 
@@ -41,7 +41,7 @@ import games.joserobjr.intellimob.pathfinding.StraightLinePathFinder
  * @author joserobjr
  * @since 2021-01-13
  */
-internal open class LivingEntityAIFactory: EntityAIFactory {
+internal interface LivingEntityAIFactory: EntityAIFactory {
     override fun createControls(regularEntity: RegularEntity): EntityControls {
         return ModularControls(
             regularEntity, 
@@ -53,16 +53,9 @@ internal open class LivingEntityAIFactory: EntityAIFactory {
     
     override fun createPathFinder(regularEntity: RegularEntity): PathFinder = StraightLinePathFinder()
 
-    override fun createDefaultStatus(): ImmutableEntityStatus = ImmutableEntityStatus(
-        headSpeed = PitchYawSpeed(40.0, 10.0),
-        headFastSpeed = PitchYawSpeed(80.0, 20.0),
-        walkSpeed = DoubleVectorXZ(.7),
-        sprintSpeed = DoubleVectorXZ(1.0),
-        flySpeed = DoubleVectorXZ(.4),
-        jumpSpeed = .42,
-        stepHeight = .6,
-        canJump = true,
-    )
+    override fun setDefaultFlags(manager: IEntityFlagManager) {
+        manager.enableFlags(CAN_WALK, BREATHING, HAS_COLLISION, HAS_GRAVITY)
+    }
 
     override fun createBrain(regularEntity: RegularEntity): Brain = Brain(regularEntity).apply {
         normalGoals += GoalSwimUp

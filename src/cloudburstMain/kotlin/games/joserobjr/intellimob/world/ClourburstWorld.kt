@@ -23,10 +23,9 @@ import games.joserobjr.intellimob.block.*
 import games.joserobjr.intellimob.coroutines.Sync
 import games.joserobjr.intellimob.entity.EntitySnapshot
 import games.joserobjr.intellimob.entity.RegularEntity
+import games.joserobjr.intellimob.entity.Sound
 import games.joserobjr.intellimob.entity.asRegularEntity
-import games.joserobjr.intellimob.math.BoundingBox
-import games.joserobjr.intellimob.math.EntityPos
-import games.joserobjr.intellimob.math.IBlockPos
+import games.joserobjr.intellimob.math.*
 import games.joserobjr.intellimob.math.toBlockPos
 import games.joserobjr.intellimob.metadata.lazyMetadata
 import games.joserobjr.intellimob.timesource.ServerTickTimeSource
@@ -104,8 +103,12 @@ internal inline class ClourburstWorld(override val cloudburstWorld: Level): Regu
         TODO("Not yet implemented")
     }
 
+    override suspend fun playSound(pos: IEntityPos, sound: Sound) {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun findClosestPlayer(
-        position: EntityPos,
+        position: IEntityPos,
         bounds: BoundingBox?,
         loadChunks: Boolean,
         condition: (suspend (RegularEntity) -> Boolean)?
@@ -114,7 +117,7 @@ internal inline class ClourburstWorld(override val cloudburstWorld: Level): Regu
     }
 
     override suspend fun findClosestEntity(
-        position: EntityPos,
+        position: IEntityPos,
         bounds: BoundingBox?,
         loadChunks: Boolean,
         condition: (suspend (RegularEntity) -> Boolean)?

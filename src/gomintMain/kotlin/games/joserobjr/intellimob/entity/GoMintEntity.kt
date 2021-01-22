@@ -107,4 +107,14 @@ internal class GoMintEntity<E>(override val goMintEntity: Entity<E>) : RegularEn
     override var blockFavor: BlockFavorProvider
         get() = TODO("Not yet implemented")
         set(value) {}
+    override var motion: Velocity
+        get() = TODO("Not yet implemented")
+        set(value) {}
+
+    override val flagManager: IEntityFlagManager
+        get() = TODO("Not yet implemented")
+
+    override suspend fun playSound(sound: Sound) {
+        TODO("Not yet implemented")
+    }
 }

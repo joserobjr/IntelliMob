@@ -39,6 +39,7 @@ internal interface RegularBlock: PlatformBlock, WithBlockLocation {
     }
 
     suspend fun up(): RegularBlock = world.getBlock(position.up())
+    suspend fun isSolid(): Boolean
 
     override val regularBlock: RegularBlock get() = this
 }

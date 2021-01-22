@@ -17,18 +17,12 @@
  *
  */
 
-package games.joserobjr.intellimob.control.api
-
-import games.joserobjr.intellimob.entity.RegularEntity
+package games.joserobjr.intellimob.entity
 
 /**
  * @author joserobjr
- * @since 2021-01-20
+ * @since 2021-01-22
  */
-internal interface Controller {
-    val owner: RegularEntity
-    
-    suspend fun idleTask() {
-        
-    }
+internal expect enum class Sound {
+    MOB_BAT_TAKEOFF
 }

@@ -68,6 +68,8 @@ internal class BoundingBox(
     }
 
     fun expandBy(x: Float, y: Float, z: Float) = expandBy(x.toDouble(), y.toDouble(), z.toDouble())
+
+    fun expandBy(amount: Double): BoundingBox = expandBy(amount, amount, amount)
     
     fun expandBy(x: Double, y: Double, z: Double): BoundingBox {
         return BoundingBox(

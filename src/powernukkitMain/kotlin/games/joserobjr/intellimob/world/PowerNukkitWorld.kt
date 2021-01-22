@@ -27,15 +27,13 @@ import games.joserobjr.intellimob.coroutines.AI
 import games.joserobjr.intellimob.coroutines.Sync
 import games.joserobjr.intellimob.entity.EntitySnapshot
 import games.joserobjr.intellimob.entity.RegularEntity
+import games.joserobjr.intellimob.entity.Sound
 import games.joserobjr.intellimob.entity.asRegularEntity
 import games.joserobjr.intellimob.math.*
 import games.joserobjr.intellimob.metadata.lazyMetadata
 import games.joserobjr.intellimob.timesource.ServerTickTimeSource
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.flow.*
 import java.util.function.Predicate
 import kotlin.time.ExperimentalTime
 import kotlin.time.TimeSource
@@ -105,8 +103,26 @@ internal inline class PowerNukkitWorld(override val powerNukkitLevel: Level): Re
         private val Level.job: Job by lazyMetadata<Level, Job> { SupervisorJob() }
     }
 
+    override suspend fun hasPlayerIn(
+        bounds: BoundingBox?,
+        condition: (suspend (RegularEntity) -> Boolean)?
+    ): RegularEntity? {
+        val players = withContext(world.updateDispatcher) {
+            world.powerNukkitLevel.players.values.toList()
+        }
+        return withContext(Dispatchers.AI) {
+            players.asFlow()
+                .map { it.asRegularEntity() }
+                .let { flow ->
+                    bounds?.let { flow.filter { it.position in bounds } } ?: flow
+                }.let { flow ->
+                    condition?.let { flow.filter(it) } ?: flow
+                }.firstOrNull()
+        }
+    }
+    
     override suspend fun findClosestPlayer(
-        position: EntityPos,
+        position: IEntityPos,
         bounds: BoundingBox?,
         loadChunks: Boolean,
         condition: (suspend (RegularEntity) -> Boolean)?
@@ -127,7 +143,7 @@ internal inline class PowerNukkitWorld(override val powerNukkitLevel: Level): Re
     }
 
     override suspend fun findClosestEntity(
-        position: EntityPos,
+        position: IEntityPos,
         bounds: BoundingBox?,
         loadChunks: Boolean,
         condition: (suspend (RegularEntity) -> Boolean)?
@@ -151,6 +167,15 @@ internal inline class PowerNukkitWorld(override val powerNukkitLevel: Level): Re
                 BlockEntity.createBlockEntity(entity.name, snapshot.location.toPosition(), entity.content)
             }
             success
+        }
+    }
+
+    override suspend fun playSound(pos: IEntityPos, sound: Sound) {
+        if (sound.soundEvent != null) {
+            @Suppress("DEPRECATION")
+            powerNukkitLevel.addLevelSoundEvent(pos.toVector3(), sound.soundEvent)
+        } else if (sound.sound != null) {
+            powerNukkitLevel.addSound(pos.toVector3(), sound.sound)
         }
     }
 }

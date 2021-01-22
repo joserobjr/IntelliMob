@@ -47,7 +47,7 @@ internal open class LandBodyController(final override val owner: RegularEntity):
 
     override fun isMoving(): Boolean = !currentJob.get().second.isCompleted
     
-    override fun CoroutineScope.walkTo(pos: WithEntityPos, acceptableDistance: Double, speed: DoubleVectorXZ): Job {
+    override fun CoroutineScope.walkTo(pos: WithEntityPos, acceptableDistance: Double, speed: DoubleVectorXZ): Job? {
         val (_, job) = currentJob.updateAndGet { oldPair ->
             val (oldActivity, oldJob) = oldPair
             val activity = ActiveWalk(pos.position.toImmutable(), acceptableDistance, speed)

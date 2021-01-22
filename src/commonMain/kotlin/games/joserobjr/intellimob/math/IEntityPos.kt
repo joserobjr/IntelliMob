@@ -39,7 +39,7 @@ internal interface IEntityPos: WithEntityPos, IDoubleVectorXYZ {
         
         val yaw = (atan2(deltaZ, deltaX) * RAD_TO_DEGREE) - 90.0
         
-        val pitch = -(atan2(deltaY, sqrt(deltaX * deltaX + deltaZ * deltaZ)) * RAD_TO_DEGREE)
+        val pitch = -(atan2(deltaY, sqrt(deltaX.squared() + deltaZ.squared())) * RAD_TO_DEGREE)
         
         return PitchYaw(pitch, yaw)
     }

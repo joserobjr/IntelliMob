@@ -121,4 +121,8 @@ internal class CloudburstBlock(override val location: BlockLocation): RegularBlo
     ): Boolean {
         TODO("Not yet implemented")
     }
+
+    override suspend fun isSolid(): Boolean {
+        TODO("Not yet implemented")
+    }
 }

@@ -109,4 +109,14 @@ internal class CloudburstEntity(override val cloudburstEntity: Entity) : Regular
     override var blockFavor: BlockFavorProvider
         get() = TODO("Not yet implemented")
         set(value) {}
+    override var motion: Velocity
+        get() = TODO("Not yet implemented")
+        set(value) {}
+
+    override suspend  fun playSound(sound: Sound) {
+        TODO("Not yet implemented")
+    }
+
+    override val flagManager: IEntityFlagManager
+        get() = TODO("Not yet implemented")
 }

@@ -120,7 +120,7 @@ internal inline class CloudburstChunk(override val cloudburstChunk: CBChunk): Re
     }
 
     override suspend fun findClosestPlayer(
-        position: EntityPos,
+        position: IEntityPos,
         bounds: BoundingBox?,
         loadChunks: Boolean,
         condition: (suspend (RegularEntity) -> Boolean)?
@@ -129,7 +129,7 @@ internal inline class CloudburstChunk(override val cloudburstChunk: CBChunk): Re
     }
 
     override suspend fun findClosestEntity(
-        position: EntityPos,
+        position: IEntityPos,
         bounds: BoundingBox?,
         loadChunks: Boolean,
         condition: (suspend (RegularEntity) -> Boolean)?

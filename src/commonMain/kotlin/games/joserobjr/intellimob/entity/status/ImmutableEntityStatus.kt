@@ -21,6 +21,7 @@ package games.joserobjr.intellimob.entity.status
 
 import games.joserobjr.intellimob.math.DoubleVectorXZ
 import games.joserobjr.intellimob.math.PitchYawSpeed
+import games.joserobjr.intellimob.math.Velocity
 
 /**
  * @author joserobjr
@@ -34,7 +35,11 @@ internal data class ImmutableEntityStatus (
     override val flySpeed: DoubleVectorXZ,
     override val jumpSpeed: Double,
     override val stepHeight: Double,
-    override val canJump: Boolean
+    override val canJump: Boolean,
+    override val followRange: Double,
+    override val attackKnockBack: Double,
+    override val gravity: Velocity,
+    override val drag: Velocity,
 ): EntityStatus {
     override fun toMutable(): MutableEntityStatus = MutableEntityStatus(
         headSpeed = headSpeed,
@@ -45,6 +50,10 @@ internal data class ImmutableEntityStatus (
         sprintSpeed = sprintSpeed,
         stepHeight = stepHeight,
         canJump = canJump,
+        followRange = followRange,
+        attackKnockBack = attackKnockBack,
+        gravity = gravity,
+        drag = drag,
     )
 
     override fun toImmutable(): ImmutableEntityStatus = this

@@ -19,9 +19,15 @@
 
 package games.joserobjr.intellimob.entity.factory
 
+import games.joserobjr.intellimob.entity.status.MutableEntityStatus
+
 /**
  * @author joserobjr
  * @since 2021-01-19
  */
-internal object GenericEntityAIFactory: LivingEntityAIFactory()
+internal object GenericEntityAIFactory: LivingEntityAIFactory {
+    override fun adjustDefaultStatus(status: MutableEntityStatus) {
+        
+    }
+}
 

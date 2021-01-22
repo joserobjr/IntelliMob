@@ -47,7 +47,8 @@ internal class PowerNukkitEntity(override val powerNukkitEntity: Entity) : Regul
     override val job: Job = SupervisorJob(world.job)
     override val updateDispatcher: CoroutineDispatcher get() = world.updateDispatcher
     override val type: EntityType = EntityType.fromEntity(this)
-    
+
+    override val flagManager = FlagManager(powerNukkitEntity).also { type.aiFactory.setDefaultFlags(it) }
     override val baseStatus: MutableEntityStatus = type.aiFactory.createBaseStatus(this)
     override var controls: EntityControls = type.aiFactory.createControls(this)
     override var blockFavor: BlockFavorProvider = type.aiFactory.createBlockFavor(this)
@@ -86,8 +87,18 @@ internal class PowerNukkitEntity(override val powerNukkitEntity: Entity) : Regul
             bodyPitch = value.pitch
             powerNukkitEntity.yaw = value.yaw
         }
+    
+    override var motion: Velocity
+        get() = with(powerNukkitEntity) { Velocity(motionX, motionY, motionZ) }
+        set(value) {
+            powerNukkitEntity.motion = value.toVector3()     
+        }
 
     override fun hasPassengers(): Boolean = powerNukkitEntity.passengers.isNotEmpty()
+
+    override suspend fun playSound(sound: Sound) {
+        world.playSound(position, sound)
+    }
 
     override suspend fun moveTo(nextPos: EntityPos): Boolean = updateAndGet {
         with(powerNukkitEntity) {
@@ -119,13 +130,13 @@ internal class PowerNukkitEntity(override val powerNukkitEntity: Entity) : Regul
     }
 
     override suspend fun calculateInertiaMotion(): IDoubleVectorXYZ {
-        return DEFAULT_GRAVITY
+        return currentStatus.gravity
     }
 
     override suspend fun calculateDrag(): IDoubleVectorXYZ {
         with(powerNukkitEntity) {
             if (!isOnGround) {
-                return DEFAULT_DRAG
+                return currentStatus.drag
             }
             val friction = .91 * level.getBlock(x.toInt(), (y - 0.5).toInt(), z.toInt()).frictionFactor
             return DoubleVectorXYZ(friction, .98, friction)
@@ -171,10 +182,5 @@ internal class PowerNukkitEntity(override val powerNukkitEntity: Entity) : Regul
                 canJump = isAlive && (onGround || isInsideOfWater)
             }
         }
-    }
-    
-    companion object {
-        private val DEFAULT_GRAVITY = DoubleVectorXYZ(0.0, -0.055, 0.0) 
-        private val DEFAULT_DRAG = DoubleVectorXYZ(.91, .98, .91) 
     }
 }

@@ -20,6 +20,7 @@
 package games.joserobjr.intellimob.entity.factory
 
 import games.joserobjr.intellimob.brain.Brain
+import games.joserobjr.intellimob.entity.IEntityFlagManager
 import games.joserobjr.intellimob.entity.RegularEntity
 
 /**
@@ -29,5 +30,9 @@ import games.joserobjr.intellimob.entity.RegularEntity
 internal abstract class NoDefaultAI: EntityAIFactory {
     override fun createBrain(regularEntity: RegularEntity): Brain {
         return Brain(regularEntity)
+    }
+
+    override fun setDefaultFlags(manager: IEntityFlagManager) {
+        
     }
 }

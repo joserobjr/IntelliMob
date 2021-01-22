@@ -125,7 +125,7 @@ internal inline class GoMintChunk(override val goMintChunk: GMChunk): RegularChu
     }
 
     override suspend fun findClosestPlayer(
-        position: EntityPos,
+        position: IEntityPos,
         bounds: BoundingBox?,
         loadChunks: Boolean,
         condition: (suspend (RegularEntity) -> Boolean)?
@@ -134,7 +134,7 @@ internal inline class GoMintChunk(override val goMintChunk: GMChunk): RegularChu
     }
 
     override suspend fun findClosestEntity(
-        position: EntityPos,
+        position: IEntityPos,
         bounds: BoundingBox?,
         loadChunks: Boolean,
         condition: (suspend (RegularEntity) -> Boolean)?

@@ -17,18 +17,16 @@
  *
  */
 
-package games.joserobjr.intellimob.control.api
+package games.joserobjr.intellimob.entity.factory
 
-import games.joserobjr.intellimob.entity.RegularEntity
+import games.joserobjr.intellimob.entity.status.MutableEntityStatus
 
 /**
  * @author joserobjr
- * @since 2021-01-20
+ * @since 2021-01-21
  */
-internal interface Controller {
-    val owner: RegularEntity
-    
-    suspend fun idleTask() {
-        
+internal interface AggressiveAIFactory: LivingEntityAIFactory {
+    override fun adjustDefaultStatus(status: MutableEntityStatus) = with(status) {
+        followRange = 16.0
     }
 }

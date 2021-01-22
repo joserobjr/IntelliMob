@@ -17,12 +17,14 @@
  *
  */
 
-package games.joserobjr.intellimob.math
+package games.joserobjr.intellimob.control.bat
 
-import cn.nukkit.math.BlockVector3
+import games.joserobjr.intellimob.control.generic.LandJumpController
+import games.joserobjr.intellimob.entity.RegularEntity
 
 /**
  * @author joserobjr
- * @since 2021-01-18
+ * @since 2021-01-22
  */
-internal fun IBlockPos.toBlockVector3() = BlockVector3(x, y, z)
+internal class BatJumpController(owner: RegularEntity) : LandJumpController(owner) {
+}

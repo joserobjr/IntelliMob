@@ -17,23 +17,28 @@
  *
  */
 
-package games.joserobjr.intellimob.entity.factory
+package games.joserobjr.intellimob.entity
 
-import games.joserobjr.intellimob.brain.Brain
-import games.joserobjr.intellimob.control.api.EntityControls
-import games.joserobjr.intellimob.control.frozen.FrozenControls
-import games.joserobjr.intellimob.entity.RegularEntity
+import cn.nukkit.entity.Entity
 
 /**
  * @author joserobjr
- * @since 2021-01-20
+ * @since 2021-01-22
  */
-internal object PlayerAIFactory: LivingEntityAIFactory() {
-    override fun createBrain(regularEntity: RegularEntity): Brain {
-        return Brain(regularEntity)
+internal class FlagManager(private val entity: Entity) : IEntityFlagManager {
+    override fun set(flag: EntityFlag, value: Boolean) {
+        entity.setDataFlag(flag.container, flag.id, value)
     }
 
-    override fun createControls(regularEntity: RegularEntity): EntityControls {
-        return FrozenControls(regularEntity)
+    override fun get(flag: EntityFlag): Boolean {
+        return entity.getDataFlag(flag.container, flag.id)
+    }
+
+    override fun enableFlags(vararg flags: EntityFlag) {
+        flags.forEach { entity.setDataFlag(it.container, it.id, true) }
+    }
+
+    override fun disableFlags(vararg flags: EntityFlag) {
+        flags.forEach { entity.setDataFlag(it.container, it.id, false) }
     }
 }

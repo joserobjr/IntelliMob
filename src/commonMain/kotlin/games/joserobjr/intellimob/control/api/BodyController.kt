@@ -44,7 +44,7 @@ internal interface BodyController: Controller {
         pos: WithEntityPos,
         acceptableDistance: Double = owner.currentStatus.stepHeight,
         speed: DoubleVectorXZ = owner.currentStatus.walkSpeed
-    ): Job
-    
+    ): Job?
+
     fun isMoving(): Boolean = false
 }

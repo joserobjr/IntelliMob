@@ -17,18 +17,14 @@
  *
  */
 
-package games.joserobjr.intellimob.control.api
+package games.joserobjr.intellimob.entity
 
-import games.joserobjr.intellimob.entity.RegularEntity
+import cn.nukkit.level.Sound as PN
 
 /**
  * @author joserobjr
- * @since 2021-01-20
+ * @since 2021-01-22
  */
-internal interface Controller {
-    val owner: RegularEntity
-    
-    suspend fun idleTask() {
-        
-    }
+internal actual enum class Sound(val soundEvent: Int? = null, val sound: PN? = null) {
+    MOB_BAT_TAKEOFF(sound = PN.MOB_BAT_TAKEOFF)
 }

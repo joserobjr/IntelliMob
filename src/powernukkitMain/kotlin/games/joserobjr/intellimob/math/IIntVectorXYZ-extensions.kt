@@ -17,18 +17,12 @@
  *
  */
 
-package games.joserobjr.intellimob.control.api
+package games.joserobjr.intellimob.math
 
-import games.joserobjr.intellimob.entity.RegularEntity
+import cn.nukkit.math.BlockVector3
 
 /**
  * @author joserobjr
- * @since 2021-01-20
+ * @since 2021-01-18
  */
-internal interface Controller {
-    val owner: RegularEntity
-    
-    suspend fun idleTask() {
-        
-    }
-}
+internal fun IIntVectorXYZ.toBlockVector3() = BlockVector3(x, y, z)

@@ -37,7 +37,7 @@ internal actual sealed class EntityType {
     /**
      * The default status based on the entity type.
      */
-    actual val defaultStatus: ImmutableEntityStatus by lazy { aiFactory.createDefaultStatus() }
+    actual val defaultStatus: ImmutableEntityStatus by lazy { aiFactory.createDefaultBaseStatus(this) }
 
     actual abstract var aiFactory: EntityAIFactory
     

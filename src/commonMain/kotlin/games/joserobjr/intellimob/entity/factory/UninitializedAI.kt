@@ -21,8 +21,8 @@ package games.joserobjr.intellimob.entity.factory
 
 import games.joserobjr.intellimob.brain.Brain
 import games.joserobjr.intellimob.control.api.EntityControls
+import games.joserobjr.intellimob.entity.IEntityFlagManager
 import games.joserobjr.intellimob.entity.RegularEntity
-import games.joserobjr.intellimob.entity.status.ImmutableEntityStatus
 import games.joserobjr.intellimob.entity.status.MutableEntityStatus
 import games.joserobjr.intellimob.pathfinding.PathFinder
 
@@ -39,7 +39,11 @@ internal object UninitializedAI: EntityAIFactory {
         fail()
     }
 
-    override fun createDefaultStatus(): ImmutableEntityStatus {
+    override fun adjustDefaultStatus(status: MutableEntityStatus) {
+        fail()
+    }
+
+    override fun setDefaultFlags(manager: IEntityFlagManager) {
         fail()
     }
 

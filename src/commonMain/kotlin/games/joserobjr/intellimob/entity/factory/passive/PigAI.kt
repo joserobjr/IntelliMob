@@ -20,18 +20,16 @@
 package games.joserobjr.intellimob.entity.factory.passive
 
 import games.joserobjr.intellimob.entity.factory.LivingEntityAIFactory
-import games.joserobjr.intellimob.entity.status.ImmutableEntityStatus
+import games.joserobjr.intellimob.entity.status.MutableEntityStatus
 import games.joserobjr.intellimob.math.DoubleVectorXZ
 
 /**
  * @author joserobjr
  * @since 2021-01-19
  */
-internal open class PigAI: LivingEntityAIFactory() {
-    override fun createDefaultStatus(): ImmutableEntityStatus {
-        return super.createDefaultStatus().copy(
-            walkSpeed = DoubleVectorXZ(.25)
-        )
+internal open class PigAI: LivingEntityAIFactory {
+    override fun adjustDefaultStatus(status: MutableEntityStatus) = with(status) {
+        walkSpeed = DoubleVectorXZ(.25)
     }
 }
 
