@@ -27,6 +27,7 @@ import games.joserobjr.intellimob.entity.RegularEntity
 import games.joserobjr.intellimob.entity.Sound
 import games.joserobjr.intellimob.math.*
 import games.joserobjr.intellimob.trait.WithEntityPos
+import games.joserobjr.intellimob.trait.update
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlin.math.sign
@@ -64,12 +65,16 @@ internal class BatBodyControl(override val owner: RegularEntity) : BodyControlle
             return
         }
         
-        if (Random.nextInt(2) == 0) {
-            owner.headPitchYaw = PitchYaw(0.0, Random.nextDouble(360.0))
+        if (Random.nextInt(200) == 0) {
+            owner.update {
+                headPitchYaw = PitchYaw(0.0, Random.nextDouble(360.0))
+            }
         }
         
         if (owner.world.hasPlayerIn(owner.boundingBox.expandBy(4.0)) != null) {
-            isRoosting = false
+            owner.update {
+                isRoosting = false
+            }
             owner.playSound(Sound.MOB_BAT_TAKEOFF)
             return
         }
@@ -102,17 +107,21 @@ internal class BatBodyControl(override val owner: RegularEntity) : BodyControlle
             (sign(speed.y) * 0.7 - currentSpeed.y) * 0.1,
             (sign(speed.z) * 0.5 - currentSpeed.z) * 0.1
         )
-        owner.motion = adjusted.toImmutable()
+        
         
         val currentYaw = owner.headPitchYaw.yaw
         val yaw = adjusted.toYaw()
         val adjustedYaw = PitchYaw(pitch = 0.0, yaw = currentYaw + yaw)
-        owner.headPitchYaw = adjustedYaw
-        if (Random.nextInt(200) == 0) {
-            val above = owner.world.getBlock(current.toBlockPos().up())
-            if (above.isSolid()) {
-                this.hangingBlock = above
-                isRoosting = true
+        val attemptToRest = Random.nextInt(200) == 0
+        owner.update {
+            motion = adjusted.toImmutable()
+            headPitchYaw = adjustedYaw
+            if (attemptToRest) {
+                val above = owner.world.getBlock(current.toBlockPos().up())
+                if (above.isSolid()) {
+                    this@BatBodyControl.hangingBlock = above
+                    isRoosting = true
+                }
             }
         }
     }

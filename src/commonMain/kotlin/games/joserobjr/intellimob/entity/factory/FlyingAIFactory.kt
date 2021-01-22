@@ -30,7 +30,7 @@ import games.joserobjr.intellimob.math.Velocity
  */
 internal interface FlyingAIFactory: LivingEntityAIFactory {
     override fun adjustDefaultStatus(status: MutableEntityStatus) = with(status) {
-        gravity = Velocity(0.0, .0, 0.0)
+        gravity = Velocity(0.0, 0.0, 0.0)
         drag = Velocity(.8, .9, .8)
     }
 
