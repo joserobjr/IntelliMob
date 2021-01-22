@@ -21,15 +21,13 @@
 
 package games.joserobjr.intellimob.world
 
-import games.joserobjr.intellimob.block.BlockState
-import games.joserobjr.intellimob.block.GoMintBlock
-import games.joserobjr.intellimob.block.RegularBlock
-import games.joserobjr.intellimob.block.asIntelliMobBlockState
+import games.joserobjr.intellimob.block.*
 import games.joserobjr.intellimob.coroutines.Sync
 import games.joserobjr.intellimob.entity.EntitySnapshot
 import games.joserobjr.intellimob.entity.RegularEntity
 import games.joserobjr.intellimob.entity.asRegularEntity
 import games.joserobjr.intellimob.math.BoundingBox
+import games.joserobjr.intellimob.math.EntityPos
 import games.joserobjr.intellimob.math.IBlockPos
 import games.joserobjr.intellimob.math.toBlockPos
 import games.joserobjr.intellimob.timesource.ServerTickTimeSource
@@ -111,5 +109,27 @@ internal inline class GoMintWorld(override val goMintWorld: GMWorld): RegularWor
             }.let { seq ->
                 limit.takeIf { it < Int.MAX_VALUE }?.let { seq.take(limit) } ?: seq
             }.toList()
+    }
+
+    override suspend fun restoreSnapshot(snapshot: BlockSnapshot): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun findClosestPlayer(
+        position: EntityPos,
+        bounds: BoundingBox?,
+        loadChunks: Boolean,
+        condition: (suspend (RegularEntity) -> Boolean)?
+    ): RegularEntity? {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun findClosestEntity(
+        position: EntityPos,
+        bounds: BoundingBox?,
+        loadChunks: Boolean,
+        condition: (suspend (RegularEntity) -> Boolean)?
+    ): RegularEntity? {
+        TODO("Not yet implemented")
     }
 }

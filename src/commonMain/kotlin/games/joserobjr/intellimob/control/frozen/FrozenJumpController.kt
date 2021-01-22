@@ -21,7 +21,6 @@ package games.joserobjr.intellimob.control.frozen
 
 import games.joserobjr.intellimob.control.api.JumpController
 import games.joserobjr.intellimob.entity.RegularEntity
-import games.joserobjr.intellimob.math.IEntityPos
 
 /**
  * @author joserobjr
@@ -29,10 +28,6 @@ import games.joserobjr.intellimob.math.IEntityPos
  */
 internal class FrozenJumpController(override val owner: RegularEntity) : JumpController {
     override suspend fun jump(speed: Double): Boolean {
-        return false
-    }
-    
-    override suspend fun shouldJumpToReach(nextPos: IEntityPos): Boolean {
         return false
     }
 }

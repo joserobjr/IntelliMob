@@ -115,7 +115,7 @@ internal class PowerNukkitEntity(override val powerNukkitEntity: Entity) : Regul
             return before
         }
         val delta = desired - before
-        return before + delta.coerceAtMost(if (delta > 0) force else -force)
+        return before + if (delta >= 0) delta.coerceAtMost(force) else delta.coerceAtLeast(-force)
     }
 
     override suspend fun calculateInertiaMotion(): IDoubleVectorXYZ {
@@ -130,7 +130,6 @@ internal class PowerNukkitEntity(override val powerNukkitEntity: Entity) : Regul
             val friction = .91 * level.getBlock(x.toInt(), (y - 0.5).toInt(), z.toInt()).frictionFactor
             return DoubleVectorXYZ(friction, .98, friction)
         }
-        return DEFAULT_DRAG
     }
     
     override suspend fun applyPhysics() = update {
@@ -139,6 +138,12 @@ internal class PowerNukkitEntity(override val powerNukkitEntity: Entity) : Regul
             motionX += inertia.x
             motionY += inertia.y
             motionZ += inertia.z
+            if (isInsideOfWater) {
+                applySpeed(inertia, DoubleVectorXYZ(.1))
+            }
+            if (!onGround && motionY > -0.5) {
+                highestPosition = y
+            }
             move(motionX, motionY, motionZ)
             
             val drag = calculateDrag()
@@ -163,7 +168,7 @@ internal class PowerNukkitEntity(override val powerNukkitEntity: Entity) : Regul
     private fun updateStatus() {
         with(powerNukkitEntity) {
             with(_currentStatus) {
-                canJump = onGround && isAlive
+                canJump = isAlive && (onGround || isInsideOfWater)
             }
         }
     }

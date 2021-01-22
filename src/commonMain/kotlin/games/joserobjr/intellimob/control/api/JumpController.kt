@@ -30,6 +30,4 @@ internal interface JumpController: Controller {
      * The entity receives an upward motion at the given speed.
      */
     suspend fun jump(speed: Double = owner.currentStatus.jumpSpeed): Boolean
-    
-    suspend fun shouldJumpToReach(nextPos: IEntityPos): Boolean
 }

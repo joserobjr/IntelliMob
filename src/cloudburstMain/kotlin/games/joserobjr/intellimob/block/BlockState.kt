@@ -40,6 +40,9 @@ internal actual class BlockState private constructor(val cloudburstBlockState: C
         fun from(state: CBBlockState): BlockState {
             return states.computeIfAbsent(state, ::BlockState)
         }
+
+        actual val RED_WOOL: BlockState
+            get() = TODO("Not yet implemented")
     }
 
     override fun equals(other: Any?): Boolean {

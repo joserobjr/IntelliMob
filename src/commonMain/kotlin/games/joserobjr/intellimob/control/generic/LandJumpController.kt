@@ -22,8 +22,6 @@ package games.joserobjr.intellimob.control.generic
 import games.joserobjr.intellimob.control.api.JumpController
 import games.joserobjr.intellimob.entity.RegularEntity
 import games.joserobjr.intellimob.math.DoubleVectorXYZ
-import games.joserobjr.intellimob.math.IEntityPos
-import games.joserobjr.intellimob.math.squared
 import games.joserobjr.intellimob.trait.updateAndGet
 
 /**
@@ -35,31 +33,5 @@ internal open class LandJumpController(final override val owner: RegularEntity) 
         if (owner.currentStatus.canJump) {
             owner.applySpeed(DoubleVectorXYZ(0.0, speed, 0.0))
         } else false
-    }
-
-    override suspend fun shouldJumpToReach(nextPos: IEntityPos): Boolean {
-        val currentStatus = owner.currentStatus
-        val current = owner.location
-        if (current.squaredDistance(nextPos) > 1.5.squared()) {
-            return false
-        }
-        
-        val ny = nextPos.y
-        val cy = current.y
-        return when {
-            ny <= cy -> false
-            ny <= cy + currentStatus.stepHeight -> {
-                //owner.update {
-                //    owner.moveTo(owner.position.copy(y = ny + 0.01))
-                //}
-                false
-            }
-            ny <= cy + currentStatus.jumpSpeed + 1.0 -> {
-                //if (!currentStatus.canJump) false
-                //else jump(currentStatus.jumpSpeed)
-                true
-            }
-            else -> /*false*/ true
-        }
     }
 }

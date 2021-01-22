@@ -26,6 +26,7 @@ import games.joserobjr.intellimob.entity.EntityType.Companion.fromEntity
 import games.joserobjr.intellimob.entity.status.EntityStatus
 import games.joserobjr.intellimob.entity.status.MutableEntityStatus
 import games.joserobjr.intellimob.math.*
+import games.joserobjr.intellimob.pathfinding.BlockFavorProvider
 import games.joserobjr.intellimob.pathfinding.PathFinder
 import games.joserobjr.intellimob.world.RegularWorld
 import games.joserobjr.intellimob.world.asIntelliMobWorld
@@ -69,4 +70,43 @@ internal class CloudburstEntity(override val cloudburstEntity: Entity) : Regular
             )
         }
     }
+
+    override var headPitchYaw: PitchYaw
+        get() = TODO("Not yet implemented")
+        set(value) {}
+    override var bodyPitchYaw: PitchYaw
+        get() = TODO("Not yet implemented")
+        set(value) {}
+
+    override fun hasPassengers(): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun moveTo(nextPos: EntityPos): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun applyMotion(motion: IDoubleVectorXYZ): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun applySpeed(vector: IDoubleVectorXYZ, force: IDoubleVectorXYZ): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun calculateInertiaMotion(): IDoubleVectorXYZ {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun calculateDrag(): IDoubleVectorXYZ {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun applyPhysics() {
+        TODO("Not yet implemented")
+    }
+
+    override var blockFavor: BlockFavorProvider
+        get() = TODO("Not yet implemented")
+        set(value) {}
 }

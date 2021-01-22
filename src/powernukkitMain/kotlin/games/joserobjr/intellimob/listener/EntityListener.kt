@@ -30,10 +30,9 @@ import cn.nukkit.event.entity.EntitySpawnEvent
 import games.joserobjr.intellimob.coroutines.AI
 import games.joserobjr.intellimob.entity.asRegularEntity
 import games.joserobjr.intellimob.intelliMob
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import games.joserobjr.intellimob.math.ticks
+import kotlinx.coroutines.*
+import kotlin.time.ExperimentalTime
 
 /**
  * @author joserobjr
@@ -47,10 +46,12 @@ internal object EntityListener: Listener {
         ev.creature?.asRegularEntity() // Setup the AI on first call
     }
 
+    @OptIn(ExperimentalTime::class)
     @EventHandler(priority = EventPriority.MONITOR)
     fun onEntityPostSpawn(ev: EntitySpawnEvent) {
         val creature = ev.creature?.asRegularEntity() ?: return
         CoroutineScope(Dispatchers.AI + creature.job).launch {
+            delay(1.ticks)
             creature.brain.startThinking()
         }
     }

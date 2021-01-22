@@ -80,4 +80,12 @@ internal class GoMintBlock(override val location: BlockLocation): RegularBlock {
             layer = layer,
         )
     }
+
+    override suspend fun changeBlock(
+        main: BlockState,
+        vararg extra: BlockState,
+        entitySnapshot: BlockEntitySnapshot?
+    ): Boolean {
+        TODO("Not yet implemented")
+    }
 }

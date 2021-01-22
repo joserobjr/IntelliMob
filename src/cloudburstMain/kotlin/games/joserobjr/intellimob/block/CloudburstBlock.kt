@@ -113,4 +113,12 @@ internal class CloudburstBlock(override val location: BlockLocation): RegularBlo
     override fun toString(): String {
         return "RegularBlock(location=$location)"
     }
+
+    override suspend fun changeBlock(
+        main: BlockState,
+        vararg extra: BlockState,
+        entitySnapshot: BlockEntitySnapshot?
+    ): Boolean {
+        TODO("Not yet implemented")
+    }
 }

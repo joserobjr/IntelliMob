@@ -44,6 +44,9 @@ internal actual class BlockState private constructor(goMintBlock: Block) : WithB
         fun from(block: Block): BlockState {
             return BlockState(block)
         }
+
+        actual val RED_WOOL: BlockState
+            get() = TODO("Not yet implemented")
     }
 
     override fun equals(other: Any?): Boolean {
