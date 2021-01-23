@@ -36,7 +36,7 @@ import kotlin.time.milliseconds
  * @since 2021-01-20
  */
 internal class GoalLookAtEntity(val types: Set<EntityType>, val range: Float, val chance: Float = .2F, val condition: (suspend (Brain, RegularEntity)->Boolean)? = null): Goal(setOf(PhysicalControl.LOOK)) {
-    override val defaultPriority: Int get() = 90_000_000
+    override val defaultPriority: Int get() = 100_800_000
     override val needsMemory: Boolean get() = true
     
     var target = atomic<RegularEntity?>(null)

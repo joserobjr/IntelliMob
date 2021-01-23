@@ -40,7 +40,7 @@ internal interface IBlockPos: WithBlockPos, WithBoundingBox, IIntVectorXYZ {
         )
     }
     
-    fun asCenteredEntityPos(xInc: Double = 0.5, yInc: Double = 0.0, zInc: Double = 0.5): EntityPos {
+    fun toCenteredEntityPos(xInc: Double = 0.5, yInc: Double = 0.0, zInc: Double = 0.5): EntityPos {
         return EntityPos(x.toDouble() + xInc, y.toDouble() + yInc, z.toDouble() + zInc)
     }
     fun toEntityPos(): EntityPos = EntityPos(x.toDouble(), y.toDouble(), z.toDouble())
@@ -80,6 +80,19 @@ internal interface IBlockPos: WithBlockPos, WithBoundingBox, IIntVectorXYZ {
     fun toImmutableBlockPos(): BlockPos = BlockPos(x, y, z)
     fun up(): IBlockPos {
         return BlockPos(x, y + 1, z)
+    }
+    
+    fun cubeIterator(target: IBlockPos): Iterator<IBlockPos> = iterator {
+        val xRange = x toward target.x 
+        val yRange = y toward target.y
+        val zRange = z toward target.z
+        xRange.forEach { x ->
+            yRange.forEach { y ->
+                zRange.forEach { z ->
+                    yield(BlockPos(x, y, z))
+                }
+            }
+        }
     }
 
     companion object {

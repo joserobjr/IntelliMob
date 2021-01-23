@@ -19,19 +19,30 @@
 
 package games.joserobjr.intellimob.block
 
-import games.joserobjr.intellimob.trait.WithBoundingBox
+import cn.nukkit.block.Block
+import cn.nukkit.block.BlockLeaves
+import cn.nukkit.block.BlockLog
+import cn.nukkit.block.BlockStem
+import kotlin.reflect.KClass
+import kotlin.reflect.full.isSuperclassOf
 
 /**
  * @author joserobjr
- * @since 2021-01-17
+ * @since 2021-01-22
  */
-internal expect class BlockState: WithBoundingBox {
-    val type: BlockType
+internal actual sealed class BlockTag {
     
-    operator fun contains(tag: BlockTag): Boolean
+    abstract operator fun contains(state: BlockState): Boolean
     
-    companion object {
-        val RED_WOOL: BlockState
-        val AIR: BlockState
+    private class SimpleClass(val kClass: KClass<out Block>, val except: KClass<*>? = null): BlockTag() {
+        override fun contains(state: BlockState): Boolean {
+            val blockClass = state.powerNukkitBlockState.block::class
+            return kClass.isSuperclassOf(blockClass) && except?.isSuperclassOf(blockClass) == true 
+        }
+    }
+    
+    actual companion object {
+        actual val LEAVES: BlockTag = SimpleClass(BlockLeaves::class)
+        actual val LOGS: BlockTag = SimpleClass(BlockLog::class, BlockStem::class)
     }
 }

@@ -38,7 +38,7 @@ import kotlin.time.milliseconds
  */
 internal object GoalLookAround: Goal(setOf(PhysicalControl.MOVE, PhysicalControl.LOOK)) {
     override val defaultPriority: Int
-        get() = 100_000_000
+        get() = 100_900_000
     
     override suspend fun canStart(entity: RegularEntity, memory: GoalMemory?): Boolean {
         return Random.nextFloat() < .02F

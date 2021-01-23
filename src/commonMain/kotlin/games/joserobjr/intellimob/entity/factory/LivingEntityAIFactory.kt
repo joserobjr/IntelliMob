@@ -23,7 +23,7 @@ import games.joserobjr.intellimob.brain.Brain
 import games.joserobjr.intellimob.brain.goal.GoalLookAround
 import games.joserobjr.intellimob.brain.goal.GoalLookAtEntity
 import games.joserobjr.intellimob.brain.goal.GoalSwimUp
-import games.joserobjr.intellimob.brain.goal.GoalWanderAround
+import games.joserobjr.intellimob.brain.goal.GoalWanderAroundFar
 import games.joserobjr.intellimob.control.ModularControls
 import games.joserobjr.intellimob.control.api.EntityControls
 import games.joserobjr.intellimob.control.generic.GenericHeadController
@@ -59,7 +59,7 @@ internal interface LivingEntityAIFactory: EntityAIFactory {
 
     override fun createBrain(regularEntity: RegularEntity): Brain = Brain(regularEntity).apply {
         normalGoals += GoalSwimUp
-        normalGoals += GoalWanderAround(DoubleVectorXZ(1.0), 120)
+        normalGoals += GoalWanderAroundFar(DoubleVectorXZ(1.0))
         normalGoals += GoalLookAtEntity(setOf(EntityType.PLAYER), 6F)
         normalGoals += GoalLookAround
     }

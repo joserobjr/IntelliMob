@@ -98,7 +98,7 @@ internal class BatBodyControl(override val owner: RegularEntity) : BodyControlle
                 hangingBlock = owner.world.getBlock(pos)
                 this.hangingBlock = hangingBlock
                 pos
-            } else hangingBlockPos.asCenteredEntityPos(yInc = .1)
+            } else hangingBlockPos.toCenteredEntityPos(yInc = .1)
 
         val speed = nextPos + CONSTANT - current
         val currentSpeed = owner.motion

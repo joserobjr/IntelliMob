@@ -63,4 +63,8 @@ internal actual class BlockState private constructor(val cloudburstBlockState: C
     override fun toString(): String {
         return "BlockState(cloudburstBlockState=$cloudburstBlockState)"
     }
+
+    actual operator fun contains(tag: BlockTag): Boolean {
+        TODO("Not yet implemented")
+    }
 }

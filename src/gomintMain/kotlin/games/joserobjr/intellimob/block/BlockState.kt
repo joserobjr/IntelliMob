@@ -70,4 +70,8 @@ internal actual class BlockState private constructor(goMintBlock: Block) : WithB
     override fun toString(): String {
         return "BlockState(type=$type, boundingBox=$boundingBox)"
     }
+
+    actual operator fun contains(tag: BlockTag): Boolean {
+        TODO("Not yet implemented")
+    }
 }

@@ -19,19 +19,13 @@
 
 package games.joserobjr.intellimob.block
 
-import games.joserobjr.intellimob.trait.WithBoundingBox
-
 /**
  * @author joserobjr
- * @since 2021-01-17
+ * @since 2021-01-22
  */
-internal expect class BlockState: WithBoundingBox {
-    val type: BlockType
-    
-    operator fun contains(tag: BlockTag): Boolean
-    
+internal expect sealed class BlockTag {
     companion object {
-        val RED_WOOL: BlockState
-        val AIR: BlockState
+        val LEAVES: BlockTag
+        val LOGS: BlockTag
     }
 }

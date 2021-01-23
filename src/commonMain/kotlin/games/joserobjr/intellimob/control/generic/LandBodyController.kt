@@ -108,7 +108,7 @@ internal open class LandBodyController(final override val owner: RegularEntity):
             if (nextNode == path.nodes.last() && current.squaredHorizontalDistance(activity.target) <= activity.acceptableDistance.squared()) {
                 return@s
             }
-            val nextNodePos = nextNode.asCenteredEntityPos()
+            val nextNodePos = nextNode.toCenteredEntityPos()
             if (nextNodePos.down().toBlockPos() isNotSimilarTo lastNode?.position) {
                 lastNode?.restoreSnapshot()
                 val nextBlock = owner.world.getBlock(nextNodePos.down())

@@ -32,14 +32,15 @@ import kotlinx.coroutines.Job
 internal abstract class Goal(val physicalControl: Set<PhysicalControl>) {
     /**
      * Default priorities:
-     * * -100.000.000 SwimUp
+     * * -100_000_000 SwimUp
      * 
-     * * 090.980.000 WanderAround 
-     * * 090.990.000 WanderAroundFar 
+     * * 090_970_000 FlyOntoTree
+     * * 090_980_000 WanderAround
+     * * 090_990_000 WanderAroundFar
      * 
-     * * 100.700.000 LookAround
-     * * 100.800.000 LookAtEntity
-     * * 100.900.000 LookAround
+     * * 100_700_000 LookAround
+     * * 100_800_000 LookAtEntity
+     * * 100_900_000 LookAround
      */
     abstract val defaultPriority: Int
     open val needsMemory: Boolean get() = false

@@ -97,6 +97,8 @@ internal interface RegularEntity: PlatformEntity, WithEntityLocation, WithTimeSo
         val liquid = currentLiquidOnEyes() ?: return false
         return eyePosition.y < liquid.bounds.maxPosExclusive.y
     }
+    
+    suspend fun isTouchingWater(): Boolean
 
     suspend fun moveTo(nextPos: EntityPos): Boolean
     

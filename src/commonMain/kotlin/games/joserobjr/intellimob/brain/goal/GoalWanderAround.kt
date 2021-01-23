@@ -33,7 +33,7 @@ import kotlin.time.ExperimentalTime
  * @author joserobjr
  * @since 2021-01-20
  */
-internal class GoalWanderAround(val speed: DoubleVectorXZ, val chance: Int): Goal(setOf(PhysicalControl.MOVE)) {
+internal open class GoalWanderAround(val speed: DoubleVectorXZ, val chance: Int = 120): Goal(setOf(PhysicalControl.MOVE)) {
     override val defaultPriority: Int get() = 90_980_000
     override val needsMemory: Boolean get() = true
 
@@ -42,17 +42,21 @@ internal class GoalWanderAround(val speed: DoubleVectorXZ, val chance: Int): Goa
         if (entity.hasPassengers() || Random.nextInt(chance) != 0) {
             return false
         }
-        val target = entity.pathFinder.findTarget(entity, 10, 7) ?: return false
+        val target = findTarget(entity, memory) ?: return false
         memory["target"] = target
         return true
     }
+    
+    protected open suspend fun findTarget(entity: RegularEntity, memory: GoalMemory): BlockPos? {
+        return entity.pathFinder.findTarget(entity, 10, 7)
+    } 
 
     @OptIn(ExperimentalTime::class)
     override fun CoroutineScope.start(entity: RegularEntity, memory: GoalMemory?): Job? {
         requireNotNull(memory)
         val target: BlockPos = memory["target"] ?: return null
         return with(entity.brain.wishes) {
-            moveTo(target.asCenteredEntityPos())
+            moveTo(target.toCenteredEntityPos())
         }
     }
 

@@ -39,6 +39,8 @@ internal actual class BlockState private constructor(val powerNukkitBlockState: 
             ?: BoundingBox.EMPTY
     }
 
+    actual operator fun contains(tag: BlockTag): Boolean = this in tag
+
     actual companion object {
         private val states = ConcurrentHashMap<PNBlockState, BlockState>()
         
