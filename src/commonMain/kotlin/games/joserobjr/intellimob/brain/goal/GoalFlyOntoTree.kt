@@ -23,7 +23,7 @@ import games.joserobjr.intellimob.block.BlockState
 import games.joserobjr.intellimob.block.BlockTag
 import games.joserobjr.intellimob.entity.RegularEntity
 import games.joserobjr.intellimob.math.BlockPos
-import games.joserobjr.intellimob.math.DoubleVectorXZ
+import games.joserobjr.intellimob.math.Velocity
 import games.joserobjr.intellimob.pathfinding.findTarget
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.filter
@@ -36,13 +36,13 @@ import kotlin.random.Random
  * @since 2021-01-22
  */
 internal open class GoalFlyOntoTree(
-    speed: DoubleVectorXZ,
+    speed: Velocity,
     chance: Int = 120,
     farProbability: Float = 0.001F
 ) : GoalWanderAroundFar(speed, chance, farProbability) {
     override val defaultPriority: Int get() = 90_970_000
     
-    override suspend fun findTarget(entity: RegularEntity, memory: GoalMemory): BlockPos? {
+    override suspend fun findTarget(entity: RegularEntity, memory: Memory): BlockPos? {
         var target: BlockPos? = null
         
         if (Random.nextFloat() >= probability) {

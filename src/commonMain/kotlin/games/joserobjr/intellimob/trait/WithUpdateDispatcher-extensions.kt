@@ -19,6 +19,8 @@
 
 package games.joserobjr.intellimob.trait
 
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 /**
@@ -34,5 +36,13 @@ internal suspend inline fun <T: WithUpdateDispatcher> T.update(crossinline updat
 internal suspend inline fun <T: WithUpdateDispatcher, R> T.updateAndGet(crossinline updater: suspend T.() -> R): R {
     return withContext(updateDispatcher) {
         updater()
+    }
+}
+
+internal suspend inline fun <T: WithUpdateDispatcher> T.updateAsync(crossinline updater: suspend T.() -> Unit) {
+    return coroutineScope { 
+        launch(updateDispatcher) { 
+            updater()
+        }
     }
 }

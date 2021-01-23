@@ -20,10 +20,7 @@
 package games.joserobjr.intellimob.entity.factory
 
 import games.joserobjr.intellimob.brain.Brain
-import games.joserobjr.intellimob.brain.goal.GoalLookAround
-import games.joserobjr.intellimob.brain.goal.GoalLookAtEntity
-import games.joserobjr.intellimob.brain.goal.GoalSwimUp
-import games.joserobjr.intellimob.brain.goal.GoalWanderAroundFar
+import games.joserobjr.intellimob.brain.goal.*
 import games.joserobjr.intellimob.control.ModularControls
 import games.joserobjr.intellimob.control.api.EntityControls
 import games.joserobjr.intellimob.control.generic.GenericHeadController
@@ -33,7 +30,7 @@ import games.joserobjr.intellimob.entity.EntityFlag.*
 import games.joserobjr.intellimob.entity.EntityType
 import games.joserobjr.intellimob.entity.IEntityFlagManager
 import games.joserobjr.intellimob.entity.RegularEntity
-import games.joserobjr.intellimob.math.DoubleVectorXZ
+import games.joserobjr.intellimob.math.Velocity
 import games.joserobjr.intellimob.pathfinding.PathFinder
 import games.joserobjr.intellimob.pathfinding.StraightLinePathFinder
 
@@ -54,12 +51,13 @@ internal interface LivingEntityAIFactory: EntityAIFactory {
     override fun createPathFinder(regularEntity: RegularEntity): PathFinder = StraightLinePathFinder()
 
     override fun setDefaultFlags(manager: IEntityFlagManager) {
-        manager.enableFlags(CAN_WALK, BREATHING, HAS_COLLISION, HAS_GRAVITY)
+        manager.enableFlags(CAN_WALK, CAN_CLIMB, BREATHING, HAS_COLLISION, HAS_GRAVITY)
     }
 
     override fun createBrain(regularEntity: RegularEntity): Brain = Brain(regularEntity).apply {
         normalGoals += GoalSwimUp
-        normalGoals += GoalWanderAroundFar(DoubleVectorXZ(1.0))
+        normalGoals += GoalEscapeDanger(Velocity(1.25))
+        normalGoals += GoalWanderAroundFar(Velocity(1.0))
         normalGoals += GoalLookAtEntity(setOf(EntityType.PLAYER), 6F)
         normalGoals += GoalLookAround
     }

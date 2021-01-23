@@ -41,7 +41,7 @@ internal class GoalLookAtEntity(val types: Set<EntityType>, val range: Float, va
     
     var target = atomic<RegularEntity?>(null)
 
-    override suspend fun canStart(entity: RegularEntity, memory: GoalMemory?): Boolean {
+    override suspend fun canStart(entity: RegularEntity, memory: Memory?): Boolean {
         requireNotNull(memory)
         if (types.isEmpty() || Random.nextFloat() >= chance) {
             return false
@@ -71,7 +71,7 @@ internal class GoalLookAtEntity(val types: Set<EntityType>, val range: Float, va
     }
 
     @OptIn(ExperimentalTime::class)
-    override fun CoroutineScope.start(entity: RegularEntity, memory: GoalMemory?): Job? {
+    override fun CoroutineScope.start(entity: RegularEntity, memory: Memory?): Job? {
         memory ?: return null
         val target: RegularEntity = memory["target"] ?: return null
         val duration = Random.nextInt(2_000, 4_000).milliseconds

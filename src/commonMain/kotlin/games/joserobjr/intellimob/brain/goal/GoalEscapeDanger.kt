@@ -20,44 +20,72 @@
 package games.joserobjr.intellimob.brain.goal
 
 import games.joserobjr.intellimob.control.api.PhysicalControl
+import games.joserobjr.intellimob.entity.EntityFlag.ON_FIRE
 import games.joserobjr.intellimob.entity.RegularEntity
 import games.joserobjr.intellimob.math.BlockPos
+import games.joserobjr.intellimob.math.IBlockPos
+import games.joserobjr.intellimob.math.IIntVectorXYZ
 import games.joserobjr.intellimob.math.Velocity
 import games.joserobjr.intellimob.pathfinding.findTarget
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import kotlin.random.Random
+import kotlinx.coroutines.flow.*
 import kotlin.time.ExperimentalTime
 
 /**
  * @author joserobjr
- * @since 2021-01-20
+ * @since 2021-01-23
  */
-internal open class GoalWanderAround(val speed: Velocity, val chance: Int = 120): Goal(setOf(PhysicalControl.MOVE)) {
-    override val defaultPriority: Int get() = 90_980_000
+internal open class GoalEscapeDanger(val speed: Velocity) : Goal(setOf(PhysicalControl.MOVE)) {
+    override val defaultPriority: Int get() = -100_100_000
     override val needsMemory: Boolean get() = true
 
     override suspend fun canStart(entity: RegularEntity, memory: Memory?): Boolean {
         requireNotNull(memory)
-        if (entity.hasPassengers() || Random.nextInt(chance) != 0) {
+        val onFire = entity.flagManager[ON_FIRE]
+        
+        if (!entity.isUnderAttack && !onFire) {
             return false
         }
-        val target = findTarget(entity, memory) ?: return false
+        
+        var target: IBlockPos? = null
+        if (onFire) {
+            target = locateClosesWater(entity, memory, SCAN_RANGE)
+        }
+        
+        if (target == null) {
+            target = findTarget(entity, memory)
+        }
+        
         memory["target"] = target
-        return true
+        
+        return target != null
     }
     
-    protected open suspend fun findTarget(entity: RegularEntity, memory: Memory): BlockPos? {
-        return entity.pathFinder.findTarget(entity, 10, 7)
-    } 
+    protected open suspend fun findTarget(entity: RegularEntity, memory: Memory): IBlockPos? {
+        return entity.pathFinder.findTarget(entity, 5, 4)
+    }
+    
+    protected open suspend fun locateClosesWater(entity: RegularEntity, memory: Memory, range: IIntVectorXYZ): IBlockPos? {
+        val pos = entity.position.toBlockPos()
+        return (pos - range).cubeIterator(pos + range).asSequence().asFlow()
+            .mapNotNull { entity.world.getBlock(it).currentLiquidState() }
+            .filter { it.isWater }
+            .map { it.pos }
+            .toList()
+            .minByOrNull { it.squaredDistance(pos) }
+    }
 
-    @OptIn(ExperimentalTime::class)
+    @ExperimentalTime
     override fun CoroutineScope.start(entity: RegularEntity, memory: Memory?): Job? {
         requireNotNull(memory)
-        val target: BlockPos = memory["target"] ?: return null
+        val target: IBlockPos = memory["target"] ?: return null
         return with(entity.brain.wishes) {
             moveTo(target.toCenteredEntityPos())
         }
     }
-
+    
+    companion object {
+        private val SCAN_RANGE: IIntVectorXYZ = BlockPos(5, 4, 5)
+    }
 }

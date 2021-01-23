@@ -26,10 +26,12 @@ import games.joserobjr.intellimob.block.RegularBlock
 import games.joserobjr.intellimob.control.api.BodyController
 import games.joserobjr.intellimob.coroutines.AI
 import games.joserobjr.intellimob.coroutines.CompletedJob
+import games.joserobjr.intellimob.entity.EntityFlag
 import games.joserobjr.intellimob.entity.RegularEntity
 import games.joserobjr.intellimob.math.*
 import games.joserobjr.intellimob.trait.WithEntityPos
 import games.joserobjr.intellimob.trait.update
+import games.joserobjr.intellimob.trait.updateAsync
 import games.joserobjr.intellimobjvm.atomic.atomic
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.asFlow
@@ -190,7 +192,12 @@ internal open class LandBodyController(final override val owner: RegularEntity):
     }
 
     override suspend fun idleTask() {
-        owner.applyPhysics()
+        with(owner) {
+            updateAsync {
+                applyPhysics()
+                flagManager[EntityFlag.MOVING] = isMoving()
+            }
+        }
     }
     
     companion object {

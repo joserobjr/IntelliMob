@@ -40,12 +40,12 @@ internal object GoalLookAround: Goal(setOf(PhysicalControl.MOVE, PhysicalControl
     override val defaultPriority: Int
         get() = 100_900_000
     
-    override suspend fun canStart(entity: RegularEntity, memory: GoalMemory?): Boolean {
+    override suspend fun canStart(entity: RegularEntity, memory: Memory?): Boolean {
         return Random.nextFloat() < .02F
     }
 
     @OptIn(ExperimentalTime::class)
-    override fun CoroutineScope.start(entity: RegularEntity, memory: GoalMemory?): Job {
+    override fun CoroutineScope.start(entity: RegularEntity, memory: Memory?): Job {
         val delta = PI * 2 * Random.nextDouble()
         val duration = Random.nextInt(1_000, 2_000).milliseconds
         return launch {

@@ -25,7 +25,7 @@ import games.joserobjr.intellimobjvm.ref.WeakReference
  * @author joserobjr
  * @since 2021-01-20
  */
-internal inline class GoalMemory(val contents: MutableMap<String, Any?> = mutableMapOf()) {
+internal inline class Memory(val contents: MutableMap<String, Any?> = mutableMapOf()) {
     inline operator fun <reified V> get(key: String): V? {
         val any = getAny(key)
         if (any is WeakReference<*> && V::class != WeakReference::class) {

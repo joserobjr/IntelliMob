@@ -33,6 +33,10 @@ internal actual class BlockType private constructor(state: PNBlockState) {
     actual companion object {
         private val types = ConcurrentHashMap<PNBlockState, BlockType>()
         actual val AIR: BlockType = fromBlockId(BlockID.AIR)
+        actual val WATER: BlockType = fromBlockId(BlockID.STILL_WATER)
+        actual val FLOWING_WATER: BlockType = fromBlockId(BlockID.WATER)
+        actual val LAVA: BlockType = fromBlockId(BlockID.STILL_LAVA)
+        actual val FLOWING_LAVA: BlockType = fromBlockId(BlockID.LAVA)
 
         fun fromPNBlock(block: Block): BlockType {
             return fromBlockId(block.id)

@@ -32,4 +32,7 @@ internal data class LiquidState (
     val pos: IBlockPos,
     val layer: Int,
     val bounds: BoundingBox
-)
+) {
+    val isWater get() = type == BlockType.WATER || type == BlockType.FLOWING_WATER
+    val isLava get() = type == BlockType.LAVA || type == BlockType.FLOWING_LAVA
+}

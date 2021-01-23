@@ -19,7 +19,8 @@
 
 package games.joserobjr.intellimob.entity.factory
 
-import games.joserobjr.intellimob.entity.EntityFlag
+import games.joserobjr.intellimob.entity.EntityFlag.CAN_CLIMB
+import games.joserobjr.intellimob.entity.EntityFlag.CAN_FLY
 import games.joserobjr.intellimob.entity.IEntityFlagManager
 import games.joserobjr.intellimob.entity.status.MutableEntityStatus
 import games.joserobjr.intellimob.math.Velocity
@@ -36,6 +37,7 @@ internal interface FlyingAIFactory: LivingEntityAIFactory {
 
     override fun setDefaultFlags(manager: IEntityFlagManager) {
         super.setDefaultFlags(manager)
-        manager.enableFlags(EntityFlag.CAN_FLY)
+        manager.disableFlags(CAN_CLIMB)
+        manager.enableFlags(CAN_FLY)
     }
 }

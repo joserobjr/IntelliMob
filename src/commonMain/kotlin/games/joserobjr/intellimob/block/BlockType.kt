@@ -27,5 +27,9 @@ internal expect class BlockType {
     val defaultState: BlockState
     companion object {
         val AIR: BlockType
+        val WATER: BlockType
+        val FLOWING_WATER: BlockType
+        val LAVA: BlockType
+        val FLOWING_LAVA: BlockType
     }
 }

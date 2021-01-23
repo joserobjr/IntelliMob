@@ -94,6 +94,12 @@ internal class PowerNukkitEntity(override val powerNukkitEntity: Entity) : Regul
             powerNukkitEntity.motion = value.toVector3()     
         }
 
+    override var isUnderAttack: Boolean = false
+
+    override suspend fun isTouchingWater(): Boolean {
+        return powerNukkitEntity.isTouchingWater
+    }
+
     override fun hasPassengers(): Boolean = powerNukkitEntity.passengers.isNotEmpty()
 
     override suspend fun playSound(sound: Sound) {

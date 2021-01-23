@@ -24,15 +24,18 @@ import cn.nukkit.entity.EntityCreature
 import cn.nukkit.event.EventHandler
 import cn.nukkit.event.EventPriority
 import cn.nukkit.event.Listener
+import cn.nukkit.event.entity.EntityDamageByEntityEvent
 import cn.nukkit.event.entity.EntityDespawnEvent
 import cn.nukkit.event.entity.EntityEvent
 import cn.nukkit.event.entity.EntitySpawnEvent
 import games.joserobjr.intellimob.coroutines.AI
+import games.joserobjr.intellimob.entity.PowerNukkitEntity
 import games.joserobjr.intellimob.entity.asRegularEntity
 import games.joserobjr.intellimob.intelliMob
 import games.joserobjr.intellimob.math.ticks
 import kotlinx.coroutines.*
 import kotlin.time.ExperimentalTime
+import kotlin.time.seconds
 
 /**
  * @author joserobjr
@@ -61,6 +64,19 @@ internal object EntityListener: Listener {
         ev.entity.takeIf { it.hasMetadata("regularEntity") }?.apply {
             asRegularEntity().job.cancel(CancellationException("The entity despawned"))
             removeMetadata("regularEntity", intelliMob)
+        }
+    }
+    
+    @ExperimentalTime
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    fun onEntityAttacked(ev: EntityDamageByEntityEvent) {
+        val entity = ev.entity.asRegularEntity() as PowerNukkitEntity
+        entity.isUnderAttack = true
+        CoroutineScope(entity.updateDispatcher).launch { 
+            delay(3.seconds)
+            if (ev.entity.lastDamageCause === ev) {
+                entity.isUnderAttack = false
+            }
         }
     }
 }

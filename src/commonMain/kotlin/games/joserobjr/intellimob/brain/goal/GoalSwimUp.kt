@@ -33,12 +33,12 @@ internal object GoalSwimUp: Goal(setOf(PhysicalControl.JUMP)) {
     override val defaultPriority: Int
         get() = -100_000_000
 
-    override suspend fun canStart(entity: RegularEntity, memory: GoalMemory?): Boolean {
+    override suspend fun canStart(entity: RegularEntity, memory: Memory?): Boolean {
         return entity.isEyeUnderWater()
     }
 
     @OptIn(ExperimentalTime::class)
-    override fun CoroutineScope.start(entity: RegularEntity, memory: GoalMemory?): Job {
+    override fun CoroutineScope.start(entity: RegularEntity, memory: Memory?): Job {
         return with(entity.brain.wishes) {
             jumpUntil { !brain.owner.isEyeUnderWater() }
         }

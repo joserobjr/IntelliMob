@@ -85,6 +85,8 @@ internal interface RegularEntity: PlatformEntity, WithEntityLocation, WithTimeSo
     
     val flagManager: IEntityFlagManager
 
+    val isUnderAttack: Boolean
+
     fun hasPassengers(): Boolean
     
     suspend fun createSnapshot(): EntitySnapshot

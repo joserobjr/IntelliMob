@@ -116,7 +116,7 @@ internal class EntityGoalSelector(
         private val _activeJob = AtomicRef<Job?>(null)
         val activeJob by _activeJob
         val brain get() = selector.brain
-        val memory = if (goal.needsMemory) GoalMemory() else null
+        val memory = if (goal.needsMemory) Memory() else null
         
         fun CoroutineScope.start() {
             _activeJob.update { old->

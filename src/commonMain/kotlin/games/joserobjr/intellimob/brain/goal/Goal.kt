@@ -33,6 +33,7 @@ internal abstract class Goal(val physicalControl: Set<PhysicalControl>) {
     /**
      * Default priorities:
      * * -100_000_000 SwimUp
+     * * -100_100_000 EscapeDanger
      * 
      * * 090_970_000 FlyOntoTree
      * * 090_980_000 WanderAround
@@ -55,9 +56,9 @@ internal abstract class Goal(val physicalControl: Set<PhysicalControl>) {
     
     open fun addedTo(brain: Brain, selector: EntityGoalSelector) {} 
     
-    abstract suspend fun canStart(entity: RegularEntity, memory: GoalMemory?): Boolean
+    abstract suspend fun canStart(entity: RegularEntity, memory: Memory?): Boolean
     
-    abstract fun CoroutineScope.start(entity: RegularEntity, memory: GoalMemory?): Job?
+    abstract fun CoroutineScope.start(entity: RegularEntity, memory: Memory?): Job?
     
     open suspend fun canStop(entity: RegularEntity): Boolean {
         return true
