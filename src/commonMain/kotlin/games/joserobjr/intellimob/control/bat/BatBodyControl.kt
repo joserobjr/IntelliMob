@@ -26,6 +26,12 @@ import games.joserobjr.intellimob.entity.EntityFlag
 import games.joserobjr.intellimob.entity.RegularEntity
 import games.joserobjr.intellimob.entity.Sound
 import games.joserobjr.intellimob.math.*
+import games.joserobjr.intellimob.math.angle.PitchYaw
+import games.joserobjr.intellimob.math.extensions.squared
+import games.joserobjr.intellimob.math.generic.DoubleVectorXYZ
+import games.joserobjr.intellimob.math.motion.IHorizontalVelocity
+import games.joserobjr.intellimob.math.motion.Velocity
+import games.joserobjr.intellimob.math.position.entity.EntityPos
 import games.joserobjr.intellimob.trait.WithEntityPos
 import games.joserobjr.intellimob.trait.update
 import kotlinx.coroutines.CoroutineScope
@@ -45,7 +51,7 @@ internal class BatBodyControl(override val owner: RegularEntity) : BodyControlle
             owner.flagManager.toggleFlags(value, EntityFlag.RESTING, EntityFlag.MOVING)
         }
 
-    override fun CoroutineScope.walkTo(pos: WithEntityPos, acceptableDistance: Double, speed: DoubleVectorXZ): Job? {
+    override fun CoroutineScope.walkTo(pos: WithEntityPos, acceptableDistance: Double, speed: IHorizontalVelocity): Job? {
         return null
     }
 

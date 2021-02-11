@@ -19,8 +19,6 @@
 
 package games.joserobjr.intellimob.control.api
 
-import games.joserobjr.intellimob.math.IEntityPos
-
 /**
  * @author joserobjr
  * @since 2021-01-20

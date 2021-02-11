@@ -20,8 +20,8 @@
 package games.joserobjr.intellimob.entity
 
 import games.joserobjr.intellimob.entity.status.EntityStatus
-import games.joserobjr.intellimob.math.EntityLocation
-import games.joserobjr.intellimob.math.PitchYaw
+import games.joserobjr.intellimob.math.angle.PitchYaw
+import games.joserobjr.intellimob.math.position.entity.EntityLocation
 import games.joserobjr.intellimob.trait.WithWorld
 import games.joserobjr.intellimob.world.RegularWorld
 

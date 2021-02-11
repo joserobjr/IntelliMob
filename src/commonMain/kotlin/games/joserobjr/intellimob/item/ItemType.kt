@@ -28,5 +28,6 @@ internal expect sealed class ItemType {
         val BEETROOT: ItemType
         val POTATO: ItemType
         val CARROT: ItemType
+        val CARROT_ON_A_STICK: ItemType
     }
 }

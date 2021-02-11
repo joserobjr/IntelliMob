@@ -22,10 +22,10 @@ package games.joserobjr.intellimob.brain.goal
 import games.joserobjr.intellimob.control.api.PhysicalControl
 import games.joserobjr.intellimob.entity.EntityFlag.ON_FIRE
 import games.joserobjr.intellimob.entity.RegularEntity
-import games.joserobjr.intellimob.math.BlockPos
-import games.joserobjr.intellimob.math.IBlockPos
-import games.joserobjr.intellimob.math.IIntVectorXYZ
-import games.joserobjr.intellimob.math.Velocity
+import games.joserobjr.intellimob.math.generic.IIntVectorXYZ
+import games.joserobjr.intellimob.math.motion.HorizontalVelocity
+import games.joserobjr.intellimob.math.position.block.BlockPos
+import games.joserobjr.intellimob.math.position.block.IBlockPos
 import games.joserobjr.intellimob.pathfinding.findTarget
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -36,7 +36,7 @@ import kotlin.time.ExperimentalTime
  * @author joserobjr
  * @since 2021-01-23
  */
-internal open class GoalEscapeDanger(val speed: Velocity) : Goal(setOf(PhysicalControl.MOVE)) {
+internal open class GoalEscapeDanger(val speed: HorizontalVelocity) : Goal(setOf(PhysicalControl.MOVE)) {
     override val defaultPriority: Int get() = -100_100_000
     override val needsMemory: Boolean get() = true
 
@@ -81,7 +81,7 @@ internal open class GoalEscapeDanger(val speed: Velocity) : Goal(setOf(PhysicalC
         requireNotNull(memory)
         val target: IBlockPos = memory["target"] ?: return null
         return with(entity.brain.wishes) {
-            moveTo(target.toCenteredEntityPos())
+            moveTo(target.toCenteredEntityPos(), speedMultiplier = speed)
         }
     }
     

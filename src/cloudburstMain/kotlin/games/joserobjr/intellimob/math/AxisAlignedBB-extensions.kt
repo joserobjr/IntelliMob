@@ -21,6 +21,7 @@
 
 package games.joserobjr.intellimob.math
 
+import games.joserobjr.intellimob.math.collision.BoundingBox
 import org.cloudburstmc.server.math.AxisAlignedBB
 
 /**

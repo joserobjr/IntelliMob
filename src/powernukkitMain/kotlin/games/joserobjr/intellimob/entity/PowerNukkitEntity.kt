@@ -28,7 +28,16 @@ import games.joserobjr.intellimob.entity.status.EntityStatus
 import games.joserobjr.intellimob.entity.status.MutableEntityStatus
 import games.joserobjr.intellimob.item.RegularItemStack
 import games.joserobjr.intellimob.item.asRegularItemStack
-import games.joserobjr.intellimob.math.*
+import games.joserobjr.intellimob.math.angle.PitchYaw
+import games.joserobjr.intellimob.math.collision.BoundingBox
+import games.joserobjr.intellimob.math.extensions.isSimilarTo
+import games.joserobjr.intellimob.math.motion.IVelocity
+import games.joserobjr.intellimob.math.motion.Velocity
+import games.joserobjr.intellimob.math.position.entity.EntityLocation
+import games.joserobjr.intellimob.math.position.entity.EntityPos
+import games.joserobjr.intellimob.math.toEntityPos
+import games.joserobjr.intellimob.math.toIntelliMobBoundingBox
+import games.joserobjr.intellimob.math.toVector3
 import games.joserobjr.intellimob.pathfinding.BlockFavorProvider
 import games.joserobjr.intellimob.pathfinding.PathFinder
 import games.joserobjr.intellimob.timesource.ServerTickTimeSource
@@ -132,13 +141,13 @@ internal class PowerNukkitEntity(override val powerNukkitEntity: Entity) : Regul
         }
     }
 
-    override suspend fun applyMotion(motion: IDoubleVectorXYZ): Boolean = updateAndGet {
+    override suspend fun applyMotion(motion: IVelocity): Boolean = updateAndGet {
         with(powerNukkitEntity) {
             powerNukkitEntity.setMotion(Vector3(motionX + motion.x, motionY + motion.y, motionZ + motion.z))
         }
     }
 
-    override suspend fun applySpeed(vector: IDoubleVectorXYZ, force: IDoubleVectorXYZ): Boolean = updateAndGet {
+    override suspend fun applySpeed(vector: IVelocity, force: IVelocity): Boolean = updateAndGet {
         with(powerNukkitEntity) {
             motionX = adjustMotion(motionX, vector.x, force.x)
             motionY = adjustMotion(motionY, vector.y, force.y)
@@ -155,17 +164,17 @@ internal class PowerNukkitEntity(override val powerNukkitEntity: Entity) : Regul
         return before + if (delta >= 0) delta.coerceAtMost(force) else delta.coerceAtLeast(-force)
     }
 
-    override suspend fun calculateInertiaMotion(): IDoubleVectorXYZ {
+    override suspend fun calculateInertiaMotion(): IVelocity {
         return currentStatus.gravity
     }
 
-    override suspend fun calculateDrag(): IDoubleVectorXYZ {
+    override suspend fun calculateDrag(): IVelocity {
         with(powerNukkitEntity) {
             if (!isOnGround) {
                 return currentStatus.drag
             }
             val friction = .91 * level.getBlock(x.toInt(), (y - 0.5).toInt(), z.toInt()).frictionFactor
-            return DoubleVectorXYZ(friction, .98, friction)
+            return Velocity(friction, .98, friction)
         }
     }
     
@@ -176,7 +185,7 @@ internal class PowerNukkitEntity(override val powerNukkitEntity: Entity) : Regul
             motionY += inertia.y
             motionZ += inertia.z
             if (isInsideOfWater) {
-                applySpeed(inertia, DoubleVectorXYZ(.1))
+                applySpeed(inertia, Velocity(.1))
             }
             if (!onGround && motionY > -0.5) {
                 highestPosition = y

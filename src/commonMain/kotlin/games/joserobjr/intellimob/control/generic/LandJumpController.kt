@@ -21,7 +21,7 @@ package games.joserobjr.intellimob.control.generic
 
 import games.joserobjr.intellimob.control.api.JumpController
 import games.joserobjr.intellimob.entity.RegularEntity
-import games.joserobjr.intellimob.math.DoubleVectorXYZ
+import games.joserobjr.intellimob.math.motion.Velocity
 import games.joserobjr.intellimob.trait.updateAndGet
 
 /**
@@ -31,7 +31,7 @@ import games.joserobjr.intellimob.trait.updateAndGet
 internal open class LandJumpController(final override val owner: RegularEntity) : JumpController{
     override suspend fun jump(speed: Double) = owner.updateAndGet { 
         if (owner.currentStatus.canJump) {
-            owner.applySpeed(DoubleVectorXYZ(0.0, speed, 0.0))
+            owner.applySpeed(Velocity(0.0, speed, 0.0))
         } else false
     }
 }

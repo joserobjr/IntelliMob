@@ -19,7 +19,7 @@
 
 package games.joserobjr.intellimob.pathfinding
 
-import games.joserobjr.intellimob.math.IBlockPos
+import games.joserobjr.intellimob.math.position.block.IBlockPos
 
 /**
  * @author joserobjr

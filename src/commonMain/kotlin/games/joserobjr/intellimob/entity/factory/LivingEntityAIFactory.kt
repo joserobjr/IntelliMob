@@ -30,7 +30,8 @@ import games.joserobjr.intellimob.entity.EntityFlag.*
 import games.joserobjr.intellimob.entity.EntityType
 import games.joserobjr.intellimob.entity.IEntityFlagManager
 import games.joserobjr.intellimob.entity.RegularEntity
-import games.joserobjr.intellimob.math.Velocity
+import games.joserobjr.intellimob.math.motion.HorizontalVelocity
+import games.joserobjr.intellimob.math.motion.Velocity
 import games.joserobjr.intellimob.pathfinding.PathFinder
 import games.joserobjr.intellimob.pathfinding.StraightLinePathFinder
 
@@ -56,8 +57,8 @@ internal interface LivingEntityAIFactory: EntityAIFactory {
 
     override fun createBrain(regularEntity: RegularEntity): Brain = Brain(regularEntity).apply {
         normalGoals += GoalSwimUp
-        normalGoals += GoalEscapeDanger(Velocity(1.25))
-        normalGoals += GoalWanderAroundFar(Velocity(1.0))
+        normalGoals += GoalEscapeDanger(HorizontalVelocity(1.25))
+        normalGoals += GoalWanderAroundFar(HorizontalVelocity(1.0))
         normalGoals += GoalLookAtEntity(setOf(EntityType.PLAYER), 6F)
         normalGoals += GoalLookAround
     }

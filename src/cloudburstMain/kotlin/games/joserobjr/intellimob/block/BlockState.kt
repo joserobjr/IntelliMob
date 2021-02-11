@@ -19,7 +19,7 @@
 
 package games.joserobjr.intellimob.block
 
-import games.joserobjr.intellimob.math.BoundingBox
+import games.joserobjr.intellimob.math.collision.BoundingBox
 import games.joserobjr.intellimob.math.toIntelliMobBoundingBox
 import games.joserobjr.intellimob.trait.WithBoundingBox
 import org.cloudburstmc.server.block.BlockTypes

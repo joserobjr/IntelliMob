@@ -28,5 +28,7 @@ internal actual sealed class ItemType {
         actual val BEETROOT: ItemType get() = TODO()
         actual val POTATO: ItemType get() = TODO()
         actual val CARROT: ItemType get() = TODO()
+        actual val CARROT_ON_A_STICK: ItemType
+            get() = TODO("Not yet implemented")
     }
 }

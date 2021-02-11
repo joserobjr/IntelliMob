@@ -22,6 +22,7 @@
 package games.joserobjr.intellimob.math
 
 import com.nukkitx.math.vector.Vector3i
+import games.joserobjr.intellimob.math.position.block.IBlockPos
 
 /**
  * @author joserobjr

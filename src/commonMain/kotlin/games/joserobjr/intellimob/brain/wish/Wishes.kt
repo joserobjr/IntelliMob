@@ -26,9 +26,9 @@ import games.joserobjr.intellimob.control.api.PhysicalControl
 import games.joserobjr.intellimob.coroutines.AI
 import games.joserobjr.intellimob.coroutines.RestartableJob
 import games.joserobjr.intellimob.entity.RegularEntity
-import games.joserobjr.intellimob.math.DoubleVectorXZ
-import games.joserobjr.intellimob.math.EntityPos
-import games.joserobjr.intellimob.math.IDoubleVectorXYZ
+import games.joserobjr.intellimob.math.generic.IDoubleVectorXYZ
+import games.joserobjr.intellimob.math.motion.IHorizontalVelocity
+import games.joserobjr.intellimob.math.position.entity.EntityPos
 import games.joserobjr.intellimob.trait.WithEntityPos
 import games.joserobjr.intellimobjvm.collection.asMap
 import games.joserobjr.intellimobjvm.collection.toEnumMap
@@ -55,11 +55,11 @@ internal class Wishes(val brain: Brain) {
     private val _wishesJob = RestartableJob()
     private val wishesJob by _wishesJob
 
-    fun CoroutineScope.moveTo(pos: EntityPos, timeLimit: Duration? = null, sprinting: Boolean = false, speedMultiplier: DoubleVectorXZ? = null): Job {
+    fun CoroutineScope.moveTo(pos: EntityPos, timeLimit: Duration? = null, sprinting: Boolean = false, speedMultiplier: IHorizontalVelocity? = null): Job {
         return launchWish(PhysicalControl.MOVE, WishMoveToPos(pos, sprinting, speedMultiplier), timeLimit)
     }
 
-    fun CoroutineScope.moveTo(entity: WithEntityPos, timeLimit: Duration? = null, sprinting: Boolean = false, speedMultiplier: DoubleVectorXZ? = null): Job {
+    fun CoroutineScope.moveTo(entity: WithEntityPos, timeLimit: Duration? = null, sprinting: Boolean = false, speedMultiplier: IHorizontalVelocity? = null): Job {
         return launchWish(PhysicalControl.MOVE, WishMoveToEntity(entity, sprinting, speedMultiplier), timeLimit)
     }
 

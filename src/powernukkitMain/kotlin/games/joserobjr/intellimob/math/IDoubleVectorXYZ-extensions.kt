@@ -20,6 +20,7 @@
 package games.joserobjr.intellimob.math
 
 import cn.nukkit.math.Vector3
+import games.joserobjr.intellimob.math.generic.IDoubleVectorXYZ
 
 /**
  * @author joserobjr

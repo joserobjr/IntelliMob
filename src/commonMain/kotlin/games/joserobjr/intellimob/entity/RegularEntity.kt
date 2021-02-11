@@ -26,10 +26,10 @@ import games.joserobjr.intellimob.control.api.EntityControls
 import games.joserobjr.intellimob.entity.status.EntityStatus
 import games.joserobjr.intellimob.entity.status.MutableEntityStatus
 import games.joserobjr.intellimob.item.RegularItemStack
-import games.joserobjr.intellimob.math.EntityPos
-import games.joserobjr.intellimob.math.IDoubleVectorXYZ
-import games.joserobjr.intellimob.math.PitchYaw
-import games.joserobjr.intellimob.math.Velocity
+import games.joserobjr.intellimob.math.angle.PitchYaw
+import games.joserobjr.intellimob.math.motion.IVelocity
+import games.joserobjr.intellimob.math.motion.Velocity
+import games.joserobjr.intellimob.math.position.entity.EntityPos
 import games.joserobjr.intellimob.pathfinding.BlockFavorProvider
 import games.joserobjr.intellimob.pathfinding.PathFinder
 import games.joserobjr.intellimob.trait.WithBoundingBox
@@ -113,13 +113,13 @@ internal interface RegularEntity: PlatformEntity, WithEntityLocation, WithTimeSo
 
     suspend fun moveTo(nextPos: EntityPos): Boolean
     
-    suspend fun applyMotion(motion: IDoubleVectorXYZ): Boolean
-    suspend fun applySpeed(vector: IDoubleVectorXYZ, force: IDoubleVectorXYZ = vector): Boolean
+    suspend fun applyMotion(motion: IVelocity): Boolean
+    suspend fun applySpeed(vector: IVelocity, force: IVelocity = vector): Boolean
     
-    suspend fun calculateInertiaMotion(): IDoubleVectorXYZ
-    
-    suspend fun calculateDrag(): IDoubleVectorXYZ
-    
+    suspend fun calculateInertiaMotion(): IVelocity
+
+    suspend fun calculateDrag(): IVelocity
+
     suspend fun applyPhysics()
 
     suspend fun playSound(sound: Sound)

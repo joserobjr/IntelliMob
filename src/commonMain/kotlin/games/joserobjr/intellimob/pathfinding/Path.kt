@@ -19,7 +19,7 @@
 
 package games.joserobjr.intellimob.pathfinding
 
-import games.joserobjr.intellimob.math.EntityPos
+import games.joserobjr.intellimob.math.position.entity.EntityPos
 
 /**
  * @author joserobjr

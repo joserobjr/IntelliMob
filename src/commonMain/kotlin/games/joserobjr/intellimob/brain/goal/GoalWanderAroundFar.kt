@@ -20,8 +20,8 @@
 package games.joserobjr.intellimob.brain.goal
 
 import games.joserobjr.intellimob.entity.RegularEntity
-import games.joserobjr.intellimob.math.BlockPos
-import games.joserobjr.intellimob.math.Velocity
+import games.joserobjr.intellimob.math.motion.HorizontalVelocity
+import games.joserobjr.intellimob.math.position.block.BlockPos
 import games.joserobjr.intellimob.pathfinding.findTarget
 import kotlin.random.Random
 
@@ -30,7 +30,7 @@ import kotlin.random.Random
  * @since 2021-01-22
  */
 internal open class GoalWanderAroundFar(
-    speed: Velocity,
+    speed: HorizontalVelocity,
     chance: Int = 120,
     val probability: Float = 0.001F
 ) : GoalWanderAround(speed, chance) {

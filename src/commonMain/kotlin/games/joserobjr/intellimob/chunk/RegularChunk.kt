@@ -20,8 +20,8 @@
 package games.joserobjr.intellimob.chunk
 
 import games.joserobjr.intellimob.block.BlockSnapshot
-import games.joserobjr.intellimob.math.ChunkPos
-import games.joserobjr.intellimob.math.IBlockPos
+import games.joserobjr.intellimob.math.position.chunk.ChunkPos
+import games.joserobjr.intellimob.math.position.block.IBlockPos
 import games.joserobjr.intellimob.trait.WithUpdateDispatcher
 import games.joserobjr.intellimob.world.WorldView
 

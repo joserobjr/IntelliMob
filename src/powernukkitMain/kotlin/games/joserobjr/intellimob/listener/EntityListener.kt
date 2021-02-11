@@ -32,7 +32,7 @@ import games.joserobjr.intellimob.coroutines.AI
 import games.joserobjr.intellimob.entity.PowerNukkitEntity
 import games.joserobjr.intellimob.entity.asRegularEntity
 import games.joserobjr.intellimob.intelliMob
-import games.joserobjr.intellimob.math.ticks
+import games.joserobjr.intellimob.math.extensions.ticks
 import kotlinx.coroutines.*
 import kotlin.time.ExperimentalTime
 import kotlin.time.seconds

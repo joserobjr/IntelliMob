@@ -46,5 +46,6 @@ internal actual sealed class ItemType {
         actual val BEETROOT: ItemType = VanillaItemType(ItemID.BEETROOT)
         actual val POTATO: ItemType = VanillaItemType(ItemID.POTATO)
         actual val CARROT: ItemType = VanillaItemType(ItemID.CARROT)
+        actual val CARROT_ON_A_STICK: ItemType = VanillaItemType(ItemID.CARROT_ON_A_STICK)
     }
 }

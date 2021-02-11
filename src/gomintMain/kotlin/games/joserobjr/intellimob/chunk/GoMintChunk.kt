@@ -24,6 +24,11 @@ import games.joserobjr.intellimob.entity.EntitySnapshot
 import games.joserobjr.intellimob.entity.RegularEntity
 import games.joserobjr.intellimob.entity.asRegularEntity
 import games.joserobjr.intellimob.math.*
+import games.joserobjr.intellimob.math.collision.BoundingBox
+import games.joserobjr.intellimob.math.position.block.BlockLocation
+import games.joserobjr.intellimob.math.position.block.IBlockPos
+import games.joserobjr.intellimob.math.position.chunk.ChunkPos
+import games.joserobjr.intellimob.math.position.entity.IEntityPos
 import games.joserobjr.intellimob.world.RegularWorld
 import games.joserobjr.intellimob.world.WorldView
 import games.joserobjr.intellimob.world.asIntelliMobWorld

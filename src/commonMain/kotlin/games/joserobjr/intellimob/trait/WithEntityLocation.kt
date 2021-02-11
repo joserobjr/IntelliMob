@@ -19,7 +19,7 @@
 
 package games.joserobjr.intellimob.trait
 
-import games.joserobjr.intellimob.math.EntityLocation
+import games.joserobjr.intellimob.math.position.entity.EntityLocation
 
 /**
  * @author joserobjr

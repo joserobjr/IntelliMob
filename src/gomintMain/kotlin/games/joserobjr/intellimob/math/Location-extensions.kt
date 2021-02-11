@@ -21,6 +21,8 @@
 
 package games.joserobjr.intellimob.math
 
+import games.joserobjr.intellimob.math.position.entity.EntityLocation
+import games.joserobjr.intellimob.math.position.entity.EntityPos
 import games.joserobjr.intellimob.world.asIntelliMobWorld
 import io.gomint.math.Location
 

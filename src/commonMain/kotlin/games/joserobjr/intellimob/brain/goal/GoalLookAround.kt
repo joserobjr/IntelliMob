@@ -21,7 +21,7 @@ package games.joserobjr.intellimob.brain.goal
 
 import games.joserobjr.intellimob.control.api.PhysicalControl
 import games.joserobjr.intellimob.entity.RegularEntity
-import games.joserobjr.intellimob.math.DoubleVectorXYZ
+import games.joserobjr.intellimob.math.generic.DoubleVectorXYZ
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch

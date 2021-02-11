@@ -20,8 +20,8 @@
 package games.joserobjr.intellimob.entity.factory
 
 import games.joserobjr.intellimob.entity.status.MutableEntityStatus
-import games.joserobjr.intellimob.math.DoubleVectorXZ
-import games.joserobjr.intellimob.math.PitchYawSpeed
+import games.joserobjr.intellimob.math.angle.PitchYawSpeed
+import games.joserobjr.intellimob.math.motion.HorizontalVelocity
 
 /**
  * @author joserobjr
@@ -31,9 +31,9 @@ internal object PlayerAI: NoDefaultAI() {
     override fun adjustDefaultStatus(status: MutableEntityStatus) = with(status) {
         headSpeed = PitchYawSpeed.ZERO
         headFastSpeed = PitchYawSpeed.ZERO
-        walkSpeed = DoubleVectorXZ(.1)
-        sprintSpeed = DoubleVectorXZ(.103)
-        flySpeed = DoubleVectorXZ(.05)
+        walkSpeed = HorizontalVelocity(.1)
+        sprintSpeed = HorizontalVelocity(.103)
+        flySpeed = HorizontalVelocity(.05)
         jumpSpeed = .42
         stepHeight = .6
         canJump = true

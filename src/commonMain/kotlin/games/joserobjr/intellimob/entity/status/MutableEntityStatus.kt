@@ -19,9 +19,9 @@
 
 package games.joserobjr.intellimob.entity.status
 
-import games.joserobjr.intellimob.math.DoubleVectorXZ
-import games.joserobjr.intellimob.math.PitchYawSpeed
-import games.joserobjr.intellimob.math.Velocity
+import games.joserobjr.intellimob.math.angle.PitchYawSpeed
+import games.joserobjr.intellimob.math.motion.HorizontalVelocity
+import games.joserobjr.intellimob.math.motion.Velocity
 
 /**
  * @author joserobjr
@@ -30,9 +30,9 @@ import games.joserobjr.intellimob.math.Velocity
 internal data class MutableEntityStatus(
     override var headSpeed: PitchYawSpeed,
     override var headFastSpeed: PitchYawSpeed,
-    override var walkSpeed: DoubleVectorXZ,
-    override var sprintSpeed: DoubleVectorXZ,
-    override var flySpeed: DoubleVectorXZ,
+    override var walkSpeed: HorizontalVelocity,
+    override var sprintSpeed: HorizontalVelocity,
+    override var flySpeed: HorizontalVelocity,
     override var jumpSpeed: Double,
     override var stepHeight: Double,
     override var canJump: Boolean,

@@ -26,6 +26,9 @@ import games.joserobjr.intellimob.entity.RegularEntity
 import games.joserobjr.intellimob.entity.Sound
 import games.joserobjr.intellimob.entity.asRegularEntity
 import games.joserobjr.intellimob.math.*
+import games.joserobjr.intellimob.math.collision.BoundingBox
+import games.joserobjr.intellimob.math.position.block.IBlockPos
+import games.joserobjr.intellimob.math.position.entity.IEntityPos
 import games.joserobjr.intellimob.math.toBlockPos
 import games.joserobjr.intellimob.metadata.lazyMetadata
 import games.joserobjr.intellimob.timesource.ServerTickTimeSource

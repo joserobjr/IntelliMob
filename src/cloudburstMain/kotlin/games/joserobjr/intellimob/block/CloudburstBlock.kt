@@ -19,8 +19,8 @@
 
 package games.joserobjr.intellimob.block
 
-import games.joserobjr.intellimob.math.BlockLocation
-import games.joserobjr.intellimob.math.BoundingBox
+import games.joserobjr.intellimob.math.position.block.BlockLocation
+import games.joserobjr.intellimob.math.collision.BoundingBox
 import games.joserobjr.intellimob.math.toVector3i
 import kotlinx.coroutines.withContext
 import org.cloudburstmc.server.block.Block

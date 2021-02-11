@@ -29,6 +29,15 @@ import games.joserobjr.intellimob.coroutines.CompletedJob
 import games.joserobjr.intellimob.entity.EntityFlag
 import games.joserobjr.intellimob.entity.RegularEntity
 import games.joserobjr.intellimob.math.*
+import games.joserobjr.intellimob.math.angle.PitchYaw
+import games.joserobjr.intellimob.math.extensions.squared
+import games.joserobjr.intellimob.math.extensions.ticks
+import games.joserobjr.intellimob.math.motion.HorizontalVelocity
+import games.joserobjr.intellimob.math.motion.IHorizontalVelocity
+import games.joserobjr.intellimob.math.motion.IVelocity
+import games.joserobjr.intellimob.math.motion.Velocity
+import games.joserobjr.intellimob.math.position.entity.EntityPos
+import games.joserobjr.intellimob.math.position.entity.IEntityPos
 import games.joserobjr.intellimob.pathfinding.Path
 import games.joserobjr.intellimob.trait.WithEntityPos
 import games.joserobjr.intellimob.trait.update
@@ -47,11 +56,11 @@ import kotlin.time.ExperimentalTime
  * @since 2021-01-21
  */
 internal open class LandBodyController(final override val owner: RegularEntity): BodyController {
-    private val currentJob = atomic(ActiveWalk(IEntityPos.ZERO, .0, DoubleVectorXZ(.0)) to CompletedJob)
+    private val currentJob = atomic(ActiveWalk(IEntityPos.ZERO, .0, HorizontalVelocity(.0)) to CompletedJob)
 
     override fun isMoving(): Boolean = !currentJob.get().second.isCompleted
     
-    override fun CoroutineScope.walkTo(pos: WithEntityPos, acceptableDistance: Double, speed: DoubleVectorXZ): Job? {
+    override fun CoroutineScope.walkTo(pos: WithEntityPos, acceptableDistance: Double, speed: IHorizontalVelocity): Job? {
         val (_, job) = currentJob.updateAndGet { oldPair ->
             val (oldActivity, oldJob) = oldPair
             val activity = ActiveWalk(pos, acceptableDistance, speed)
@@ -70,7 +79,7 @@ internal open class LandBodyController(final override val owner: RegularEntity):
         return job
     }
     
-    private data class ActiveWalk(val target: WithEntityPos, var acceptableDistance: Double, var speed: DoubleVectorXZ) {
+    private data class ActiveWalk(val target: WithEntityPos, var acceptableDistance: Double, var speed: IHorizontalVelocity) {
         fun isSimilar(other: ActiveWalk): Boolean {
             return target.position.toBlockPos() == other.target.position.toBlockPos()
         }
@@ -173,7 +182,7 @@ internal open class LandBodyController(final override val owner: RegularEntity):
                 } else if (needsToJump) {
                     owner.controls.jump()
                 }
-                applySpeed(motion, DoubleVectorXYZ(activity.speed))
+                applySpeed(motion, Velocity(activity.speed))
             }
             delay(1.ticks)
         }
@@ -182,7 +191,7 @@ internal open class LandBodyController(final override val owner: RegularEntity):
         }
     }
     
-    private fun EntityPos.motionToward(toward: EntityPos, speed: DoubleVectorXZ): DoubleVectorXYZ {
+    private fun EntityPos.motionToward(toward: EntityPos, speed: IHorizontalVelocity): IVelocity {
         // Create vector
         var x = toward.x - x
         var z = toward.z - z
@@ -190,7 +199,7 @@ internal open class LandBodyController(final override val owner: RegularEntity):
         // Normalize
         val squaredLen = x.squared() + z.squared()
         if (squaredLen <= 0) {
-            return DoubleVectorXYZ(this)
+            return Velocity(this)
         }
         val len = sqrt(squaredLen)
         x /= len
@@ -201,7 +210,7 @@ internal open class LandBodyController(final override val owner: RegularEntity):
         z *= speed.z
         
         // Done
-        return DoubleVectorXYZ(x, 0.0, z) 
+        return Velocity(x, 0.0, z) 
     }
 
     override suspend fun idleTask() {

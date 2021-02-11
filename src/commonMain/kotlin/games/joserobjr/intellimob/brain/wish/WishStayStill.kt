@@ -21,7 +21,7 @@ package games.joserobjr.intellimob.brain.wish
 
 import games.joserobjr.intellimob.control.api.EntityControls
 import games.joserobjr.intellimob.entity.RegularEntity
-import games.joserobjr.intellimob.math.DoubleVectorXZ
+import games.joserobjr.intellimob.math.motion.IHorizontalVelocity
 import games.joserobjr.intellimob.trait.WithEntityPos
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.awaitCancellation
@@ -34,7 +34,7 @@ import kotlinx.coroutines.launch
  */
 internal object WishStayStill: WishMove() {
     override val sprinting: Boolean get() = false
-    override val speedMultiplier: DoubleVectorXZ? get() = null
+    override val speedMultiplier: IHorizontalVelocity? get() = null
 
     override suspend fun EntityControls.start(): Job {
         return coroutineScope { 

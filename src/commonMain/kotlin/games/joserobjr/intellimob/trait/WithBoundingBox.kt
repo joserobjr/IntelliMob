@@ -19,7 +19,7 @@
 
 package games.joserobjr.intellimob.trait
 
-import games.joserobjr.intellimob.math.BoundingBox
+import games.joserobjr.intellimob.math.collision.BoundingBox
 
 /**
  * @author joserobjr

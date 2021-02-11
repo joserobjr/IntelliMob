@@ -19,7 +19,7 @@
 
 package games.joserobjr.intellimob.block
 
-import games.joserobjr.intellimob.math.IBlockPos
+import games.joserobjr.intellimob.math.position.block.IBlockPos
 import games.joserobjr.intellimob.math.toBlockPos
 import games.joserobjr.intellimob.world.RegularWorld
 import games.joserobjr.intellimob.world.asIntelliMobWorld

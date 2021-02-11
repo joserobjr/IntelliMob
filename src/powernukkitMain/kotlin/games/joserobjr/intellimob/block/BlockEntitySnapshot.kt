@@ -20,7 +20,7 @@
 package games.joserobjr.intellimob.block
 
 import cn.nukkit.nbt.tag.CompoundTag
-import games.joserobjr.intellimob.math.BlockLocation
+import games.joserobjr.intellimob.math.position.block.BlockLocation
 import games.joserobjr.intellimob.trait.WithBlockLocation
 import games.joserobjr.intellimob.trait.WithBlockPosWorldByLocation
 

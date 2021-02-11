@@ -20,8 +20,8 @@
 package games.joserobjr.intellimob.block
 
 import cn.nukkit.blockentity.BlockEntity
-import games.joserobjr.intellimob.math.BlockPos
-import games.joserobjr.intellimob.math.IBlockPos
+import games.joserobjr.intellimob.math.position.block.BlockPos
+import games.joserobjr.intellimob.math.position.block.IBlockPos
 import games.joserobjr.intellimob.world.RegularWorld
 import games.joserobjr.intellimob.world.asIntelliMobWorld
 import kotlinx.coroutines.CoroutineDispatcher
@@ -32,7 +32,8 @@ import kotlin.time.TimeSource
 internal inline class PowerNukkitBlockEntity(override val powerNukkitEntity: BlockEntity): RegularBlockEntity {
     override val updateDispatcher: CoroutineDispatcher get() = world.updateDispatcher
     
-    override val position: IBlockPos get() = with(powerNukkitEntity) {
+    override val position: IBlockPos
+        get() = with(powerNukkitEntity) {
             BlockPos(x.toInt(), y.toInt(), z.toInt())
     }
 

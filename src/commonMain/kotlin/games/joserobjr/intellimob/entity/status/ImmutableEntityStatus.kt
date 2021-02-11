@@ -19,9 +19,10 @@
 
 package games.joserobjr.intellimob.entity.status
 
-import games.joserobjr.intellimob.math.DoubleVectorXZ
-import games.joserobjr.intellimob.math.PitchYawSpeed
-import games.joserobjr.intellimob.math.Velocity
+import games.joserobjr.intellimob.math.generic.DoubleVectorXZ
+import games.joserobjr.intellimob.math.angle.PitchYawSpeed
+import games.joserobjr.intellimob.math.motion.HorizontalVelocity
+import games.joserobjr.intellimob.math.motion.Velocity
 
 /**
  * @author joserobjr
@@ -30,9 +31,9 @@ import games.joserobjr.intellimob.math.Velocity
 internal data class ImmutableEntityStatus (
     override val headSpeed: PitchYawSpeed,
     override val headFastSpeed: PitchYawSpeed,
-    override val walkSpeed: DoubleVectorXZ,
-    override val sprintSpeed: DoubleVectorXZ,
-    override val flySpeed: DoubleVectorXZ,
+    override val walkSpeed: HorizontalVelocity,
+    override val sprintSpeed: HorizontalVelocity,
+    override val flySpeed: HorizontalVelocity,
     override val jumpSpeed: Double,
     override val stepHeight: Double,
     override val canJump: Boolean,

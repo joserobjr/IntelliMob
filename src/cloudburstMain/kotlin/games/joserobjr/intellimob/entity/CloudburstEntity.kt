@@ -27,6 +27,12 @@ import games.joserobjr.intellimob.entity.status.EntityStatus
 import games.joserobjr.intellimob.entity.status.MutableEntityStatus
 import games.joserobjr.intellimob.item.RegularItemStack
 import games.joserobjr.intellimob.math.*
+import games.joserobjr.intellimob.math.angle.PitchYaw
+import games.joserobjr.intellimob.math.collision.BoundingBox
+import games.joserobjr.intellimob.math.motion.IVelocity
+import games.joserobjr.intellimob.math.motion.Velocity
+import games.joserobjr.intellimob.math.position.entity.EntityLocation
+import games.joserobjr.intellimob.math.position.entity.EntityPos
 import games.joserobjr.intellimob.pathfinding.BlockFavorProvider
 import games.joserobjr.intellimob.pathfinding.PathFinder
 import games.joserobjr.intellimob.world.RegularWorld
@@ -87,19 +93,19 @@ internal class CloudburstEntity(override val cloudburstEntity: Entity) : Regular
         TODO("Not yet implemented")
     }
 
-    override suspend fun applyMotion(motion: IDoubleVectorXYZ): Boolean {
+    override suspend fun applyMotion(motion: IVelocity): Boolean {
         TODO("Not yet implemented")
     }
 
-    override suspend fun applySpeed(vector: IDoubleVectorXYZ, force: IDoubleVectorXYZ): Boolean {
+    override suspend fun applySpeed(vector: IVelocity, force: IVelocity): Boolean {
         TODO("Not yet implemented")
     }
 
-    override suspend fun calculateInertiaMotion(): IDoubleVectorXYZ {
+    override suspend fun calculateInertiaMotion(): IVelocity {
         TODO("Not yet implemented")
     }
 
-    override suspend fun calculateDrag(): IDoubleVectorXYZ {
+    override suspend fun calculateDrag(): IVelocity {
         TODO("Not yet implemented")
     }
 

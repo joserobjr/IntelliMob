@@ -21,6 +21,7 @@
 
 package games.joserobjr.intellimob.math
 
+import games.joserobjr.intellimob.math.position.block.BlockPos
 import io.gomint.math.BlockPosition
 
 /**

@@ -20,8 +20,8 @@
 package games.joserobjr.intellimob.brain.wish
 
 import games.joserobjr.intellimob.entity.RegularEntity
-import games.joserobjr.intellimob.math.DoubleVectorXZ
-import games.joserobjr.intellimob.math.IEntityPos
+import games.joserobjr.intellimob.math.motion.IHorizontalVelocity
+import games.joserobjr.intellimob.math.position.entity.IEntityPos
 
 /**
  * @author joserobjr
@@ -30,7 +30,7 @@ import games.joserobjr.intellimob.math.IEntityPos
 internal data class WishMoveToPos(
     val target: IEntityPos,
     override val sprinting: Boolean = false,
-    override val speedMultiplier: DoubleVectorXZ? = null,
+    override val speedMultiplier: IHorizontalVelocity? = null,
 ): WishMove() {
     override suspend fun targetFor(owner: RegularEntity) = target
 }

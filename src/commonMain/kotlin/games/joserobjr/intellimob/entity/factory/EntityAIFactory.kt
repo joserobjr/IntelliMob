@@ -30,9 +30,9 @@ import games.joserobjr.intellimob.entity.factory.passive.BatAI
 import games.joserobjr.intellimob.entity.factory.passive.PigAI
 import games.joserobjr.intellimob.entity.status.ImmutableEntityStatus
 import games.joserobjr.intellimob.entity.status.MutableEntityStatus
-import games.joserobjr.intellimob.math.DoubleVectorXZ
-import games.joserobjr.intellimob.math.PitchYawSpeed
-import games.joserobjr.intellimob.math.Velocity
+import games.joserobjr.intellimob.math.angle.PitchYawSpeed
+import games.joserobjr.intellimob.math.motion.HorizontalVelocity
+import games.joserobjr.intellimob.math.motion.Velocity
 import games.joserobjr.intellimob.pathfinding.BlockFavorProvider
 import games.joserobjr.intellimob.pathfinding.PathFinder
 import games.joserobjr.intellimob.pathfinding.StationaryPathFinder
@@ -59,9 +59,9 @@ internal interface EntityAIFactory {
         return MutableEntityStatus(
             headSpeed = PitchYawSpeed(40.0, 10.0),
             headFastSpeed = PitchYawSpeed(80.0, 20.0),
-            walkSpeed = DoubleVectorXZ(.7),
-            sprintSpeed = DoubleVectorXZ(1.0),
-            flySpeed = DoubleVectorXZ(.4),
+            walkSpeed = HorizontalVelocity(.7),
+            sprintSpeed = HorizontalVelocity(1.0),
+            flySpeed = HorizontalVelocity(.4),
             jumpSpeed = .42,
             stepHeight = .6,
             canJump = true,

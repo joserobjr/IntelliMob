@@ -21,6 +21,8 @@ package games.joserobjr.intellimob.block
 
 import cn.nukkit.block.BlockLiquid
 import games.joserobjr.intellimob.math.*
+import games.joserobjr.intellimob.math.collision.BoundingBox
+import games.joserobjr.intellimob.math.position.block.BlockLocation
 import kotlinx.coroutines.withContext
 
 /**

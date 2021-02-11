@@ -19,8 +19,8 @@
 
 package games.joserobjr.intellimob.trait
 
-import games.joserobjr.intellimob.math.BlockLocation
-import games.joserobjr.intellimob.math.IBlockPos
+import games.joserobjr.intellimob.math.position.block.BlockLocation
+import games.joserobjr.intellimob.math.position.block.IBlockPos
 import games.joserobjr.intellimob.world.RegularWorld
 
 /**

@@ -24,7 +24,7 @@ import games.joserobjr.intellimob.brain.Brain
 import games.joserobjr.intellimob.control.api.PhysicalControl
 import games.joserobjr.intellimob.coroutines.AI
 import games.joserobjr.intellimob.coroutines.RestartableJob
-import games.joserobjr.intellimob.math.ticks
+import games.joserobjr.intellimob.math.extensions.ticks
 import games.joserobjr.intellimobjvm.atomic.AtomicRef
 import games.joserobjr.intellimobjvm.atomic.atomic
 import games.joserobjr.intellimobjvm.atomic.getValue

@@ -23,7 +23,7 @@ import games.joserobjr.intellimob.entity.EntityFlag.CAN_CLIMB
 import games.joserobjr.intellimob.entity.EntityFlag.CAN_FLY
 import games.joserobjr.intellimob.entity.IEntityFlagManager
 import games.joserobjr.intellimob.entity.status.MutableEntityStatus
-import games.joserobjr.intellimob.math.Velocity
+import games.joserobjr.intellimob.math.motion.Velocity
 
 /**
  * @author joserobjr

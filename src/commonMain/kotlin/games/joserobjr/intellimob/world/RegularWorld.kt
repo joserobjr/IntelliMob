@@ -23,8 +23,8 @@ import games.joserobjr.intellimob.block.BlockSnapshot
 import games.joserobjr.intellimob.block.BlockState
 import games.joserobjr.intellimob.block.RegularBlockEntity
 import games.joserobjr.intellimob.entity.Sound
-import games.joserobjr.intellimob.math.IBlockPos
-import games.joserobjr.intellimob.math.IEntityPos
+import games.joserobjr.intellimob.math.position.block.IBlockPos
+import games.joserobjr.intellimob.math.position.entity.IEntityPos
 import games.joserobjr.intellimob.trait.WithTimeSource
 import games.joserobjr.intellimob.trait.WithUpdateDispatcher
 import kotlinx.coroutines.Job

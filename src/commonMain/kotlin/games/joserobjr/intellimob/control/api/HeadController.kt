@@ -20,8 +20,8 @@
 package games.joserobjr.intellimob.control.api
 
 import games.joserobjr.intellimob.entity.status.EntityStatus
-import games.joserobjr.intellimob.math.PitchYaw
-import games.joserobjr.intellimob.math.PitchYawSpeed
+import games.joserobjr.intellimob.math.angle.PitchYaw
+import games.joserobjr.intellimob.math.angle.PitchYawSpeed
 import games.joserobjr.intellimob.trait.WithEntityPos
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job

@@ -26,6 +26,7 @@ import cn.nukkit.level.Position
 import games.joserobjr.intellimob.block.PNBlockState
 import games.joserobjr.intellimob.block.PowerNukkitBlock
 import games.joserobjr.intellimob.block.RegularBlock
+import games.joserobjr.intellimob.math.position.block.BlockLocation
 
 /**
  * @author joserobjr

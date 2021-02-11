@@ -23,9 +23,9 @@ import games.joserobjr.intellimob.control.api.HeadController
 import games.joserobjr.intellimob.coroutines.AI
 import games.joserobjr.intellimob.coroutines.CompletedJob
 import games.joserobjr.intellimob.entity.RegularEntity
-import games.joserobjr.intellimob.math.PitchYaw
-import games.joserobjr.intellimob.math.PitchYawSpeed
-import games.joserobjr.intellimob.math.ticks
+import games.joserobjr.intellimob.math.angle.PitchYaw
+import games.joserobjr.intellimob.math.angle.PitchYawSpeed
+import games.joserobjr.intellimob.math.extensions.ticks
 import games.joserobjr.intellimob.trait.WithEntityPos
 import games.joserobjr.intellimob.trait.update
 import games.joserobjr.intellimobjvm.atomic.atomic

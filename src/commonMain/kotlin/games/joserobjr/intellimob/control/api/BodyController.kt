@@ -20,7 +20,7 @@
 package games.joserobjr.intellimob.control.api
 
 import games.joserobjr.intellimob.entity.status.EntityStatus
-import games.joserobjr.intellimob.math.DoubleVectorXZ
+import games.joserobjr.intellimob.math.motion.IHorizontalVelocity
 import games.joserobjr.intellimob.trait.WithEntityPos
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -43,7 +43,7 @@ internal interface BodyController: Controller {
     fun CoroutineScope.walkTo(
         pos: WithEntityPos,
         acceptableDistance: Double = owner.currentStatus.stepHeight,
-        speed: DoubleVectorXZ = owner.currentStatus.walkSpeed
+        speed: IHorizontalVelocity = owner.currentStatus.walkSpeed
     ): Job?
 
     fun isMoving(): Boolean = false

@@ -19,9 +19,9 @@
 
 package games.joserobjr.intellimob.block
 
-import games.joserobjr.intellimob.math.BlockLocation
-import games.joserobjr.intellimob.math.BoundingBox
-import games.joserobjr.intellimob.math.IBlockPos
+import games.joserobjr.intellimob.math.position.block.BlockLocation
+import games.joserobjr.intellimob.math.collision.BoundingBox
+import games.joserobjr.intellimob.math.position.block.IBlockPos
 import games.joserobjr.intellimob.trait.WithBlockLocation
 import games.joserobjr.intellimob.trait.WithBoundingBox
 import games.joserobjr.intellimob.world.RegularWorld

@@ -24,6 +24,7 @@ package games.joserobjr.intellimob.math
 import cn.nukkit.math.BlockVector3
 import cn.nukkit.math.Vector3
 import cn.nukkit.math.Vector3f
+import games.joserobjr.intellimob.math.position.block.MutableBlockPos
 
 /**
  * @author joserobjr

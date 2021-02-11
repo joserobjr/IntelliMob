@@ -20,6 +20,7 @@
 package games.joserobjr.intellimob.math
 
 import cn.nukkit.math.AxisAlignedBB
+import games.joserobjr.intellimob.math.collision.BoundingBox
 
 /**
  * @author joserobjr

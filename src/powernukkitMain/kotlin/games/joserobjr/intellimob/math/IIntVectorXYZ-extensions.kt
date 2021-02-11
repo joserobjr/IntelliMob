@@ -20,6 +20,7 @@
 package games.joserobjr.intellimob.math
 
 import cn.nukkit.math.BlockVector3
+import games.joserobjr.intellimob.math.generic.IIntVectorXYZ
 
 /**
  * @author joserobjr

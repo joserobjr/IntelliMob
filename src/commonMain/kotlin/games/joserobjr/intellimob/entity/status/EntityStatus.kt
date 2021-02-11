@@ -19,9 +19,9 @@
 
 package games.joserobjr.intellimob.entity.status
 
-import games.joserobjr.intellimob.math.DoubleVectorXZ
-import games.joserobjr.intellimob.math.PitchYawSpeed
-import games.joserobjr.intellimob.math.Velocity
+import games.joserobjr.intellimob.math.angle.PitchYawSpeed
+import games.joserobjr.intellimob.math.motion.HorizontalVelocity
+import games.joserobjr.intellimob.math.motion.Velocity
 
 /**
  * @author joserobjr
@@ -33,9 +33,9 @@ internal interface EntityStatus {
      */
     val headSpeed: PitchYawSpeed
     val headFastSpeed: PitchYawSpeed
-    val walkSpeed: DoubleVectorXZ
-    val sprintSpeed: DoubleVectorXZ
-    val flySpeed: DoubleVectorXZ
+    val walkSpeed: HorizontalVelocity
+    val sprintSpeed: HorizontalVelocity
+    val flySpeed: HorizontalVelocity
     val jumpSpeed: Double
     val stepHeight: Double
     val canJump: Boolean

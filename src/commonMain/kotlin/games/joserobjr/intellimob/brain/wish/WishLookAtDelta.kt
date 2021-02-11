@@ -20,8 +20,8 @@
 package games.joserobjr.intellimob.brain.wish
 
 import games.joserobjr.intellimob.entity.RegularEntity
-import games.joserobjr.intellimob.math.IDoubleVectorXYZ
-import games.joserobjr.intellimob.math.IEntityPos
+import games.joserobjr.intellimob.math.generic.IDoubleVectorXYZ
+import games.joserobjr.intellimob.math.position.entity.IEntityPos
 import games.joserobjr.intellimob.trait.WithEntityPos
 
 /**

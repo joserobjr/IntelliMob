@@ -21,8 +21,8 @@ package games.joserobjr.intellimob.brain.goal
 
 import games.joserobjr.intellimob.control.api.PhysicalControl
 import games.joserobjr.intellimob.entity.RegularEntity
-import games.joserobjr.intellimob.math.BlockPos
-import games.joserobjr.intellimob.math.Velocity
+import games.joserobjr.intellimob.math.motion.HorizontalVelocity
+import games.joserobjr.intellimob.math.position.block.BlockPos
 import games.joserobjr.intellimob.pathfinding.findTarget
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -33,7 +33,7 @@ import kotlin.time.ExperimentalTime
  * @author joserobjr
  * @since 2021-01-20
  */
-internal open class GoalWanderAround(val speed: Velocity, val chance: Int = 120): Goal(setOf(PhysicalControl.MOVE)) {
+internal open class GoalWanderAround(val speed: HorizontalVelocity, val chance: Int = 120): Goal(setOf(PhysicalControl.MOVE)) {
     override val defaultPriority: Int get() = 90_980_000
     override val needsMemory: Boolean get() = true
 
@@ -56,7 +56,7 @@ internal open class GoalWanderAround(val speed: Velocity, val chance: Int = 120)
         requireNotNull(memory)
         val target: BlockPos = memory["target"] ?: return null
         return with(entity.brain.wishes) {
-            moveTo(target.toCenteredEntityPos())
+            moveTo(target.toCenteredEntityPos(), speedMultiplier = speed)
         }
     }
 

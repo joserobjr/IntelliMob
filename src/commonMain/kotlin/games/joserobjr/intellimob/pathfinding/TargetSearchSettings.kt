@@ -20,9 +20,9 @@
 package games.joserobjr.intellimob.pathfinding
 
 import games.joserobjr.intellimob.entity.RegularEntity
-import games.joserobjr.intellimob.math.DoubleVectorXYZ
-import games.joserobjr.intellimob.math.IDoubleVectorXYZ
-import games.joserobjr.intellimob.math.IEntityPos
+import games.joserobjr.intellimob.math.generic.DoubleVectorXYZ
+import games.joserobjr.intellimob.math.generic.IDoubleVectorXYZ
+import games.joserobjr.intellimob.math.position.entity.IEntityPos
 import kotlin.math.PI
 
 /**
