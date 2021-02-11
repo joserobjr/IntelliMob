@@ -29,6 +29,7 @@ import games.joserobjr.intellimob.coroutines.CompletedJob
 import games.joserobjr.intellimob.entity.EntityFlag
 import games.joserobjr.intellimob.entity.RegularEntity
 import games.joserobjr.intellimob.math.*
+import games.joserobjr.intellimob.pathfinding.Path
 import games.joserobjr.intellimob.trait.WithEntityPos
 import games.joserobjr.intellimob.trait.update
 import games.joserobjr.intellimob.trait.updateAsync
@@ -37,6 +38,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toSet
+import kotlin.coroutines.coroutineContext
 import kotlin.math.sqrt
 import kotlin.time.ExperimentalTime
 
@@ -52,7 +54,7 @@ internal open class LandBodyController(final override val owner: RegularEntity):
     override fun CoroutineScope.walkTo(pos: WithEntityPos, acceptableDistance: Double, speed: DoubleVectorXZ): Job? {
         val (_, job) = currentJob.updateAndGet { oldPair ->
             val (oldActivity, oldJob) = oldPair
-            val activity = ActiveWalk(pos.position.toImmutable(), acceptableDistance, speed)
+            val activity = ActiveWalk(pos, acceptableDistance, speed)
             if (!oldJob.isCompleted && !oldJob.isCancelled) {
                 if (oldActivity.isSimilar(activity)) {
                     oldActivity.speed = speed
@@ -68,18 +70,23 @@ internal open class LandBodyController(final override val owner: RegularEntity):
         return job
     }
     
-    private data class ActiveWalk(val target: EntityPos, var acceptableDistance: Double, var speed: DoubleVectorXZ) {
+    private data class ActiveWalk(val target: WithEntityPos, var acceptableDistance: Double, var speed: DoubleVectorXZ) {
         fun isSimilar(other: ActiveWalk): Boolean {
             return target.position.toBlockPos() == other.target.position.toBlockPos()
         }
     }
     
+    private suspend fun findPath(activity: ActiveWalk): Path? {
+        return owner.pathFinder.findPath(
+            owner.world.cache,
+            owner.position.toBlockPos(),
+            activity.target.position.toBlockPos()
+        ).takeIf { it.isNotEmpty() }
+    }
+    
     @OptIn(ExperimentalTime::class)
-    private suspend fun walk(activity: ActiveWalk) = coroutineScope s@ {
-        val path = owner.pathFinder.findPath(owner.world.cache, owner.position.toBlockPos(), activity.target.toBlockPos())
-        if (path.isEmpty()) {
-            return@s
-        }
+    private suspend fun walk(activity: ActiveWalk) {
+        var path = findPath(activity) ?: return
         var lastNode: BlockSnapshot? = null
         val job = Job(coroutineContext.job)
         job.start()
@@ -101,14 +108,21 @@ internal open class LandBodyController(final override val owner: RegularEntity):
             }
         }
         try {
+        var lastTargetPos = activity.target.position.toBlockPos()
         while (true) {
             val current = owner.position
-            if (current.squaredDistance(activity.target) <= activity.acceptableDistance.squared()) {
-                return@s
+            val currentEntityPos = activity.target.position
+            val currentTargetPos = currentEntityPos.toBlockPos()
+            if (currentTargetPos isNotSimilarTo lastTargetPos) {
+                path = findPath(activity) ?: return
+                lastTargetPos = currentTargetPos
             }
-            val nextNode = path.next(current) ?: return@s
-            if (nextNode == path.nodes.last() && current.squaredHorizontalDistance(activity.target) <= activity.acceptableDistance.squared()) {
-                return@s
+            if (!activity.acceptableDistance.isNaN() && current.squaredDistance(currentEntityPos) <= activity.acceptableDistance.squared()) {
+                return
+            }
+            val nextNode = path.next(current) ?: return
+            if (!activity.acceptableDistance.isNaN() && nextNode == path.nodes.last() && current.squaredHorizontalDistance(currentEntityPos) <= activity.acceptableDistance.squared()) {
+                return
             }
             val nextNodePos = nextNode.toCenteredEntityPos()
             if (nextNodePos.down().toBlockPos() isNotSimilarTo lastNode?.position) {
@@ -155,8 +169,7 @@ internal open class LandBodyController(final override val owner: RegularEntity):
             
             owner.update {
                 if (needsToStep && highestY != null) {
-                    val pos = position
-                    moveTo(pos.copy(y = pos.y + highestY))
+                    moveTo(currentEntityPos.toImmutable().copy(y = currentEntityPos.y + highestY))
                 } else if (needsToJump) {
                     owner.controls.jump()
                 }

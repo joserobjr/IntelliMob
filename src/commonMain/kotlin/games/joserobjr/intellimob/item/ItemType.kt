@@ -17,20 +17,16 @@
  *
  */
 
-package games.joserobjr.intellimob.brain.wish
-
-import games.joserobjr.intellimob.entity.RegularEntity
-import games.joserobjr.intellimob.math.DoubleVectorXZ
-import games.joserobjr.intellimob.math.IEntityPos
+package games.joserobjr.intellimob.item
 
 /**
  * @author joserobjr
- * @since 2021-01-17
+ * @since 2021-01-24
  */
-internal data class WishMoveToPos(
-    val target: IEntityPos,
-    override val sprinting: Boolean = false,
-    override val speedMultiplier: DoubleVectorXZ? = null,
-): WishMove() {
-    override suspend fun targetFor(owner: RegularEntity) = target
+internal expect sealed class ItemType {
+    companion object {
+        val BEETROOT: ItemType
+        val POTATO: ItemType
+        val CARROT: ItemType
+    }
 }

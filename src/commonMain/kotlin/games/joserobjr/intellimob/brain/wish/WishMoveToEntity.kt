@@ -20,6 +20,7 @@
 package games.joserobjr.intellimob.brain.wish
 
 import games.joserobjr.intellimob.entity.RegularEntity
+import games.joserobjr.intellimob.math.DoubleVectorXZ
 import games.joserobjr.intellimob.trait.WithEntityPos
 
 /**
@@ -29,6 +30,8 @@ import games.joserobjr.intellimob.trait.WithEntityPos
 internal data class WishMoveToEntity(
     val targetEntity: WithEntityPos,
     override val sprinting: Boolean = false,
+    override val speedMultiplier: DoubleVectorXZ? = null,
 ): WishMove() {
     override suspend fun targetFor(owner: RegularEntity): WithEntityPos = targetEntity
+    override suspend fun acceptableDistanceFor(owner: RegularEntity): Double = Double.NaN
 }

@@ -46,5 +46,14 @@ internal actual class BlockType private constructor(val goMintBlockClass: KClass
             }
             return types.computeIfAbsent(entityClass, ::BlockType)
         }
+
+        actual val WATER: BlockType
+            get() = TODO("Not yet implemented")
+        actual val FLOWING_WATER: BlockType
+            get() = TODO("Not yet implemented")
+        actual val LAVA: BlockType
+            get() = TODO("Not yet implemented")
+        actual val FLOWING_LAVA: BlockType
+            get() = TODO("Not yet implemented")
     }
 }

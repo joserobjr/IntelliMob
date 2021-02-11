@@ -26,8 +26,10 @@ import games.joserobjr.intellimob.control.api.PhysicalControl
 import games.joserobjr.intellimob.coroutines.AI
 import games.joserobjr.intellimob.coroutines.RestartableJob
 import games.joserobjr.intellimob.entity.RegularEntity
+import games.joserobjr.intellimob.math.DoubleVectorXZ
 import games.joserobjr.intellimob.math.EntityPos
 import games.joserobjr.intellimob.math.IDoubleVectorXYZ
+import games.joserobjr.intellimob.trait.WithEntityPos
 import games.joserobjr.intellimobjvm.collection.asMap
 import games.joserobjr.intellimobjvm.collection.toEnumMap
 import kotlinx.coroutines.*
@@ -35,7 +37,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.selects.select
-import kotlin.coroutines.cancellation.CancellationException
+import kotlin.coroutines.coroutineContext
 import kotlin.time.Duration
 import kotlin.time.ExperimentalTime
 import kotlin.time.TimeSource
@@ -53,19 +55,19 @@ internal class Wishes(val brain: Brain) {
     private val _wishesJob = RestartableJob()
     private val wishesJob by _wishesJob
 
-    fun CoroutineScope.moveTo(pos: EntityPos, timeLimit: Duration? = null, sprinting: Boolean = false): Job {
-        return launchWish(PhysicalControl.MOVE, WishMoveToPos(pos, sprinting), timeLimit)
+    fun CoroutineScope.moveTo(pos: EntityPos, timeLimit: Duration? = null, sprinting: Boolean = false, speedMultiplier: DoubleVectorXZ? = null): Job {
+        return launchWish(PhysicalControl.MOVE, WishMoveToPos(pos, sprinting, speedMultiplier), timeLimit)
     }
 
-    fun CoroutineScope.moveTo(entity: RegularEntity, timeLimit: Duration? = null, sprinting: Boolean = false): Job {
-        return launchWish(PhysicalControl.MOVE, WishMoveToEntity(entity, sprinting), timeLimit)
+    fun CoroutineScope.moveTo(entity: WithEntityPos, timeLimit: Duration? = null, sprinting: Boolean = false, speedMultiplier: DoubleVectorXZ? = null): Job {
+        return launchWish(PhysicalControl.MOVE, WishMoveToEntity(entity, sprinting, speedMultiplier), timeLimit)
     }
 
     fun CoroutineScope.stayStill(timeLimit: Duration): Job {
         return launchWish(PhysicalControl.MOVE, WishStayStill, timeLimit)
     }
 
-    fun CoroutineScope.lookAt(pos: EntityPos, timeLimit: Duration? = null, quickly: Boolean = false): Job {
+    fun CoroutineScope.lookAt(pos: WithEntityPos, timeLimit: Duration? = null, quickly: Boolean = false): Job {
         return launchWish(PhysicalControl.LOOK, WishLookAtPos(pos, quickly), timeLimit)
     }
 
@@ -146,7 +148,7 @@ internal class Wishes(val brain: Brain) {
     }
 
     private suspend fun replaceAndJoin(control: PhysicalControl, wish: Wish) {
-        val newWish = ActiveWish(wish)
+        val newWish = ActiveWish(wish, coroutineContext.job)
         replaceWish(control, newWish)
         val name = "${wish::class.simpleName}"
         val start = TimeSource.Monotonic.markNow()
@@ -184,7 +186,8 @@ internal class Wishes(val brain: Brain) {
     }
 
     private inner class ActiveWish(
-        val wish: Wish
+        val wish: Wish,
+        val parentJob: Job,
     ) {
         private val _job = MutableStateFlow<Job?>(null)
         val job = _job.filterNotNull().take(1) 
@@ -193,7 +196,7 @@ internal class Wishes(val brain: Brain) {
         }
 
         fun CoroutineScope.start() {
-            val job = launch(Dispatchers.AI) {
+            val job = launch(parentJob + Dispatchers.AI) {
                 val wishJob = with(brain.owner.controls) {
                     with(wish) {
                         start()

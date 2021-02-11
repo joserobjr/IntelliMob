@@ -35,6 +35,8 @@ internal abstract class Goal(val physicalControl: Set<PhysicalControl>) {
      * * -100_000_000 SwimUp
      * * -100_100_000 EscapeDanger
      * 
+     * * 010_900_000 Tempt
+     * 
      * * 090_970_000 FlyOntoTree
      * * 090_980_000 WanderAround
      * * 090_990_000 WanderAroundFar

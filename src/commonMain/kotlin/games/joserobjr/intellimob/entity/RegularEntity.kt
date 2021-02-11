@@ -25,6 +25,7 @@ import games.joserobjr.intellimob.brain.wish.Wishes
 import games.joserobjr.intellimob.control.api.EntityControls
 import games.joserobjr.intellimob.entity.status.EntityStatus
 import games.joserobjr.intellimob.entity.status.MutableEntityStatus
+import games.joserobjr.intellimob.item.RegularItemStack
 import games.joserobjr.intellimob.math.EntityPos
 import games.joserobjr.intellimob.math.IDoubleVectorXYZ
 import games.joserobjr.intellimob.math.PitchYaw
@@ -86,6 +87,14 @@ internal interface RegularEntity: PlatformEntity, WithEntityLocation, WithTimeSo
     val flagManager: IEntityFlagManager
 
     val isUnderAttack: Boolean
+
+    val itemInMainHand: RegularItemStack?
+    val itemInOffHand: RegularItemStack?
+
+    /**
+     * Is alive and is online.
+     */
+    val isValid: Boolean
 
     fun hasPassengers(): Boolean
     

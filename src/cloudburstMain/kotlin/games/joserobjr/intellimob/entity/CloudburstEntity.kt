@@ -25,6 +25,7 @@ import games.joserobjr.intellimob.coroutines.Sync
 import games.joserobjr.intellimob.entity.EntityType.Companion.fromEntity
 import games.joserobjr.intellimob.entity.status.EntityStatus
 import games.joserobjr.intellimob.entity.status.MutableEntityStatus
+import games.joserobjr.intellimob.item.RegularItemStack
 import games.joserobjr.intellimob.math.*
 import games.joserobjr.intellimob.pathfinding.BlockFavorProvider
 import games.joserobjr.intellimob.pathfinding.PathFinder
@@ -119,4 +120,16 @@ internal class CloudburstEntity(override val cloudburstEntity: Entity) : Regular
 
     override val flagManager: IEntityFlagManager
         get() = TODO("Not yet implemented")
+    override val isUnderAttack: Boolean
+        get() = TODO("Not yet implemented")
+    override val itemInMainHand: RegularItemStack?
+        get() = TODO("Not yet implemented")
+    override val itemInOffHand: RegularItemStack?
+        get() = TODO("Not yet implemented")
+    override val isValid: Boolean
+        get() = TODO("Not yet implemented")
+
+    override suspend fun isTouchingWater(): Boolean {
+        TODO("Not yet implemented")
+    }
 }

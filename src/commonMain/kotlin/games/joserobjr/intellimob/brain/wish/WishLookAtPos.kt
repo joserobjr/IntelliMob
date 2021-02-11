@@ -20,14 +20,14 @@
 package games.joserobjr.intellimob.brain.wish
 
 import games.joserobjr.intellimob.entity.RegularEntity
-import games.joserobjr.intellimob.math.IEntityPos
+import games.joserobjr.intellimob.trait.WithEntityPos
 
 /**
  * @author joserobjr
  * @since 2021-01-17
  */
 internal data class WishLookAtPos(
-    val target: IEntityPos,
+    val target: WithEntityPos,
     override val quickly: Boolean = false,
 ): WishLook() {
     override suspend fun targetFor(owner: RegularEntity) = target

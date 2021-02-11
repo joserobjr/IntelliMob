@@ -21,6 +21,7 @@ package games.joserobjr.intellimob.brain.wish
 
 import games.joserobjr.intellimob.control.api.EntityControls
 import games.joserobjr.intellimob.entity.RegularEntity
+import games.joserobjr.intellimob.math.DoubleVectorXZ
 import games.joserobjr.intellimob.trait.WithEntityPos
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
@@ -31,14 +32,22 @@ import kotlinx.coroutines.coroutineScope
  */
 internal abstract class WishMove: Wish() {
     abstract val sprinting: Boolean
+    abstract val speedMultiplier: DoubleVectorXZ?
 
     override suspend fun EntityControls.start(): Job? {
         val target = targetFor(owner) ?: return null
         val currentStatus = owner.currentStatus
         return coroutineScope {
-            walkTo(target, speed = if (sprinting) currentStatus.sprintSpeed else currentStatus.walkSpeed)
+            val baseSpeed = if (sprinting) currentStatus.sprintSpeed else currentStatus.walkSpeed
+            val finalSpeed = speedMultiplier?.let { it * baseSpeed } ?: baseSpeed
+            walkTo(
+                target,
+                speed = finalSpeed,
+                acceptableDistance = acceptableDistanceFor(owner)
+            )
         }
     }
 
     protected abstract suspend fun targetFor(owner: RegularEntity): WithEntityPos?
+    protected open suspend fun acceptableDistanceFor(owner: RegularEntity): Double = owner.currentStatus.stepHeight
 }

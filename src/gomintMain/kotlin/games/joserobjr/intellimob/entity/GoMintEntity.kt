@@ -24,6 +24,7 @@ import games.joserobjr.intellimob.control.api.EntityControls
 import games.joserobjr.intellimob.coroutines.Sync
 import games.joserobjr.intellimob.entity.status.EntityStatus
 import games.joserobjr.intellimob.entity.status.MutableEntityStatus
+import games.joserobjr.intellimob.item.RegularItemStack
 import games.joserobjr.intellimob.math.*
 import games.joserobjr.intellimob.pathfinding.BlockFavorProvider
 import games.joserobjr.intellimob.pathfinding.PathFinder
@@ -115,6 +116,19 @@ internal class GoMintEntity<E>(override val goMintEntity: Entity<E>) : RegularEn
         get() = TODO("Not yet implemented")
 
     override suspend fun playSound(sound: Sound) {
+        TODO("Not yet implemented")
+    }
+
+    override val isUnderAttack: Boolean
+        get() = TODO("Not yet implemented")
+    override val itemInMainHand: RegularItemStack?
+        get() = TODO("Not yet implemented")
+    override val itemInOffHand: RegularItemStack?
+        get() = TODO("Not yet implemented")
+    override val isValid: Boolean
+        get() = TODO("Not yet implemented")
+
+    override suspend fun isTouchingWater(): Boolean {
         TODO("Not yet implemented")
     }
 }

@@ -71,7 +71,9 @@ internal class EntityGoalSelector(
                     activeGoals.removeAll { it.activeJob?.isActive != true }
 
                     goals.forEach { goal ->
-                        if (goal.canStart()) {
+                        val conflictingGoals = activeGoals.filter { it.goal.physicalControl.any { control -> control in goal.goal.physicalControl } }
+                        if ((conflictingGoals.isEmpty() || conflictingGoals.all { it < goal }) && goal.canStart()) {
+                            conflictingGoals.forEach { it.stop() }
                             with(goal) {
                                 start()
                                 activeGoals += this
@@ -105,6 +107,10 @@ internal class EntityGoalSelector(
         _goals.update { it + added }
         goal.addedTo(brain, this)
         return true
+    }
+    
+    fun clear() {
+        _goals.set(emptySet())
     }
 
     @OptIn(ExperimentalTime::class)

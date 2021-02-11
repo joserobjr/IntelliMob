@@ -17,20 +17,12 @@
  *
  */
 
-package games.joserobjr.intellimob.brain.wish
+package games.joserobjr.intellimob.item
 
-import games.joserobjr.intellimob.entity.RegularEntity
-import games.joserobjr.intellimob.math.DoubleVectorXZ
-import games.joserobjr.intellimob.math.IEntityPos
+import cn.nukkit.item.Item
 
 /**
  * @author joserobjr
- * @since 2021-01-17
+ * @since 2021-01-24
  */
-internal data class WishMoveToPos(
-    val target: IEntityPos,
-    override val sprinting: Boolean = false,
-    override val speedMultiplier: DoubleVectorXZ? = null,
-): WishMove() {
-    override suspend fun targetFor(owner: RegularEntity) = target
-}
+internal typealias PNItemStack = Item

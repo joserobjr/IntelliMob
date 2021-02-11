@@ -41,6 +41,15 @@ internal actual class BlockType private constructor(blockState: CBBlockState) {
                 BlockType(state)
             }
         }
+
+        actual val WATER: BlockType
+            get() = TODO("Not yet implemented")
+        actual val FLOWING_WATER: BlockType
+            get() = TODO("Not yet implemented")
+        actual val LAVA: BlockType
+            get() = TODO("Not yet implemented")
+        actual val FLOWING_LAVA: BlockType
+            get() = TODO("Not yet implemented")
     }
     
     override fun equals(other: Any?): Boolean {

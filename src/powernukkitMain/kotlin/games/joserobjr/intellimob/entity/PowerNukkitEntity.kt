@@ -19,12 +19,15 @@
 
 package games.joserobjr.intellimob.entity
 
+import cn.nukkit.Player
 import cn.nukkit.entity.Entity
 import cn.nukkit.math.Vector3
 import games.joserobjr.intellimob.brain.Brain
 import games.joserobjr.intellimob.control.api.EntityControls
 import games.joserobjr.intellimob.entity.status.EntityStatus
 import games.joserobjr.intellimob.entity.status.MutableEntityStatus
+import games.joserobjr.intellimob.item.RegularItemStack
+import games.joserobjr.intellimob.item.asRegularItemStack
 import games.joserobjr.intellimob.math.*
 import games.joserobjr.intellimob.pathfinding.BlockFavorProvider
 import games.joserobjr.intellimob.pathfinding.PathFinder
@@ -92,6 +95,23 @@ internal class PowerNukkitEntity(override val powerNukkitEntity: Entity) : Regul
         get() = with(powerNukkitEntity) { Velocity(motionX, motionY, motionZ) }
         set(value) {
             powerNukkitEntity.motion = value.toVector3()     
+        }
+
+    override val itemInMainHand: RegularItemStack?
+        get() = when (val entity = powerNukkitEntity) {
+            is Player -> entity.inventory?.itemInHand?.asRegularItemStack()
+            else -> null
+        }
+
+    override val itemInOffHand: RegularItemStack?
+        get() = when (val entity = powerNukkitEntity) {
+            is Player -> entity.offhandInventory?.getItem(0)?.asRegularItemStack()
+            else -> null
+        }
+
+    override val isValid: Boolean
+        get() = with (powerNukkitEntity) {
+            isAlive && (this !is Player || isConnected)
         }
 
     override var isUnderAttack: Boolean = false

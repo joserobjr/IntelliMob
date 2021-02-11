@@ -19,8 +19,12 @@
 
 package games.joserobjr.intellimob.entity.factory.passive
 
+import games.joserobjr.intellimob.brain.Brain
+import games.joserobjr.intellimob.brain.goal.GoalTempt
+import games.joserobjr.intellimob.entity.RegularEntity
 import games.joserobjr.intellimob.entity.factory.LivingEntityAIFactory
 import games.joserobjr.intellimob.entity.status.MutableEntityStatus
+import games.joserobjr.intellimob.item.ItemType
 import games.joserobjr.intellimob.math.DoubleVectorXZ
 
 /**
@@ -30,6 +34,12 @@ import games.joserobjr.intellimob.math.DoubleVectorXZ
 internal open class PigAI: LivingEntityAIFactory {
     override fun adjustDefaultStatus(status: MutableEntityStatus) = with(status) {
         walkSpeed = DoubleVectorXZ(.25)
+    }
+
+    override fun createBrain(regularEntity: RegularEntity): Brain {
+        return super.createBrain(regularEntity).apply { 
+            normalGoals += GoalTempt(setOf(ItemType.CARROT, ItemType.POTATO, ItemType.BEETROOT), DoubleVectorXZ(1.2))
+        }
     }
 }
 
