@@ -33,7 +33,7 @@ import kotlin.time.ExperimentalTime
  * @author joserobjr
  * @since 2021-01-20
  */
-internal open class GoalWanderAround(val speed: HorizontalVelocity, val chance: Int = 120): Goal(setOf(PhysicalControl.MOVE)) {
+internal open class GoalWanderAround(val speed: HorizontalVelocity, val chance: Int = 120): Goal(MOVE) {
     override val defaultPriority: Int get() = 90_980_000
     override val needsMemory: Boolean get() = true
 

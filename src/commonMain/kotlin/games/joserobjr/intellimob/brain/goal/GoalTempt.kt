@@ -19,7 +19,6 @@
 
 package games.joserobjr.intellimob.brain.goal
 
-import games.joserobjr.intellimob.control.api.PhysicalControl
 import games.joserobjr.intellimob.entity.RegularEntity
 import games.joserobjr.intellimob.item.ItemType
 import games.joserobjr.intellimob.math.extensions.squared
@@ -35,7 +34,7 @@ import kotlin.time.TimeMark
  * @author joserobjr
  * @since 2021-01-24
  */
-internal open class GoalTempt(val items: Set<ItemType>, val speed: HorizontalVelocity): Goal(setOf(PhysicalControl.MOVE, PhysicalControl.LOOK)) {
+internal open class GoalTempt(val items: Set<ItemType>, val speed: HorizontalVelocity): Goal(MOVE_LOOK) {
     override val defaultPriority: Int get() = 10_900_000
     override val needsMemory: Boolean get() = true
     

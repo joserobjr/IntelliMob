@@ -19,7 +19,6 @@
 
 package games.joserobjr.intellimob.brain.goal
 
-import games.joserobjr.intellimob.control.api.PhysicalControl
 import games.joserobjr.intellimob.entity.RegularEntity
 import games.joserobjr.intellimob.math.generic.DoubleVectorXYZ
 import kotlinx.coroutines.CoroutineScope
@@ -36,7 +35,7 @@ import kotlin.time.milliseconds
  * @author joserobjr
  * @since 2021-01-18
  */
-internal object GoalLookAround: Goal(setOf(PhysicalControl.MOVE, PhysicalControl.LOOK)) {
+internal object GoalLookAround: Goal(MOVE_LOOK) {
     override val defaultPriority: Int
         get() = 100_900_000
     

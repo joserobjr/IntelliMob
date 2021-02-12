@@ -31,4 +31,8 @@ internal data class HorizontalVelocity(
 ): IHorizontalVelocity {
     constructor(xz: Double): this(xz, xz)
     constructor(vector: IDoubleVectorXZ): this(vector.x, vector.z)
+    
+    companion object {
+        val ONE = HorizontalVelocity(1.0)
+    }
 }

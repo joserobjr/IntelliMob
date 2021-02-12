@@ -32,6 +32,7 @@ import games.joserobjr.intellimob.math.motion.Velocity
 import games.joserobjr.intellimob.math.position.entity.EntityLocation
 import games.joserobjr.intellimob.math.position.entity.EntityPos
 import games.joserobjr.intellimob.math.toIntelliMobBoundingBox
+import games.joserobjr.intellimob.math.toLocation
 import games.joserobjr.intellimob.pathfinding.BlockFavorProvider
 import games.joserobjr.intellimob.pathfinding.PathFinder
 import games.joserobjr.intellimob.world.RegularWorld
@@ -60,7 +61,14 @@ internal class GoMintEntity<E>(override val goMintEntity: Entity<E>) : RegularEn
     @ExperimentalTime
     override val timeSource: TimeSource get() = world.timeSource
     
-    override val position: EntityPos get() = with(goMintEntity) { EntityPos(positionX(), positionY(), positionZ()) }
+    override var position: EntityPos 
+        get() = with(goMintEntity) { EntityPos(positionX(), positionY(), positionZ()) }
+        set(value) {
+            with(goMintEntity) {
+                teleport(value.toLocation(world(), pitch(), yaw()))
+            }
+        }
+    
     override val eyePosition: EntityPos get() = with(goMintEntity) { EntityPos(positionX(), positionY() + eyeHeight(), positionZ()) }
     override val world: RegularWorld get() = goMintEntity.world().asIntelliMobWorld()
     override val boundingBox: BoundingBox get() = goMintEntity.boundingBox().toIntelliMobBoundingBox()
@@ -135,6 +143,10 @@ internal class GoMintEntity<E>(override val goMintEntity: Entity<E>) : RegularEn
         get() = TODO("Not yet implemented")
 
     override suspend fun isTouchingWater(): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun createChild(other: RegularEntity): RegularEntity? {
         TODO("Not yet implemented")
     }
 }

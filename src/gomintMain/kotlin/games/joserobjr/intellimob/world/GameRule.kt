@@ -17,29 +17,18 @@
  *
  */
 
-package games.joserobjr.intellimob.brain.goal
+package games.joserobjr.intellimob.world
 
-import games.joserobjr.intellimob.entity.RegularEntity
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlin.time.ExperimentalTime
+import io.gomint.world.Gamerule
 
 /**
  * @author joserobjr
- * @since 2021-01-17
+ * @since 2021-02-11
  */
-internal object GoalSwimUp: Goal(JUMP) {
-    override val defaultPriority: Int
-        get() = -100_000_000
-
-    override suspend fun canStart(entity: RegularEntity, memory: Memory?): Boolean {
-        return entity.isEyeUnderWater()
-    }
-
-    @OptIn(ExperimentalTime::class)
-    override fun CoroutineScope.start(entity: RegularEntity, memory: Memory?): Job {
-        return with(entity.brain.wishes) {
-            jumpUntil { !brain.owner.isEyeUnderWater() }
-        }
+internal actual sealed class GameRule<T>(val goMint: Gamerule<T>) {
+    private class Vanilla<T>(rule: Gamerule<T>): GameRule<T>(rule)
+    
+    actual companion object {
+        actual val DO_MOB_LOOT: GameRule<Boolean> = Vanilla(Gamerule.DO_MOB_LOOT)
     }
 }

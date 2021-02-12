@@ -19,7 +19,6 @@
 
 package games.joserobjr.intellimob.brain.goal
 
-import games.joserobjr.intellimob.control.api.PhysicalControl
 import games.joserobjr.intellimob.entity.EntityFlag.ON_FIRE
 import games.joserobjr.intellimob.entity.RegularEntity
 import games.joserobjr.intellimob.math.generic.IIntVectorXYZ
@@ -36,7 +35,7 @@ import kotlin.time.ExperimentalTime
  * @author joserobjr
  * @since 2021-01-23
  */
-internal open class GoalEscapeDanger(val speed: HorizontalVelocity) : Goal(setOf(PhysicalControl.MOVE)) {
+internal open class GoalEscapeDanger(val speed: HorizontalVelocity) : Goal(MOVE) {
     override val defaultPriority: Int get() = -100_100_000
     override val needsMemory: Boolean get() = true
 

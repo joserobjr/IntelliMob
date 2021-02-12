@@ -27,7 +27,6 @@ import games.joserobjr.intellimob.entity.EntitySnapshot
 import games.joserobjr.intellimob.entity.RegularEntity
 import games.joserobjr.intellimob.entity.Sound
 import games.joserobjr.intellimob.entity.asRegularEntity
-import games.joserobjr.intellimob.math.*
 import games.joserobjr.intellimob.math.collision.BoundingBox
 import games.joserobjr.intellimob.math.position.block.IBlockPos
 import games.joserobjr.intellimob.math.position.entity.IEntityPos
@@ -132,10 +131,14 @@ internal inline class GoMintWorld(override val goMintWorld: GMWorld): RegularWor
 
     override suspend fun findClosestEntity(
         position: IEntityPos,
-        bounds: BoundingBox?,
+        bounds: BoundingBox,
         loadChunks: Boolean,
         condition: (suspend (RegularEntity) -> Boolean)?
     ): RegularEntity? {
         TODO("Not yet implemented")
+    }
+
+    override fun <T> get(rule: GameRule<T>): T {
+        return goMintWorld.gamerule(rule.goMint)
     }
 }

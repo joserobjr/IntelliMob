@@ -22,6 +22,7 @@ package games.joserobjr.intellimob.entity
 import cn.nukkit.Player
 import cn.nukkit.entity.mob.*
 import cn.nukkit.entity.passive.*
+import games.joserobjr.intellimob.entity.childfactory.ChildFactory
 import games.joserobjr.intellimob.entity.factory.EntityAIFactory
 import games.joserobjr.intellimob.entity.factory.GenericEntityAIFactory
 import games.joserobjr.intellimob.entity.factory.UninitializedAI
@@ -33,7 +34,7 @@ import java.util.function.IntFunction
  * @author joserobjr
  * @since 2021-01-12
  */
-internal actual sealed class EntityType(val networkId: Int) {
+internal actual sealed class EntityType(val networkId: Int, val childFactory: ChildFactory = ChildFactory.SIMPLE) {
     /**
      * The default status based on the entity type.
      */
@@ -41,7 +42,7 @@ internal actual sealed class EntityType(val networkId: Int) {
 
     actual abstract var aiFactory: EntityAIFactory
     
-    internal actual class Vanilla(networkId: Int): EntityType(networkId) {
+    internal actual class Vanilla(networkId: Int, childFactory: ChildFactory = ChildFactory.SIMPLE): EntityType(networkId, childFactory) {
         actual override var aiFactory: EntityAIFactory = UninitializedAI
             get() {
                 field.takeUnless { it == UninitializedAI }?.let { return it }

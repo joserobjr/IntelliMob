@@ -17,29 +17,13 @@
  *
  */
 
-package games.joserobjr.intellimob.brain.goal
+package games.joserobjr.intellimob.math
 
-import games.joserobjr.intellimob.entity.RegularEntity
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlin.time.ExperimentalTime
+import com.nukkitx.math.vector.Vector3f
+import games.joserobjr.intellimob.math.generic.IDoubleVectorXYZ
 
 /**
  * @author joserobjr
- * @since 2021-01-17
+ * @since 2021-02-11
  */
-internal object GoalSwimUp: Goal(JUMP) {
-    override val defaultPriority: Int
-        get() = -100_000_000
-
-    override suspend fun canStart(entity: RegularEntity, memory: Memory?): Boolean {
-        return entity.isEyeUnderWater()
-    }
-
-    @OptIn(ExperimentalTime::class)
-    override fun CoroutineScope.start(entity: RegularEntity, memory: Memory?): Job {
-        return with(entity.brain.wishes) {
-            jumpUntil { !brain.owner.isEyeUnderWater() }
-        }
-    }
-}
+internal fun IDoubleVectorXYZ.toVector3f(): Vector3f = Vector3f.from(x, y, z) 

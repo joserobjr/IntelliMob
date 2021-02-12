@@ -33,7 +33,7 @@ import kotlin.reflect.KProperty
  * @since 2021-01-19
  */
 internal class RestartableJob: ReadOnlyProperty<Any?, Job> {
-    private val _currentJob = MutableStateFlow<Job>(CompletedJob)
+    private val _currentJob = MutableStateFlow(CompletedJob)
     val currentJob = _currentJob.asStateFlow()
 
     fun CoroutineScope.startSupervisorJob(): Job? {

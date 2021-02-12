@@ -30,13 +30,14 @@ import games.joserobjr.intellimob.math.angle.PitchYaw
 import games.joserobjr.intellimob.math.motion.IVelocity
 import games.joserobjr.intellimob.math.motion.Velocity
 import games.joserobjr.intellimob.math.position.entity.EntityPos
+import games.joserobjr.intellimob.math.position.entity.IEntityPos
 import games.joserobjr.intellimob.pathfinding.BlockFavorProvider
 import games.joserobjr.intellimob.pathfinding.PathFinder
-import games.joserobjr.intellimob.trait.WithBoundingBox
-import games.joserobjr.intellimob.trait.WithEntityLocation
-import games.joserobjr.intellimob.trait.WithTimeSource
-import games.joserobjr.intellimob.trait.WithUpdateDispatcher
+import games.joserobjr.intellimob.trait.*
 import kotlinx.coroutines.Job
+import kotlin.time.Duration
+import kotlin.time.ExperimentalTime
+import kotlin.time.seconds
 
 /**
  * The root interface which compose the entities, with or without IntelliMob AI. 
@@ -74,9 +75,13 @@ internal interface RegularEntity: PlatformEntity, WithEntityLocation, WithTimeSo
      */
     var pathFinder: PathFinder
 
-    override val position: EntityPos
+    override var position: EntityPos
     
     val eyePosition: EntityPos
+    
+    val trackingEyePosition: WithEntityPos get() = object : WithEntityPos {
+        override val position: IEntityPos get() = eyePosition
+    }
 
     var headPitchYaw: PitchYaw
 
@@ -123,8 +128,16 @@ internal interface RegularEntity: PlatformEntity, WithEntityLocation, WithTimeSo
     suspend fun applyPhysics()
 
     suspend fun playSound(sound: Sound)
+    suspend fun createChild(other: RegularEntity): RegularEntity?
 
     override val regularEntity: RegularEntity get() = this
 
     var blockFavor: BlockFavorProvider
+    
+    var breedingAge: Int
+    
+    @ExperimentalTime
+    fun startLoving(duration: Duration = 30.seconds): Job?
+    
+    fun stopLoving()
 }

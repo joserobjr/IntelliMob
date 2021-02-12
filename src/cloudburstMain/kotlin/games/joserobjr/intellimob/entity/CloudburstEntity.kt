@@ -62,7 +62,12 @@ internal class CloudburstEntity(override val cloudburstEntity: Entity) : Regular
     @ExperimentalTime
     override val timeSource: TimeSource get() = world.timeSource
     
-    override val position: EntityPos get() = cloudburstEntity.position.toEntityPos()
+    override var position: EntityPos 
+        get() = cloudburstEntity.position.toEntityPos()
+        set(value) {
+            cloudburstEntity.position = value.toVector3f()
+        }
+    
     override val eyePosition: EntityPos get() = with(cloudburstEntity) { with(position) { EntityPos(x, y + eyeHeight, z) } }
     override val world: RegularWorld get() = cloudburstEntity.level.asIntelliMobWorld()
     override val boundingBox: BoundingBox get() = cloudburstEntity.boundingBox.toIntelliMobBoundingBox()
@@ -136,6 +141,10 @@ internal class CloudburstEntity(override val cloudburstEntity: Entity) : Regular
         get() = TODO("Not yet implemented")
 
     override suspend fun isTouchingWater(): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun createChild(other: RegularEntity): RegularEntity? {
         TODO("Not yet implemented")
     }
 }

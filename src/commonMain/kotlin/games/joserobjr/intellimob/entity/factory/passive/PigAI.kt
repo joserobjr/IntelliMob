@@ -20,6 +20,7 @@
 package games.joserobjr.intellimob.entity.factory.passive
 
 import games.joserobjr.intellimob.brain.Brain
+import games.joserobjr.intellimob.brain.goal.GoalMate
 import games.joserobjr.intellimob.brain.goal.GoalTempt
 import games.joserobjr.intellimob.entity.RegularEntity
 import games.joserobjr.intellimob.entity.factory.LivingEntityAIFactory
@@ -40,8 +41,13 @@ internal open class PigAI: LivingEntityAIFactory {
     }
 
     override fun createBrain(regularEntity: RegularEntity): Brain {
-        return super.createBrain(regularEntity).apply { 
-            normalGoals += GoalTempt(setOf(CARROT, POTATO, BEETROOT, CARROT_ON_A_STICK), HorizontalVelocity(1.2))
+        return super.createBrain(regularEntity).apply {
+            breedingItems += sequenceOf(CARROT, POTATO, BEETROOT)
+            
+            val twentyPercentFaster = HorizontalVelocity(1.2)
+            normalGoals += GoalMate()
+            normalGoals += GoalTempt(breedingItems, twentyPercentFaster)
+            normalGoals += GoalTempt(setOf(CARROT_ON_A_STICK), twentyPercentFaster)
         }
     }
 }

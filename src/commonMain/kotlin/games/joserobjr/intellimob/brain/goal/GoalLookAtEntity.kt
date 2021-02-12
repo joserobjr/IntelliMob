@@ -20,7 +20,6 @@
 package games.joserobjr.intellimob.brain.goal
 
 import games.joserobjr.intellimob.brain.Brain
-import games.joserobjr.intellimob.control.api.PhysicalControl
 import games.joserobjr.intellimob.entity.EntityType
 import games.joserobjr.intellimob.entity.RegularEntity
 import games.joserobjr.intellimobjvm.atomic.atomic
@@ -35,7 +34,12 @@ import kotlin.time.milliseconds
  * @author joserobjr
  * @since 2021-01-20
  */
-internal class GoalLookAtEntity(val types: Set<EntityType>, val range: Float, val chance: Float = .2F, val condition: (suspend (Brain, RegularEntity)->Boolean)? = null): Goal(setOf(PhysicalControl.LOOK)) {
+internal class GoalLookAtEntity(
+    val types: Set<EntityType>,
+    val range: Float,
+    val chance: Float = .2F,
+    val condition: (suspend (Brain, RegularEntity) -> Boolean)? = null
+): Goal(LOOK) {
     override val defaultPriority: Int get() = 100_800_000
     override val needsMemory: Boolean get() = true
     

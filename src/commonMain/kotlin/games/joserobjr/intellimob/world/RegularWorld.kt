@@ -24,6 +24,7 @@ import games.joserobjr.intellimob.block.BlockState
 import games.joserobjr.intellimob.block.RegularBlockEntity
 import games.joserobjr.intellimob.entity.Sound
 import games.joserobjr.intellimob.math.position.block.IBlockPos
+import games.joserobjr.intellimob.math.position.entity.EntityPos
 import games.joserobjr.intellimob.math.position.entity.IEntityPos
 import games.joserobjr.intellimob.trait.WithTimeSource
 import games.joserobjr.intellimob.trait.WithUpdateDispatcher
@@ -42,4 +43,7 @@ internal interface RegularWorld: PlatformWorld, WorldView, WithTimeSource, WithU
     override suspend fun getBlockEntity(pos: IBlockPos): RegularBlockEntity? = getBlock(pos).currentBlockEntity()
     suspend fun restoreSnapshot(snapshot: BlockSnapshot): Boolean
     suspend fun playSound(pos: IEntityPos, sound: Sound)
+
+    operator fun <T> get(rule: GameRule<T>): T
+    fun spawnExperienceOrbs(position: EntityPos, experience: Int)
 }

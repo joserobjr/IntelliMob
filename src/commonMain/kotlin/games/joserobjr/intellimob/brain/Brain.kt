@@ -25,6 +25,7 @@ import games.joserobjr.intellimob.brain.wish.Wishes
 import games.joserobjr.intellimob.coroutines.AI
 import games.joserobjr.intellimob.coroutines.RestartableJob
 import games.joserobjr.intellimob.entity.RegularEntity
+import games.joserobjr.intellimob.item.ItemType
 import games.joserobjr.intellimob.math.extensions.ticks
 import games.joserobjr.intellimob.trait.WithTimeSource
 import kotlinx.coroutines.*
@@ -38,6 +39,8 @@ import kotlin.time.measureTime
 internal class Brain(
     val owner: RegularEntity,
 ): WithTimeSource by owner {
+    val breedingItems: MutableSet<ItemType> = mutableSetOf()
+    
     private val _thinkingJob = RestartableJob()
     val thinkingJob by _thinkingJob
     

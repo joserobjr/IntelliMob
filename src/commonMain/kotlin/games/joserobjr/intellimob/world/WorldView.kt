@@ -80,7 +80,7 @@ internal interface WorldView: WithWorld {
     
     suspend fun findClosestEntity(
         position: IEntityPos,
-        bounds: BoundingBox? = null,
+        bounds: BoundingBox,
         loadChunks: Boolean = false,
         condition: (suspend (RegularEntity) -> Boolean)? = null
     ): RegularEntity?

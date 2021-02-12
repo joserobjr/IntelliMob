@@ -17,29 +17,31 @@
  *
  */
 
-package games.joserobjr.intellimob.brain.goal
+package games.joserobjr.intellimob.entity.childfactory
 
+import cn.nukkit.entity.Entity
+import games.joserobjr.intellimob.entity.EntityFlag
 import games.joserobjr.intellimob.entity.RegularEntity
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlin.time.ExperimentalTime
+import games.joserobjr.intellimob.entity.asRegularEntity
+import games.joserobjr.intellimob.math.toPosition
 
 /**
  * @author joserobjr
- * @since 2021-01-17
+ * @since 2021-02-12
  */
-internal object GoalSwimUp: Goal(JUMP) {
-    override val defaultPriority: Int
-        get() = -100_000_000
-
-    override suspend fun canStart(entity: RegularEntity, memory: Memory?): Boolean {
-        return entity.isEyeUnderWater()
+internal open class ChildFactory protected constructor() {
+    open fun createChild(entityA: RegularEntity, entityB: RegularEntity): RegularEntity? {
+        val pos = entityA.location.toPosition()
+        return Entity.createEntity(entityA.type.networkId, pos)
+            ?.apply { setScale(0.5f) }
+            ?.asRegularEntity()?.apply {
+                flagManager[EntityFlag.BABY]
+                breedingAge = -24000
+                powerNukkitEntity.spawnToAll()
+            }
     }
 
-    @OptIn(ExperimentalTime::class)
-    override fun CoroutineScope.start(entity: RegularEntity, memory: Memory?): Job {
-        return with(entity.brain.wishes) {
-            jumpUntil { !brain.owner.isEyeUnderWater() }
-        }
+    companion object {
+        val SIMPLE = ChildFactory()
     }
 }

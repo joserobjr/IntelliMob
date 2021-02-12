@@ -23,7 +23,6 @@ import games.joserobjr.intellimob.block.*
 import games.joserobjr.intellimob.entity.EntitySnapshot
 import games.joserobjr.intellimob.entity.RegularEntity
 import games.joserobjr.intellimob.entity.asRegularEntity
-import games.joserobjr.intellimob.math.*
 import games.joserobjr.intellimob.math.collision.BoundingBox
 import games.joserobjr.intellimob.math.position.block.BlockLocation
 import games.joserobjr.intellimob.math.position.block.IBlockPos
@@ -135,7 +134,7 @@ internal inline class PowerNukkitChunk(override val powerNukkitChunk: PNChunk): 
 
     override suspend fun findClosestEntity(
         position: IEntityPos,
-        bounds: BoundingBox?,
+        bounds: BoundingBox,
         loadChunks: Boolean,
         condition: (suspend (RegularEntity) -> Boolean)?
     ): RegularEntity? {

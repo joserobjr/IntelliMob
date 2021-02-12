@@ -33,6 +33,7 @@ import games.joserobjr.intellimob.math.*
 import games.joserobjr.intellimob.math.collision.BoundingBox
 import games.joserobjr.intellimob.math.position.block.IBlockPos
 import games.joserobjr.intellimob.math.position.block.MutableBlockPos
+import games.joserobjr.intellimob.math.position.entity.EntityPos
 import games.joserobjr.intellimob.math.position.entity.IEntityPos
 import games.joserobjr.intellimob.metadata.lazyMetadata
 import games.joserobjr.intellimob.timesource.ServerTickTimeSource
@@ -148,11 +149,17 @@ internal inline class PowerNukkitWorld(override val powerNukkitLevel: Level): Re
 
     override suspend fun findClosestEntity(
         position: IEntityPos,
-        bounds: BoundingBox?,
+        bounds: BoundingBox,
         loadChunks: Boolean,
         condition: (suspend (RegularEntity) -> Boolean)?
     ): RegularEntity? {
-        TODO("Not yet implemented")
+        return withContext(world.updateDispatcher) {
+            world.powerNukkitLevel.getCollidingEntities(bounds)
+        }.asFlow()
+            .map { it.asRegularEntity() }
+            .let { flow -> condition?.let { flow.filter(it) } ?: flow }
+            .toList()
+            .minByOrNull { it.position.squaredDistance(position) }
     }
 
     override suspend fun restoreSnapshot(snapshot: BlockSnapshot): Boolean {
@@ -181,5 +188,13 @@ internal inline class PowerNukkitWorld(override val powerNukkitLevel: Level): Re
         } else if (sound.sound != null) {
             powerNukkitLevel.addSound(pos.toVector3(), sound.sound)
         }
+    }
+
+    override fun <T> get(rule: GameRule<T>): T {
+        return rule.getValue(world.powerNukkitLevel.gameRules)
+    }
+
+    override fun spawnExperienceOrbs(position: EntityPos, experience: Int) {
+        powerNukkitLevel.dropExpOrb(position.toVector3(), experience)
     }
 }

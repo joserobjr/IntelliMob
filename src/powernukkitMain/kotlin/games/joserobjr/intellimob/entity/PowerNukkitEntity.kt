@@ -20,8 +20,10 @@
 package games.joserobjr.intellimob.entity
 
 import cn.nukkit.Player
+import cn.nukkit.Server
 import cn.nukkit.entity.Entity
 import cn.nukkit.math.Vector3
+import cn.nukkit.network.protocol.EntityEventPacket
 import games.joserobjr.intellimob.brain.Brain
 import games.joserobjr.intellimob.control.api.EntityControls
 import games.joserobjr.intellimob.entity.status.EntityStatus
@@ -45,11 +47,12 @@ import games.joserobjr.intellimob.trait.update
 import games.joserobjr.intellimob.trait.updateAndGet
 import games.joserobjr.intellimob.world.RegularWorld
 import games.joserobjr.intellimob.world.asIntelliMobWorld
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.SupervisorJob
+import games.joserobjr.intellimobjvm.atomic.atomic
+import kotlinx.coroutines.*
+import kotlin.time.Duration
 import kotlin.time.ExperimentalTime
 import kotlin.time.TimeSource
+import kotlin.time.seconds
 
 /**
  * Wraps a PowerNukkit entity object and tag it as a regular entity.
@@ -77,7 +80,12 @@ internal class PowerNukkitEntity(override val powerNukkitEntity: Entity) : Regul
     @ExperimentalTime
     override val timeSource: TimeSource get() = ServerTickTimeSource
     
-    override val position: EntityPos get() = powerNukkitEntity.toEntityPos()
+    override var position: EntityPos 
+        get() = powerNukkitEntity.toEntityPos()
+        set(value) {
+            powerNukkitEntity.teleport(value.toVector3())
+        }
+    
     override val eyePosition: EntityPos get() = with(powerNukkitEntity) { EntityPos(x, y + eyeHeight, z) }
     override val world: RegularWorld get() = powerNukkitEntity.level.asIntelliMobWorld()
     override val boundingBox: BoundingBox get() = powerNukkitEntity.boundingBox?.toIntelliMobBoundingBox() ?: BoundingBox.EMPTY
@@ -124,6 +132,10 @@ internal class PowerNukkitEntity(override val powerNukkitEntity: Entity) : Regul
         }
 
     override var isUnderAttack: Boolean = false
+
+    override var breedingAge: Int = 0
+    
+    private val lovingJob = atomic<Job?>(null)
 
     override suspend fun isTouchingWater(): Boolean {
         return powerNukkitEntity.isTouchingWater
@@ -217,5 +229,37 @@ internal class PowerNukkitEntity(override val powerNukkitEntity: Entity) : Regul
                 canJump = isAlive && (onGround || isInsideOfWater)
             }
         }
+    }
+
+    override suspend fun createChild(other: RegularEntity): RegularEntity? {
+        return type.childFactory.createChild(this, other)
+    }
+    
+    @ExperimentalTime
+    override fun startLoving(duration: Duration) = lovingJob.updateAndGet { old -> 
+        old?.cancel("Starting another loving job")
+        CoroutineScope(job + updateDispatcher).launch {
+            withTimeout(duration) {
+                old?.join()
+                flagManager[EntityFlag.IN_LOVE] = true
+                try {
+                    val packet = EntityEventPacket().apply {
+                        eid = powerNukkitEntity.id
+                        event = EntityEventPacket.LOVE_PARTICLES
+                    }
+                    
+                    while (isValid && flagManager[EntityFlag.IN_LOVE]) {
+                        Server.broadcastPacket(powerNukkitEntity.viewers.values, packet)
+                        delay(1.seconds)
+                    }
+                } finally {
+                    flagManager[EntityFlag.IN_LOVE] = false
+                }
+            }
+        }
+    }
+    
+    override fun stopLoving() {
+        lovingJob.get()?.cancel("Stopped by request")
     }
 }

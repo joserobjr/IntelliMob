@@ -19,6 +19,8 @@
 
 package games.joserobjr.intellimob.math
 
+import cn.nukkit.level.Level
+import cn.nukkit.level.Position
 import cn.nukkit.math.Vector3
 import games.joserobjr.intellimob.math.generic.IDoubleVectorXYZ
 
@@ -27,3 +29,4 @@ import games.joserobjr.intellimob.math.generic.IDoubleVectorXYZ
  * @since 2021-01-22
  */
 internal fun IDoubleVectorXYZ.toVector3() = Vector3(x, y, z) 
+internal fun IDoubleVectorXYZ.toPosition(level: Level? = null) = Position(x, y, z, level) 

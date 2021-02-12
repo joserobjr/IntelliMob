@@ -35,6 +35,7 @@ internal abstract class Goal(val physicalControl: Set<PhysicalControl>) {
      * * -100_000_000 SwimUp
      * * -100_100_000 EscapeDanger
      * 
+     * * 009_000_000 AnimalMate
      * * 010_900_000 Tempt
      * 
      * * 090_970_000 FlyOntoTree
@@ -68,5 +69,12 @@ internal abstract class Goal(val physicalControl: Set<PhysicalControl>) {
     
     open suspend fun canBeReplacedBy(entity: RegularEntity, other: Goal, thisPriority: Int, otherPriority: Int): Boolean {
         return canStop(entity) && otherPriority < thisPriority
+    }
+    
+    companion object {
+        val MOVE = setOf(PhysicalControl.MOVE)
+        val MOVE_LOOK = setOf(PhysicalControl.MOVE, PhysicalControl.LOOK)
+        val LOOK = setOf(PhysicalControl.LOOK)
+        val JUMP = setOf(PhysicalControl.JUMP)
     }
 }

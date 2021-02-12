@@ -101,18 +101,16 @@ internal open class LandBodyController(final override val owner: RegularEntity):
         job.start()
         CoroutineScope(SupervisorJob(owner.world.job) + owner.world.updateDispatcher).launch { 
             try {
-                log.warn { "+++++++++++++" }
                 job.join()
-                log.warn { "------------" }
-            } catch (e: Throwable) {
-                log.warn(e) { "$$$$$$$$$$$$" }
+            } catch (ignored: CancellationException) {
+                // Does nothing
+            } catch (e: Exception) {
+                log.error(e) { "Error while awaiting for the job to complete" }
             } finally {
                 try {
-                    log.warn { "IIIIIIIIIIIIIIII" }
                     lastNode?.restoreSnapshot()
-                    log.warn { "OOOOOOOOOOOOOOOO" }
                 } catch (e: Throwable) {
-                    log.error(e) { "!!!!!!!!!!!!!" }
+                    log.error(e) { "Error while restoring block snapshot" }
                 }
             }
         }
@@ -137,7 +135,7 @@ internal open class LandBodyController(final override val owner: RegularEntity):
             if (nextNodePos.down().toBlockPos() isNotSimilarTo lastNode?.position) {
                 lastNode?.restoreSnapshot()
                 val nextBlock = owner.world.getBlock(nextNodePos.down())
-                lastNode = nextBlock.createSnapshot(includeBlockEntity = true)
+                lastNode = nextBlock.createSnapshot(includeBlockEntity = true).takeIf { it.states.main != BlockState.RED_WOOL }
                 nextBlock.changeBlock(BlockState.RED_WOOL)
             }
             val status = owner.currentStatus
